@@ -8,11 +8,26 @@ use Illuminate\Http\Request;
 
 class MitraController extends Controller
 {
-    public function index()
-    {
-        $mitras = Mitra::all();
-        return view('admin.mitra.index', compact('mitras'));
+   public function index(Request $request)
+{
+    $query = Mitra::query();
+
+    if ($request->search) {
+        $query->where('nama_mitra', 'like', '%' . $request->search . '%')
+              ->orWhere('alamat', 'like', '%' . $request->search . '%')
+              ->orWhere('no_hp', 'like', '%' . $request->search . '%');
     }
+
+    $mitras = $query->latest()->paginate(10);
+    $total = Mitra::count();
+
+    if ($request->ajax()) {
+        return view('admin.mitra.partials.table', compact('mitras'))->render();
+    }
+
+    return view('admin.mitra.index', compact('mitras', 'total'));
+}
+
 
    public function create()
 {
@@ -44,7 +59,7 @@ public function edit($id)
         $mitra = Mitra::findOrFail($id);
         $mitra->update($request->all());
 
-        return redirect()->route('mitra.index')->with('success', 'Mitra berhasil diperbarui.');
+        return redirect()->route('admin.mitra.index')->with('success', 'Mitra berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -52,6 +67,6 @@ public function edit($id)
         $mitra = Mitra::findOrFail($id);
         $mitra->delete();
 
-        return redirect()->route('mitra.index')->with('success', 'Mitra berhasil dihapus.');
+        return redirect()->route('admin.mitra.index')->with('success', 'Mitra berhasil dihapus.');
     }
 }

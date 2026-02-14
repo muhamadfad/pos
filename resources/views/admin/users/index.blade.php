@@ -3,76 +3,122 @@
 @section('title', 'Manajemen User')
 
 @section('content')
-<div class="bg-white p-6 rounded-xl shadow-sm border">
+<div x-data="userPage()" class="max-w-7xl mx-auto space-y-6">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">👤 Manajemen User</h2>
+    <!-- Stats -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 
+                text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
+
+        <div>
+            <h2 class="text-lg font-medium">Total User</h2>
+            <p class="text-3xl font-bold mt-1">{{ $total }}</p>
+        </div>
+
+        <div class="text-5xl opacity-20">
+            <span class="iconify" data-icon="mdi:account-group-outline"></span>
+        </div>
+    </div>
+
+    <!-- Header & Search -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+        <input type="text"
+               x-model="search"
+               @input.debounce.500ms="fetchData(null)"
+               placeholder="Cari nama atau email..."
+               class="w-full md:w-80 px-4 py-2.5 border rounded-xl shadow-sm 
+                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+
         <a href="{{ route('admin.users.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            + Tambah
+           class="inline-flex items-center gap-2 px-4 py-2.5 
+                  bg-blue-600 text-white rounded-xl shadow-sm 
+                  hover:bg-blue-700 hover:shadow-md transition-all">
+            Tambah User
         </a>
     </div>
 
-    <!-- Alert -->
-    @if(session('success'))
-        <div class="mb-4 bg-green-100 text-green-700 px-4 py-3 rounded-lg text-sm">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border rounded-lg overflow-hidden">
-            <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                <tr>
-                    <th class="px-4 py-3">No</th>
-                    <th class="px-4 py-3">Nama</th>
-                    <th class="px-4 py-3">Email</th>
-                    <th class="px-4 py-3">Role</th>
-                    <th class="px-4 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y">
-                @forelse ($users as $user)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-3 font-medium text-gray-800">{{ $user->name }}</td>
-                    <td class="px-4 py-3">{{ $user->email }}</td>
-                    <td class="px-4 py-3 capitalize">
-                        <span class="px-2 py-1 rounded-full text-xs font-semibold
-                            {{ $user->role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700' }}">
-                            {{ $user->role }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-3 text-center space-x-2">
-                        <a href="{{ route('admin.users.edit', $user) }}"
-                           class="text-blue-600 hover:underline text-sm">
-                            Edit
-                        </a>
+    <div id="tableContent">
+        @include('admin.users.partials.table')
+    </div>
 
-                        <form action="{{ route('admin.users.destroy', $user) }}"
-                              method="POST" class="inline"
-                              onsubmit="return confirm('Yakin ingin menghapus user ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-red-600 hover:underline text-sm">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-4 py-6 text-center text-gray-500">
-                        Data user belum tersedia.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <!-- Delete Modal -->
+    <div x-show="showModal"
+         x-transition
+         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+        <div class="bg-white p-6 rounded-2xl shadow-xl w-96 space-y-4">
+
+            <h3 class="text-lg font-semibold text-gray-800">
+                Hapus User?
+            </h3>
+
+            <p class="text-sm text-gray-500">
+                Data yang dihapus tidak dapat dikembalikan.
+            </p>
+
+            <div class="flex justify-end gap-2">
+                <button @click="showModal=false"
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                    Batal
+                </button>
+
+                <form :action="deleteUrl" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+                        Hapus
+                    </button>
+                </form>
+            </div>
+
+        </div>
     </div>
 
 </div>
+
+<script>
+function userPage() {
+    return {
+        search: '',
+        showModal: false,
+        deleteUrl: '',
+
+        fetchData(pageUrl = null) {
+
+            if (typeof pageUrl === 'object') {
+                pageUrl = null;
+            }
+
+            let baseUrl = "{{ route('admin.users.index') }}";
+
+            let url = pageUrl
+                ? pageUrl
+                : baseUrl + '?search=' + encodeURIComponent(this.search);
+
+            fetch(url, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('tableContent').innerHTML = html;
+
+                document.querySelectorAll('#tableContent .pagination a')
+                .forEach(link => {
+                    link.addEventListener('click', e => {
+                        e.preventDefault();
+                        this.fetchData(link.href);
+                    });
+                });
+            });
+        }
+    }
+}
+
+function openDeleteModal(id) {
+    let alpine = document.querySelector('[x-data]').__x.$data;
+    alpine.deleteUrl = `/admin/users/${id}`;
+    alpine.showModal = true;
+}
+</script>
 @endsection

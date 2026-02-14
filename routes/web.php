@@ -7,11 +7,11 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\TransactionController; // 👈 Tambahkan
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\MitraController;
-
-
+use App\Http\Controllers\Admin\BarangMasukController;
+use App\Http\Controllers\Admin\BarangKeluarController;
+use App\Http\Controllers\Admin\PembayaranHutangController;
 
 // USER DASHBOARD
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -20,10 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // 👈 TAMBAHKAN INI
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Routes
+// ADMIN ROUTES
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -38,26 +38,48 @@ Route::middleware(['auth', 'admin'])
         Route::get('/products/barcode/{barcode}', [ProductController::class, 'getByBarcode'])
             ->name('products.barcode');
         Route::resource('users', UserController::class);
+        Route::resource('mitra', MitraController::class);
 
-        // ===== Transaksi Barang =====
-        Route::prefix('transactions')->name('transactions.')->group(function () {
-            // Barang Masuk
-            Route::get('in', [TransactionController::class, 'indexIn'])->name('in.index');
-            Route::get('in/create', [TransactionController::class, 'createIn'])->name('in.create');
-            Route::post('in', [TransactionController::class, 'storeIn'])->name('in.store');
+      
+        // ===== TRANSAKSI BARANG MASUK =====
+        Route::prefix('transactions/in')->name('transactions.in.')->group(function () {
 
-            // Barang Keluar
-            Route::get('out', [TransactionController::class, 'indexOut'])->name('out.index');
-            Route::get('out/create', [TransactionController::class, 'createOut'])->name('out.create');
-            Route::post('out', [TransactionController::class, 'storeOut'])->name('out.store');
+            Route::get('/', [BarangMasukController::class, 'index'])->name('index');
+
+            Route::get('/pilih-mitra', [BarangMasukController::class, 'pilihMitra'])->name('pilihMitra');
+
+            Route::get('/mitra/{mitra}', [BarangMasukController::class, 'transaksiPerMitra'])->name('perMitra');
+            Route::get('/mitra/{mitra}/download', 
+                        [BarangMasukController::class, 'downloadPdf']
+                    )->name('download');
+
+            Route::get('/mitra/{mitra}/create', [BarangMasukController::class, 'create'])->name('create');
+
+            Route::post('/mitra/{mitra}', [BarangMasukController::class, 'store'])->name('store');
+
+            Route::get('/detail/{id}', [BarangMasukController::class, 'show'])->name('show');
+            Route::post('/{id}/bayar', [PembayaranHutangController::class, 'bayarHutang'])
+    ->name('bayar');
+
         });
-         Route::resource('mitra', MitraController::class); // 👈 TAMBAHAN UTAMA
 
+        // ===== TRANSAKSI BARANG KELUAR =====
+        Route::prefix('transactions/out')->name('transactions.out.')->group(function () {
+            Route::get('/', [BarangKeluarController::class, 'index'])->name('index');
+            Route::get('/create', [BarangKeluarController::class, 'create'])->name('create');
+            Route::post('/', [BarangKeluarController::class, 'store'])->name('store');
+        });
+
+        // ===== PEMBAYARAN HUTANG =====
+        Route::resource('pembayaran-hutang', PembayaranHutangController::class)
+            ->only(['index', 'show', 'store']);
+
+        // ===== FINANCE =====
         Route::prefix('finance')->name('finance.')->group(function () {
-            Route::get('/', [FinanceController::class, 'index'])->name('index');        // Laporan utama
-            Route::get('daily', [FinanceController::class, 'daily'])->name('daily');    // Harian
-            Route::get('weekly', [FinanceController::class, 'weekly'])->name('weekly'); // Mingguan
-            Route::get('monthly', [FinanceController::class, 'monthly'])->name('monthly'); // Bulanan
+            Route::get('/', [FinanceController::class, 'index'])->name('index');
+            Route::get('daily', [FinanceController::class, 'daily'])->name('daily');
+            Route::get('weekly', [FinanceController::class, 'weekly'])->name('weekly');
+            Route::get('monthly', [FinanceController::class, 'monthly'])->name('monthly');
         });
     });
 

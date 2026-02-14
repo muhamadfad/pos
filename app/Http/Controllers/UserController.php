@@ -11,11 +11,26 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $users = User::latest()->get();
-        return view('admin.users.index', compact('users'));
+   public function index(Request $request)
+{
+    $query = User::query();
+
+    if ($request->search) {
+        $query->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('email', 'like', '%' . $request->search . '%');
     }
+
+    $users = $query->latest()->paginate(10);
+
+    if ($request->ajax()) {
+        return view('admin.users.partials.table', compact('users'))->render();
+    }
+
+    $total = User::count();
+
+    return view('admin.users.index', compact('users', 'total'));
+}
+
 
     /**
      * Show the form for creating a new resource.

@@ -8,20 +8,49 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        $products = Product::with('category')->latest()->get();
-        return view('admin.products.index', compact('products'));
-    }
+    public function index(Request $request)
+        {
+            $query = Product::with('category');
 
-    public function create()
-    {
-        $categories = Category::all();
-        return view('admin.products.create', [
-            'categories' => $categories,
-            'isEdit' => false
-        ]);
-    }
+            // Search
+            if ($request->search) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('barcode', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // Filter kategori
+            if ($request->category) {
+                $query->where('category_id', $request->category);
+            }
+
+            // Sorting
+            if ($request->sort) {
+                if ($request->sort === 'price') {
+                    $query->orderBy('price', 'asc');
+                } elseif ($request->sort === 'stock') {
+                    $query->orderBy('stock', 'asc');
+                }
+            }
+
+            // Stok habis di atas
+            $query->orderByRaw("stock = 0 DESC");
+
+            $perPage = $request->per_page ?? 10;
+
+            $products = $query->paginate($perPage)->withQueryString();
+            $categories = Category::orderBy('name')->get();
+
+            // Kalau AJAX request
+            if ($request->ajax()) {
+                return view('admin.products.partials.table', compact('products'))->render();
+            }
+
+            return view('admin.products.index', compact('products', 'categories'));
+        }
+
+
 
     public function store(Request $request)
     {

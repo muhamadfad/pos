@@ -7,11 +7,25 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::latest()->get();
-        return view('admin.categories.index', compact('categories'));
+    public function index(Request $request)
+{
+    $query = Category::query();
+
+    if ($request->search) {
+        $query->where('name', 'like', '%' . $request->search . '%');
     }
+
+    $categories = $query->latest()->paginate(10);
+
+    if ($request->ajax()) {
+        return view('admin.categories.partials.table', compact('categories'))->render();
+    }
+
+    $total = Category::count();
+
+    return view('admin.categories.index', compact('categories','total'));
+}
+
 
     public function create()
     {
