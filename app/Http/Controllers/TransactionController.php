@@ -1,17 +1,18 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\BarangMasuk;
-use App\Models\BarangKeluar;
+use App\Models\StockEntry;
+use App\Models\StockOut;
 
 class TransactionController extends Controller
 {
-    // ======= Barang Masuk =======
+    // ======= Stock In =======
     public function indexIn()
     {
-        $entries = BarangMasuk::with('product')->latest()->get();
+        $entries = StockEntry::with('items.product')->latest()->get();
         return view('admin.transactions.in.index', compact('entries'));
     }
 
@@ -29,18 +30,18 @@ class TransactionController extends Controller
             'date' => 'required|date',
         ]);
 
-        BarangMasuk::create($request->all());
+        StockEntry::create($request->all());
 
         $product = Product::find($request->product_id);
         $product->increment('stock', $request->quantity);
 
-        return redirect()->route('admin.transactions.in.index')->with('success', 'Barang masuk berhasil ditambahkan.');
+        return redirect()->route('admin.transactions.in.index')->with('success', 'Stock entry added successfully.');
     }
 
-    // ======= Barang Keluar =======
+    // ======= Stock Out =======
     public function indexOut()
     {
-        $entries = BarangKeluar::with('product')->latest()->get();
+        $entries = StockOut::with('product')->latest()->get();
         return view('admin.transactions.out.index', compact('entries'));
     }
 
@@ -63,10 +64,10 @@ class TransactionController extends Controller
             return back()->withErrors(['quantity' => 'Stok tidak cukup']);
         }
 
-        BarangKeluar::create($request->all());
+        StockOut::create($request->all());
 
         $product->decrement('stock', $request->quantity);
 
-        return redirect()->route('admin.transactions.out.index')->with('success', 'Barang keluar berhasil ditambahkan.');
+        return redirect()->route('admin.transactions.out.index')->with('success', 'Stock out added successfully.');
     }
 }

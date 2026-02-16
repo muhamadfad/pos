@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BarangKeluar;
+use App\Models\StockOut;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -29,9 +29,9 @@ class FinanceController extends Controller
         $finance = $this->calculateProfit($today);
 
         // Data grafik barang terlaris hari ini
-        $topProducts = BarangKeluar::join('products', 'barang_keluar.product_id', '=', 'products.id')
-            ->select('products.name', DB::raw('SUM(barang_keluar.quantity) as total_qty'))
-            ->whereDate('barang_keluar.date', $today)
+        $topProducts = StockOut::join('products', 'stock_outs.product_id', '=', 'products.id')
+            ->select('products.name', DB::raw('SUM(stock_outs.quantity) as total_qty'))
+            ->whereDate('stock_outs.date', $today)
             ->groupBy('products.name')
             ->orderByDesc('total_qty')
             ->limit(5)
@@ -42,22 +42,22 @@ class FinanceController extends Controller
 
     // ================= LAPORAN MINGGUAN =================
     public function weekly()
-{
-    $start = Carbon::now()->startOfWeek();
-    $end = Carbon::now()->endOfWeek();
+    {
+        $start = Carbon::now()->startOfWeek();
+        $end = Carbon::now()->endOfWeek();
 
-    $finance = $this->calculateProfit($start, $end);
+        $finance = $this->calculateProfit($start, $end);
 
-    // DATA GRAFIK: Produk paling banyak terjual minggu ini
-    $topProducts = BarangKeluar::join('products', 'barang_keluar.product_id', '=', 'products.id')
-                ->whereBetween('barang_keluar.date', [$start, $end])
-                ->select('products.name', DB::raw('SUM(barang_keluar.quantity) as total_qty'))
-                ->groupBy('products.name')
-                ->orderByDesc('total_qty')
-                ->get();
+        // DATA GRAFIK: Produk paling banyak terjual minggu ini
+        $topProducts = StockOut::join('products', 'stock_outs.product_id', '=', 'products.id')
+            ->whereBetween('stock_outs.date', [$start, $end])
+            ->select('products.name', DB::raw('SUM(stock_outs.quantity) as total_qty'))
+            ->groupBy('products.name')
+            ->orderByDesc('total_qty')
+            ->get();
 
-    return view('admin.finance.weekly', compact('finance', 'start', 'end', 'topProducts'));
-}
+        return view('admin.finance.weekly', compact('finance', 'start', 'end', 'topProducts'));
+    }
 
 
     // ================= LAPORAN BULANAN =================
@@ -83,16 +83,16 @@ class FinanceController extends Controller
     // ================= HELPER =================
     private function calculateProfit($start = null, $end = null)
     {
-        $query = BarangKeluar::join('products', 'barang_keluar.product_id', '=', 'products.id')
+        $query = StockOut::join('products', 'stock_outs.product_id', '=', 'products.id')
             ->select(
-                DB::raw('SUM(barang_keluar.quantity * products.price) as income'),
-                DB::raw('SUM(barang_keluar.quantity * products.purchase_price) as cost')
+                DB::raw('SUM(stock_outs.quantity * products.price) as income'),
+                DB::raw('SUM(stock_outs.quantity * products.purchase_price) as cost')
             );
 
         if ($start && $end) {
-            $query->whereBetween('barang_keluar.date', [$start, $end]);
+            $query->whereBetween('stock_outs.date', [$start, $end]);
         } elseif ($start) {
-            $query->whereDate('barang_keluar.date', $start);
+            $query->whereDate('stock_outs.date', $start);
         }
 
         $result = $query->first();

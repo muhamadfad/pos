@@ -12,7 +12,7 @@
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                     <th class="px-4 py-3">Tanggal</th>
-                    <th class="px-4 py-3">Mitra</th>
+                    <th class="px-4 py-3">Supplier</th>
                     <th class="px-4 py-3">Produk</th>
                     <th class="px-4 py-3">Total Hutang</th>
                     <th class="px-4 py-3">Jatuh Tempo</th>
@@ -23,34 +23,35 @@
             <tbody class="divide-y">
                 @forelse ($terutangs as $item)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3">{{ $item->barangMasuk->date->format('d-m-Y') }}</td>
-                    <td class="px-4 py-3">{{ $item->mitra->nama_mitra }}</td>
-                    <td class="px-4 py-3">{{ $item->barangMasuk->product->name }}</td>
+                    <td class="px-4 py-3">{{ $item->stockEntry->date->format('d-m-Y') }}</td>
+                    <td class="px-4 py-3">{{ $item->supplier->name }}</td>
+                    <td class="px-4 py-3">{{ $item->stockEntry->product->name }}</td>
                     <td class="px-4 py-3">Rp {{ number_format($item->total_hutang, 0, ',', '.') }}</td>
                     <td class="px-4 py-3">
-                        {{ $item->tanggal_jatuh_tempo ? \Carbon\Carbon::parse($item->tanggal_jatuh_tempo)->format('d-m-Y') : '-' }}
+                        {{ $item->tanggal_jatuh_tempo ?
+                        \Carbon\Carbon::parse($item->tanggal_jatuh_tempo)->format('d-m-Y') : '-' }}
                     </td>
                     <td class="px-4 py-3">
                         @if ($item->status === 'lunas')
-                            <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Lunas</span>
+                        <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Lunas</span>
                         @else
-                            <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">Belum Lunas</span>
+                        <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">Belum Lunas</span>
                         @endif
                     </td>
                     <td class="px-4 py-3">
                         @if ($item->status === 'belum_lunas')
                         <form action="{{ route('admin.terutang.update', $item->id) }}" method="POST"
-                              onsubmit="return confirm('Tandai sebagai lunas?')">
+                            onsubmit="return confirm('Tandai sebagai lunas?')">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="status" value="lunas">
                             <button type="submit"
-                                    class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">
+                                class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">
                                 Tandai Lunas
                             </button>
                         </form>
                         @else
-                            <span class="text-sm text-gray-500">-</span>
+                        <span class="text-sm text-gray-500">-</span>
                         @endif
                     </td>
                 </tr>

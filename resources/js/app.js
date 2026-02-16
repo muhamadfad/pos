@@ -1,9 +1,8 @@
-import './bootstrap';
-import ApexCharts from 'apexcharts'
-window.ApexCharts = ApexCharts
+import "./bootstrap";
+import ApexCharts from "apexcharts";
+window.ApexCharts = ApexCharts;
 
-
-import Alpine from 'alpinejs';
+import Alpine from "alpinejs";
 
 window.Alpine = Alpine;
 

@@ -1,11 +1,13 @@
 {{-- resources/views/layouts/admin.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
-    @vite(['resources/css/app.css','resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 </head>
+
 <body class="bg-gray-100 flex">
 
     {{-- Sidebar --}}
@@ -26,4 +28,5 @@
     </main>
 
 </body>
+
 </html>
