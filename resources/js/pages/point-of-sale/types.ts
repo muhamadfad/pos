@@ -13,6 +13,13 @@ export interface Category {
     name: string;
 }
 
+export interface Customer {
+    id: number;
+    name: string;
+    type: string;
+    phone: string | null;
+}
+
 export interface CartItem {
     product_id: number;
     barcode: string;
@@ -30,12 +37,34 @@ export interface CashierShift {
     transaction_count: number;
 }
 
+export interface DebtOrder {
+    id: number;
+    invoice_number: string | null;
+    date: string;
+    total_amount: number;
+    total_paid: number;
+    remaining_receivable: number;
+    payment_status: "unpaid" | "partial";
+}
+
+export interface CustomerDebt {
+    id: number;
+    name: string;
+    phone: string | null;
+    total_debt: number;
+    orders: DebtOrder[];
+}
+
 export interface PageProps {
+    [key: string]: unknown;
     products: Product[];
     categories: Category[];
+    customers: Customer[];
+    customerDebts: CustomerDebt[];
     activeShift: CashierShift | null;
     flash?: {
         success?: string;
+        debt_success?: string;
     };
     errors?: Record<string, string>;
 }

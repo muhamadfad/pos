@@ -8,23 +8,29 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Category::query();
+    {
+        $query = Category::withCount('products');
 
-    if ($request->search) {
-        $query->where('name', 'like', '%' . $request->search . '%');
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $categories = $query->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return view('admin.categories.partials.table', compact('categories'))->render();
+        }
+
+        $total = Category::count();
+
+        return view('admin.categories.index', compact('categories', 'total'));
     }
 
-    $categories = $query->latest()->paginate(10);
-
-    if ($request->ajax()) {
-        return view('admin.categories.partials.table', compact('categories'))->render();
+    public function show(Category $category)
+    {
+        $products = $category->products()->with('category')->latest()->paginate(15);
+        return view('admin.categories.show', compact('category', 'products'));
     }
-
-    $total = Category::count();
-
-    return view('admin.categories.index', compact('categories','total'));
-}
 
 
     public function create()

@@ -3,18 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'name',
-        'address',
         'phone',
+        'address',
         'type',
+        'email',
+        'notes',
+        'is_active',
     ];
 
-    public function stockOuts()
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function orders()
     {
-        return $this->hasMany(StockOut::class);
+        return $this->hasMany(Order::class);
     }
 }

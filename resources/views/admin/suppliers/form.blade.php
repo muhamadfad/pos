@@ -3,75 +3,133 @@
 @section('title', isset($supplier) ? 'Edit Supplier' : 'Tambah Supplier')
 
 @section('content')
-<div class="max-w-3xl bg-white p-6 rounded-xl shadow-sm border">
+<div class="w-full mx-auto space-y-6">
 
     <!-- Header -->
-    <h2 class="text-xl font-semibold text-gray-800 mb-6">
-        {{ isset($supplier) ? '✏️ Edit Supplier' : '➕ Tambah Supplier' }}
-    </h2>
+    <div class="flex items-center gap-4">
+        <a href="{{ route('admin.suppliers.index') }}"
+            class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition shadow-sm">
+            <span class="iconify" data-icon="mdi:arrow-left"></span>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">
+                {{ isset($supplier) ? 'Edit Supplier' : 'Tambah Supplier' }}
+            </h1>
+            <p class="text-sm text-slate-500 mt-0.5">
+                {{ isset($supplier) ? 'Perbarui data supplier' : 'Daftarkan supplier baru' }}
+            </p>
+        </div>
+    </div>
 
-    <form action="{{ isset($supplier) ? route('admin.suppliers.update', $supplier) : route('admin.suppliers.store') }}"
-        method="POST" class="space-y-5">
-        @csrf
-        @if(isset($supplier))
-        @method('PUT')
+    <!-- Card Form -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+
+        @if ($errors->any())
+        <div
+            class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm">
+            <span class="iconify mt-0.5 shrink-0 text-red-500" data-icon="mdi:alert-circle-outline"></span>
+            <span>{{ implode(', ', $errors->all()) }}</span>
+        </div>
         @endif
 
-        <!-- Name -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Supplier</label>
-            <input type="text" name="name"
-                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
-                value="{{ old('name', $supplier->name ?? '') }}" required>
-            @error('name')
-            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+        <form
+            action="{{ isset($supplier) ? route('admin.suppliers.update', $supplier) : route('admin.suppliers.store') }}"
+            method="POST" class="space-y-5">
+            @csrf
+            @if(isset($supplier))
+            @method('PUT')
+            @endif
 
-        <!-- Address -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-            <input type="text" name="address"
-                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
-                value="{{ old('address', $supplier->address ?? '') }}">
-            @error('address')
-            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+            <!-- Nama -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                    Nama Supplier <span class="text-red-500 ml-0.5">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span class="iconify" data-icon="mdi:truck-outline"></span>
+                    </div>
+                    <input type="text" name="name" value="{{ old('name', $supplier->name ?? '') }}"
+                        placeholder="Nama supplier" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-xl transition
+                               {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-slate-300 focus:ring-indigo-200 focus:border-indigo-400' }}
+                               focus:outline-none focus:ring-2">
+                </div>
+                @error('name')
+                <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:alert-circle-outline"></span> {{ $message }}
+                </p>
+                @enderror
+            </div>
 
-        <!-- Phone -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">No HP</label>
-            <input type="text" name="phone"
-                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
-                value="{{ old('phone', $supplier->phone ?? '') }}">
-            @error('phone')
-            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+            <!-- Alamat -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Alamat</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span class="iconify" data-icon="mdi:map-marker-outline"></span>
+                    </div>
+                    <input type="text" name="address" value="{{ old('address', $supplier->address ?? '') }}"
+                        placeholder="Alamat lengkap"
+                        class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition">
+                </div>
+                @error('address')
+                <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:alert-circle-outline"></span> {{ $message }}
+                </p>
+                @enderror
+            </div>
 
-        <!-- Type -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Supplier</label>
-            <input type="text" name="type"
-                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
-                value="{{ old('type', $supplier->type ?? '') }}" placeholder="Depo Bangunan / Toko Material / dll">
-            @error('type')
-            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+            <!-- No HP -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">No HP</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span class="iconify" data-icon="mdi:phone-outline"></span>
+                    </div>
+                    <input type="text" name="phone" value="{{ old('phone', $supplier->phone ?? '') }}"
+                        placeholder="08xxxxxxxxxx"
+                        class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition">
+                </div>
+                @error('phone')
+                <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:alert-circle-outline"></span> {{ $message }}
+                </p>
+                @enderror
+            </div>
 
-        <!-- Buttons -->
-        <div class="flex items-center gap-3 pt-4">
-            <button type="submit" class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                {{ isset($supplier) ? 'Update' : 'Simpan' }}
-            </button>
-            <a href="{{ route('admin.suppliers.index') }}"
-                class="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                Kembali
-            </a>
-        </div>
+            <!-- Jenis -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Jenis Supplier</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span class="iconify" data-icon="mdi:tag-outline"></span>
+                    </div>
+                    <input type="text" name="type" value="{{ old('type', $supplier->type ?? '') }}"
+                        placeholder="Depo Bangunan / Toko Material / dll"
+                        class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition">
+                </div>
+                @error('type')
+                <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:alert-circle-outline"></span> {{ $message }}
+                </p>
+                @enderror
+            </div>
 
-    </form>
+            <!-- Actions -->
+            <div class="flex items-center justify-between pt-2">
+                <a href="{{ route('admin.suppliers.index') }}"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    <span class="iconify" data-icon="mdi:arrow-left"></span>
+                    Kembali
+                </a>
+                <button type="submit"
+                    class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-md shadow-indigo-100">
+                    <span class="iconify" data-icon="mdi:content-save-outline"></span>
+                    {{ isset($supplier) ? 'Update' : 'Simpan' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
 @endsection

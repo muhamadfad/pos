@@ -14,7 +14,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="turbo-cache-control" content="no-preview">
 
     <style>
         [x-cloak] {
@@ -107,7 +108,7 @@
                 </a>
 
                 <!-- POS Kasir -->
-                <a href="{{ route('pos.shift.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
+                <a href="{{ route('pos.shift.index') }}" data-turbo="false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
                {{ request()->routeIs('pos.*')
                     ? 'bg-slate-800 text-white'
                     : 'hover:bg-slate-800 hover:text-white' }}">
@@ -152,7 +153,8 @@
                 </a>
 
                 <!-- TRANSAKSI DROPDOWN -->
-                <div x-data="{ open: {{ request()->routeIs('admin.transactions.*') ? 'true' : 'false' }} }">
+                <div
+                    x-data="{ open: {{ request()->routeIs('admin.purchases.*', 'admin.orders.*', 'admin.purchase-payments.*', 'admin.order-payments.*') ? 'true' : 'false' }} }">
 
                     <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl
                            hover:bg-slate-800 hover:text-white transition">
@@ -168,18 +170,32 @@
 
                     <div x-show="open" x-collapse class="mt-1 space-y-1 pl-6">
 
-                        <a href="{{ route('admin.transactions.in.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.transactions.in.*')
+                        <a href="{{ route('admin.purchases.index') }}" class="block px-4 py-2 rounded-xl transition
+                       {{ request()->routeIs('admin.purchases.*')
                             ? 'bg-slate-800 text-white'
                             : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Barang Masuk
+                            Pembelian
                         </a>
 
-                        <a href="{{ route('admin.transactions.out.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.transactions.out.*')
+                        <a href="{{ route('admin.orders.index') }}" class="block px-4 py-2 rounded-xl transition
+                       {{ request()->routeIs('admin.orders.*')
                             ? 'bg-slate-800 text-white'
                             : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Barang Keluar
+                            Penjualan
+                        </a>
+
+                        <a href="{{ route('admin.purchase-payments.index') }}" class="block px-4 py-2 rounded-xl transition
+                       {{ request()->routeIs('admin.purchase-payments.*')
+                            ? 'bg-slate-800 text-white'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            Hutang
+                        </a>
+
+                        <a href="{{ route('admin.order-payments.index') }}" class="block px-4 py-2 rounded-xl transition
+                       {{ request()->routeIs('admin.order-payments.*')
+                            ? 'bg-slate-800 text-white'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            Piutang
                         </a>
 
                     </div>
@@ -221,6 +237,15 @@
 
                     </div>
                 </div>
+
+                <!-- Pengeluaran -->
+                <a href="{{ route('admin.expenses.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
+               {{ request()->routeIs('admin.expenses.*')
+                    ? 'bg-slate-800 text-white'
+                    : 'hover:bg-slate-800 hover:text-white' }}">
+                    <span class="iconify text-xl text-slate-400" data-icon="mdi:cash-minus"></span>
+                    <span x-show="!sidebarCollapsed">Pengeluaran</span>
+                </a>
 
                 <!-- User -->
                 <a href="{{ route('admin.users.index') }}"
@@ -356,7 +381,7 @@
 
                                 <div class="border-t my-2"></div>
 
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" data-turbo="false">
                                     @csrf
                                     <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5
                                        text-red-500 hover:bg-red-50 transition">
@@ -382,6 +407,83 @@
         </div>
 
     </div>
+
+    <!-- ===== GLOBAL DELETE CONFIRM MODAL ===== -->
+    <div id="deleteModal" class="fixed inset-0 z-[999] flex items-center justify-center p-4"
+        style="display:none!important">
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+
+        <!-- Card -->
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
+
+            <!-- Icon -->
+            <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                    <span class="iconify text-2xl text-red-600" data-icon="mdi:trash-can-outline"></span>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Konfirmasi Hapus</h3>
+                    <p class="text-sm text-slate-500 mt-0.5">Tindakan ini tidak dapat dibatalkan.</p>
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-600 border border-slate-200">
+                Apakah Anda yakin ingin menghapus
+                <span id="deleteModalName" class="font-semibold text-slate-800"></span>?
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3">
+                <button onclick="closeDeleteModal()"
+                    class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    Batal
+                </button>
+                <form id="deleteModalForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl transition shadow-sm shadow-red-100">
+                        <span class="iconify" data-icon="mdi:trash-can-outline"></span>
+                        Ya, Hapus
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    @stack('scripts')
+
+    <script>
+        function confirmDelete(url, name) {
+        document.getElementById('deleteModalName').textContent = name ?? 'item ini';
+        document.getElementById('deleteModalForm').action = url;
+        document.getElementById('deleteModal').style.removeProperty('display');
+    }
+    function confirmAction(formId, name) {
+        document.getElementById('deleteModalName').textContent = name ?? 'tindakan ini';
+        // Override submit to submit the target form instead
+        const btn = document.querySelector('#deleteModalForm button[type=submit]');
+        const originalClick = btn.onclick;
+        document.getElementById('deleteModalForm').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById(formId).submit();
+            closeDeleteModal();
+        };
+        document.getElementById('deleteModal').style.removeProperty('display');
+    }
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        // Reset form submit
+        document.getElementById('deleteModalForm').onsubmit = null;
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeDeleteModal();
+    });
+    </script>
 
 </body>
 

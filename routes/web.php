@@ -10,10 +10,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\StockEntryController;
-use App\Http\Controllers\Admin\StockOutController;
-use App\Http\Controllers\Admin\DebtPaymentController;
-use App\Http\Controllers\Admin\ReceivablePaymentController;
+use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\PurchasePaymentController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderPaymentController;
+use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\PointOfSaleController;
 use App\Http\Controllers\CashierShiftController;
 
@@ -29,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Point of Sale (Kasir)
     Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos.index');
     Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('pos.checkout');
+    Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('pos.customer-debt');
+    Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pos.pay-debt');
 
     // Cashier Shift Management
     Route::get('/pos/shift', [CashierShiftController::class, 'index'])->name('pos.shift.index');
@@ -54,60 +57,52 @@ Route::middleware(['auth', 'admin'])
         Route::resource('suppliers', SupplierController::class);
         Route::resource('customers', CustomerController::class);
 
-
-        // ===== STOCK ENTRIES (Barang Masuk) =====
-        Route::prefix('transactions/in')->name('transactions.in.')->group(function () {
-
-            Route::get('/', [StockEntryController::class, 'index'])->name('index');
-
-            Route::get('/select-supplier', [StockEntryController::class, 'selectSupplier'])->name('selectSupplier');
-
-            Route::get('/supplier/{supplier}', [StockEntryController::class, 'transactionsPerSupplier'])->name('perSupplier');
-            Route::get(
-                '/supplier/{supplier}/download',
-                [StockEntryController::class, 'downloadPdf']
-            )->name('download');
-
-            Route::get('/supplier/{supplier}/create', [StockEntryController::class, 'create'])->name('create');
-
-            Route::post('/supplier/{supplier}', [StockEntryController::class, 'store'])->name('store');
-
-            Route::get('/detail/{id}', [StockEntryController::class, 'show'])->name('show');
-            Route::post('/{id}/pay', [DebtPaymentController::class, 'payDebt'])
-                ->name('pay');
+        // ===== PURCHASES (Barang Masuk dari Supplier) =====
+        Route::prefix('purchases')->name('purchases.')->group(function () {
+            Route::get('/', [PurchaseController::class, 'index'])->name('index');
+            Route::get('/select-supplier', [PurchaseController::class, 'selectSupplier'])->name('select-supplier');
+            Route::get('/supplier/{supplier}', [PurchaseController::class, 'perSupplier'])->name('per-supplier');
+            Route::get('/supplier/{supplier}/download', [PurchaseController::class, 'downloadPdf'])->name('download');
+            Route::get('/supplier/{supplier}/create', [PurchaseController::class, 'create'])->name('create');
+            Route::post('/supplier/{supplier}', [PurchaseController::class, 'store'])->name('store');
+            Route::get('/{purchase}', [PurchaseController::class, 'show'])->name('show');
+            Route::post('/{purchase}/pay', [PurchasePaymentController::class, 'pay'])->name('pay');
         });
 
-        // ===== STOCK OUTS (Barang Keluar) =====
-        Route::prefix('transactions/out')->name('transactions.out.')->group(function () {
-            Route::get('/', [StockOutController::class, 'index'])->name('index');
-
-            Route::get('/select-customer', [StockOutController::class, 'selectCustomer'])->name('selectCustomer');
-
-            Route::get('/customer/{customer}', [StockOutController::class, 'perCustomer'])->name('perCustomer');
-            Route::get('/customer/{customer}/download', [StockOutController::class, 'download'])->name('download');
-
-            Route::get('/customer/{customer}/create', [StockOutController::class, 'create'])->name('create');
-            Route::post('/customer/{customer}', [StockOutController::class, 'store'])->name('store');
-
-            Route::get('/detail/{id}', [StockOutController::class, 'show'])->name('show');
-            Route::post('/{id}/receive', [ReceivablePaymentController::class, 'receivePayment'])->name('receive');
+        // ===== PURCHASE PAYMENTS (Hutang ke Supplier) =====
+        Route::prefix('purchase-payments')->name('purchase-payments.')->group(function () {
+            Route::get('/', [PurchasePaymentController::class, 'index'])->name('index');
+            Route::post('/', [PurchasePaymentController::class, 'store'])->name('store');
         });
 
-        // ===== DEBT PAYMENTS =====
-        Route::resource('debt-payments', DebtPaymentController::class)
-            ->only(['index', 'show', 'store']);
+        // ===== ORDERS (Penjualan ke Customer) =====
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/select-customer', [OrderController::class, 'selectCustomer'])->name('select-customer');
+            Route::get('/customer/{customer}', [OrderController::class, 'perCustomer'])->name('per-customer');
+            Route::get('/customer/{customer}/download', [OrderController::class, 'downloadPdf'])->name('download');
+            Route::get('/customer/{customer}/create', [OrderController::class, 'create'])->name('create');
+            Route::post('/customer/{customer}', [OrderController::class, 'store'])->name('store');
+            Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+            Route::post('/{order}/receive', [OrderPaymentController::class, 'receive'])->name('receive');
+        });
 
-        // ===== RECEIVABLE PAYMENTS =====
-        Route::resource('receivable-payments', ReceivablePaymentController::class)
-            ->only(['index', 'show']);
+        // ===== ORDER PAYMENTS (Piutang dari Customer) =====
+        Route::prefix('order-payments')->name('order-payments.')->group(function () {
+            Route::get('/', [OrderPaymentController::class, 'index'])->name('index');
+        });
 
         // ===== FINANCE =====
         Route::prefix('finance')->name('finance.')->group(function () {
             Route::get('/', [FinanceController::class, 'index'])->name('index');
+            Route::get('cashflow', [FinanceController::class, 'cashflow'])->name('cashflow');
             Route::get('daily', [FinanceController::class, 'daily'])->name('daily');
             Route::get('weekly', [FinanceController::class, 'weekly'])->name('weekly');
             Route::get('monthly', [FinanceController::class, 'monthly'])->name('monthly');
         });
+
+        // ===== EXPENSES =====
+        Route::resource('expenses', ExpenseController::class);
     });
 
 require __DIR__ . '/auth.php';

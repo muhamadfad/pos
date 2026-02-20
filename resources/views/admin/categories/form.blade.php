@@ -1,64 +1,79 @@
 @extends('layouts.admin')
 
+@section('title', isset($category) ? 'Edit Kategori' : 'Tambah Kategori')
+
 @section('content')
-<div class="max-w-xl mx-auto space-y-6">
+<div class="max-w-lg mx-auto space-y-6">
 
-    <!-- Card -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <a href="{{ route('admin.categories.index') }}"
+            class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition shadow-sm">
+            <span class="iconify" data-icon="mdi:arrow-left"></span>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">
+                {{ isset($category) ? 'Edit Kategori' : 'Tambah Kategori' }}
+            </h1>
+            <p class="text-sm text-slate-500 mt-0.5">
+                {{ isset($category) ? 'Perbarui nama kategori' : 'Buat kategori produk baru' }}
+            </p>
+        </div>
+    </div>
 
-        <!-- Header -->
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">
-            {{ isset($category) ? '✏️ Edit Kategori' : '➕ Tambah Kategori' }}
-        </h2>
+    <!-- Card Form -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
 
-        <!-- Error -->
         @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-4">
-                {{ implode(', ', $errors->all()) }}
-            </div>
+        <div
+            class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm">
+            <span class="iconify mt-0.5 shrink-0 text-red-500" data-icon="mdi:alert-circle-outline"></span>
+            <span>{{ implode(', ', $errors->all()) }}</span>
+        </div>
         @endif
 
-        <!-- Form -->
-        <form 
-            action="{{ isset($category) ? route('admin.categories.update', $category->id) : route('admin.categories.store') }}" 
-            method="POST" 
-            class="space-y-5"
-        >
+        <form
+            action="{{ isset($category) ? route('admin.categories.update', $category->id) : route('admin.categories.store') }}"
+            method="POST" class="space-y-5">
             @csrf
             @if(isset($category))
-                @method('PUT')
+            @method('PUT')
             @endif
 
-            <!-- Nama -->
+            <!-- Nama Kategori -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">
                     Nama Kategori
+                    <span class="text-red-500 ml-0.5">*</span>
                 </label>
-                <input 
-                    type="text" 
-                    name="name"
-                    value="{{ old('name', $category->name ?? '') }}"
-                    class="w-full border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-blue-300 focus:border-blue-500"
-                    placeholder="Contoh: Semen, Cat, Paku"
-                    required
-                >
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <span class="iconify" data-icon="mdi:shape-outline"></span>
+                    </div>
+                    <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}"
+                        placeholder="Contoh: Semen, Cat, Paku" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-xl transition
+                               {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-slate-300 focus:ring-indigo-200 focus:border-indigo-400' }}
+                               focus:outline-none focus:ring-2">
+                </div>
                 @error('name')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:alert-circle-outline"></span>
+                    {{ $message }}
+                </p>
                 @enderror
             </div>
 
             <!-- Actions -->
-            <div class="flex justify-between pt-4">
+            <div class="flex items-center justify-between pt-2">
                 <a href="{{ route('admin.categories.index') }}"
-                   class="inline-flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg
-                          hover:bg-gray-600 transition">
-                    ↩️ Kembali
+                    class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    <span class="iconify" data-icon="mdi:arrow-left"></span>
+                    Kembali
                 </a>
-
                 <button type="submit"
-                    class="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg
-                           hover:bg-blue-700 transition">
-                    {{ isset($category) ? '💾 Update' : '💾 Simpan' }}
+                    class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-md shadow-indigo-100">
+                    <span class="iconify" data-icon="mdi:content-save-outline"></span>
+                    {{ isset($category) ? 'Update' : 'Simpan' }}
                 </button>
             </div>
         </form>

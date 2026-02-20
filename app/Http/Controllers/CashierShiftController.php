@@ -21,7 +21,7 @@ class CashierShiftController extends Controller
 
         // Get transactions for active shift
         $transactions = $activeShift
-            ? $activeShift->stockOuts()->with(['customer', 'items.product'])->latest()->get()
+            ? $activeShift->orders()->with(['customer', 'items.product'])->latest('date')->get()
             : collect();
 
         // Get last closed shift

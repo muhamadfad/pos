@@ -4,15 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'address', 'phone', 'type'];
+    protected $fillable = [
+        'name',
+        'phone',
+        'address',
+        'type',
+        'email',
+        'notes',
+        'is_active',
+    ];
 
-    public function stockEntries()
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function purchases()
     {
-        return $this->hasMany(StockEntry::class);
+        return $this->hasMany(Purchase::class);
     }
 }

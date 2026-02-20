@@ -40,12 +40,13 @@
                     </td>
                     <td class="px-4 py-3">
                         @if ($item->status === 'belum_lunas')
-                        <form action="{{ route('admin.terutang.update', $item->id) }}" method="POST"
-                            onsubmit="return confirm('Tandai sebagai lunas?')">
+                        <form id="lunas-form-{{ $item->id }}" action="{{ route('admin.terutang.update', $item->id) }}"
+                            method="POST">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="status" value="lunas">
-                            <button type="submit"
+                            <button type="button"
+                                onclick="confirmAction('lunas-form-{{ $item->id }}', 'Tandai hutang ini sebagai lunas?')"
                                 class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">
                                 Tandai Lunas
                             </button>

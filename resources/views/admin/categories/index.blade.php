@@ -1,37 +1,48 @@
 @extends('layouts.admin')
 
+@section('title', 'Kategori')
+
 @section('content')
-<div x-data="categoryPage()" class="max-w-6xl mx-auto space-y-6">
+<div x-data="categoryPage()" class="w-full mx-auto space-y-6">
 
-    <!-- Stats -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 
-                text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
-
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="text-xl font-semibold">Total Kategori</h2>
-            <p class="text-3xl font-bold mt-1">{{ $total }}</p>
+            <h1 class="text-2xl font-bold text-slate-800">Kategori Produk</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Kelola semua kategori produk</p>
         </div>
-
-        <span class="iconify text-5xl opacity-20"
-              data-icon="mdi:shape-outline"></span>
-    </div>
-
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-        <input type="text"
-               x-model="search"
-               @input.debounce.500ms="fetchData()"
-               placeholder="Cari kategori..."
-               class="w-full md:w-80 px-4 py-2.5 border rounded-xl shadow-sm 
-                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-
         <a href="{{ route('admin.categories.create') }}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 
-                  bg-blue-600 text-white rounded-xl shadow-sm 
-                  hover:bg-blue-700 hover:shadow-md transition-all">
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-100">
+            <span class="iconify" data-icon="mdi:plus"></span>
             Tambah Kategori
         </a>
+    </div>
+
+    <!-- Stat + Search Bar -->
+    <div class="flex flex-col sm:flex-row gap-4">
+
+        <!-- Stat Card -->
+        <div
+            class="flex items-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-sm px-5 py-4 min-w-[180px]">
+            <div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+                <span class="iconify text-2xl" data-icon="mdi:shape-outline"></span>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Kategori</p>
+                <p class="text-2xl font-bold text-slate-800">{{ $total }}</p>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
+            <span class="iconify text-slate-400 text-xl shrink-0" data-icon="mdi:magnify"></span>
+            <input type="text" x-model="search" @input.debounce.400ms="fetchData()" placeholder="Cari nama kategori..."
+                class="flex-1 bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none">
+            <button x-show="search" @click="search=''; fetchData()"
+                class="text-slate-400 hover:text-slate-600 transition">
+                <span class="iconify" data-icon="mdi:close-circle"></span>
+            </button>
+        </div>
     </div>
 
     <!-- Table -->
@@ -39,78 +50,22 @@
         @include('admin.categories.partials.table')
     </div>
 
-    <!-- Delete Modal -->
-    <div x-show="showModal"
-         x-transition
-         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
-        <div class="bg-white p-6 rounded-2xl shadow-xl w-96 space-y-4">
-
-            <h3 class="text-lg font-semibold text-gray-800">
-                Hapus Kategori?
-            </h3>
-
-            <p class="text-sm text-gray-500">
-                Data yang dihapus tidak bisa dikembalikan.
-            </p>
-
-            <div class="flex justify-end gap-2">
-                <button @click="showModal=false"
-                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                    Batal
-                </button>
-
-                <form :action="deleteUrl" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
-                        Hapus
-                    </button>
-                </form>
-            </div>
-
-        </div>
-    </div>
-
 </div>
 
 <script>
-function categoryPage() {
+    function categoryPage() {
     return {
         search: '',
-        showModal: false,
-        deleteUrl: '',
-
         fetchData(pageUrl = null) {
-
-            let url = pageUrl ?? `?search=${this.search}`;
-
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('tableContent').innerHTML = html;
-
-                // rebind pagination
-                document.querySelectorAll('#tableContent .pagination a')
-                .forEach(link => {
-                    link.addEventListener('click', e => {
-                        e.preventDefault();
-                        this.fetchData(link.href);
-                    });
+            let url = pageUrl ?? `?search=${encodeURIComponent(this.search)}`;
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('tableContent').innerHTML = html;
+                    if (window.Iconify) window.Iconify.scan();
                 });
-            });
         }
     }
-}
-
-function openDeleteModal(id) {
-    let alpine = document.querySelector('[x-data]').__x.$data;
-    alpine.deleteUrl = `/admin/categories/${id}`;
-    alpine.showModal = true;
 }
 </script>
 @endsection

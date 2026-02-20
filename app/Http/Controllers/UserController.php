@@ -11,25 +11,25 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
-{
-    $query = User::query();
+    public function index(Request $request)
+    {
+        $query = User::query();
 
-    if ($request->search) {
-        $query->where('name', 'like', '%' . $request->search . '%')
-              ->orWhere('email', 'like', '%' . $request->search . '%');
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%');
+        }
+
+        $users = $query->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return view('admin.users.partials.table', compact('users'))->render();
+        }
+
+        $total = User::count();
+
+        return view('admin.users.index', compact('users', 'total'));
     }
-
-    $users = $query->latest()->paginate(10);
-
-    if ($request->ajax()) {
-        return view('admin.users.partials.table', compact('users'))->render();
-    }
-
-    $total = User::count();
-
-    return view('admin.users.index', compact('users', 'total'));
-}
 
 
     /**
@@ -46,17 +46,18 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,user',
+            'role'     => 'required|in:admin,kasir',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
+            'role'      => $request->role,
+            'is_active' => $request->boolean('is_active', true),
         ]);
 
         return redirect()
@@ -81,13 +82,14 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
-            'role' => 'required|in:admin,user',
+            'role'     => 'required|in:admin,kasir',
         ]);
 
         $data = $request->only(['name', 'email', 'role']);
+        $data['is_active'] = $request->has('is_active');
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
@@ -106,6 +108,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        // Jangan hapus user kita sendiri (opsional tapi bagus)
+        if (auth()->id() == $user->id) {
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
         $user->delete();
 
         return redirect()

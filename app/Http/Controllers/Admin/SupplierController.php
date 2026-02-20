@@ -10,7 +10,7 @@ class SupplierController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Supplier::query();
+        $query = Supplier::withCount('purchases');
 
         if ($request->search) {
             $query->where('name', 'like', '%' . $request->search . '%')
@@ -26,6 +26,19 @@ class SupplierController extends Controller
         }
 
         return view('admin.suppliers.index', compact('suppliers', 'total'));
+    }
+
+    public function show($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        $purchases = $supplier->purchases()
+            ->with('items.product')
+            ->latest()
+            ->paginate(15);
+        $totalTransaksi  = $supplier->purchases()->count();
+        $totalPembelian  = $supplier->purchases()->sum('total_amount');
+        $totalHutang     = $supplier->purchases()->whereIn('payment_status', ['unpaid', 'partial'])->sum('remaining_debt');
+        return view('admin.suppliers.show', compact('supplier', 'purchases', 'totalTransaksi', 'totalPembelian', 'totalHutang'));
     }
 
     public function create()

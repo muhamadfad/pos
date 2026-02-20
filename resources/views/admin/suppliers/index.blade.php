@@ -3,65 +3,48 @@
 @section('title', 'Data Supplier')
 
 @section('content')
-<div x-data="supplierPage()" class="max-w-7xl mx-auto space-y-6">
+<div x-data="supplierPage()" class="max-w-6xl mx-auto space-y-6">
 
-    <!-- Stat Card -->
-    <div class="bg-gradient-to-r from-indigo-600 to-purple-600
-                text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
-
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="text-lg font-medium">Total Supplier</h2>
-            <p class="text-3xl font-bold mt-1">{{ $total }}</p>
+            <h1 class="text-2xl font-bold text-slate-800">Supplier</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Kelola semua data supplier</p>
         </div>
-    </div>
-
-    <!-- Header & Search -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-        <input type="text" x-model="search" @input.debounce.500ms="fetchData(null)"
-            placeholder="Cari nama, alamat, atau no hp..." class="w-full md:w-80 px-4 py-2.5 border rounded-xl shadow-sm
-                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-
-        <a href="{{ route('admin.suppliers.create') }}" class="inline-flex items-center px-4 py-2.5
-                  bg-indigo-600 text-white rounded-xl shadow-sm
-                  hover:bg-indigo-700 hover:shadow-md transition-all">
+        <a href="{{ route('admin.suppliers.create') }}"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-100">
+            <span class="iconify" data-icon="mdi:plus"></span>
             Tambah Supplier
         </a>
+    </div>
+
+    <!-- Stat + Search -->
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div
+            class="flex items-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-sm px-5 py-4 min-w-[180px]">
+            <div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+                <span class="iconify text-2xl" data-icon="mdi:truck-outline"></span>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Supplier</p>
+                <p class="text-2xl font-bold text-slate-800">{{ $total }}</p>
+            </div>
+        </div>
+        <div class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
+            <span class="iconify text-slate-400 text-xl shrink-0" data-icon="mdi:magnify"></span>
+            <input type="text" x-model="search" @input.debounce.400ms="fetchData(null)"
+                placeholder="Cari nama, alamat, atau no hp..."
+                class="flex-1 bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none">
+            <button x-show="search" @click="search=''; fetchData(null)"
+                class="text-slate-400 hover:text-slate-600 transition">
+                <span class="iconify" data-icon="mdi:close-circle"></span>
+            </button>
+        </div>
     </div>
 
     <!-- Table -->
     <div id="tableContent">
         @include('admin.suppliers.partials.table')
-    </div>
-
-    <!-- Delete Modal -->
-    <div x-show="showModal" x-transition class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
-        <div class="bg-white p-6 rounded-2xl shadow-xl w-96 space-y-4">
-
-            <h3 class="text-lg font-semibold text-gray-800">
-                Hapus Supplier?
-            </h3>
-
-            <p class="text-sm text-gray-500">
-                Data yang dihapus tidak dapat dikembalikan.
-            </p>
-
-            <div class="flex justify-end gap-2">
-                <button @click="showModal=false" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                    Batal
-                </button>
-
-                <form :action="deleteUrl" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
-                        Hapus
-                    </button>
-                </form>
-            </div>
-
-        </div>
     </div>
 
 </div>
@@ -70,8 +53,6 @@
     function supplierPage() {
     return {
         search: '',
-        showModal: false,
-        deleteUrl: '',
 
         fetchData(pageUrl = null) {
 
@@ -102,12 +83,6 @@
             });
         }
     }
-}
-
-function openDeleteModal(id) {
-    let alpine = document.querySelector('[x-data]').__x.$data;
-    alpine.deleteUrl = `/admin/suppliers/${id}`;
-    alpine.showModal = true;
 }
 </script>
 @endsection

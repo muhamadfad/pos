@@ -1,125 +1,111 @@
 @extends('layouts.admin')
 
-@section('title', 'Daftar Barang')
+@section('title', 'Daftar Produk')
 
 @section('content')
-<div class="bg-white p-6 rounded-xl shadow-sm border">
+<div x-data="productTable()">
 
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">📦 Daftar Barang</h2>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Daftar Produk</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Kelola semua produk yang tersedia di toko</p>
+        </div>
         <a href="{{ route('admin.products.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            + Tambah
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-all shadow-md shadow-indigo-100">
+            <span class="iconify" data-icon="mdi:plus"></span>
+            Tambah Produk
         </a>
     </div>
 
-    
+    <!-- Flash Message -->
+    @if(session('success'))
+    <div
+        class="mb-4 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
+        <span class="iconify shrink-0" data-icon="mdi:check-circle-outline"></span>
+        {{ session('success') }}
+    </div>
+    @endif
 
+    <!-- Filter Bar -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-4">
+        <div class="flex flex-wrap gap-3 items-center">
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
-        <div x-data="productTable()" class="bg-white p-6 rounded-xl shadow-sm border">
-
-    <!-- FILTER BAR -->
-    <div class="flex flex-wrap gap-3 mb-6">
-
-        <!-- Search -->
-        <input type="text"
-               x-model="search"
-               @input.debounce.500ms="fetchData"
-               placeholder="Cari produk..."
-               class="px-4 py-2 border rounded-lg text-sm w-64">
-
-        <!-- Kategori -->
-        <!-- Kategori Custom -->
-<div x-data="{ open:false }" class="relative w-64">
-
-    <!-- Trigger -->
-    <button type="button"
-        @click="open=!open"
-        @click.away="open=false"
-        class="w-full flex items-center justify-between px-4 py-2.5 
-               bg-white border border-gray-300 rounded-xl 
-               shadow-sm hover:border-blue-500 hover:shadow-md 
-               transition-all duration-200">
-
-        <span class="text-sm font-medium text-gray-700"
-              x-text="categoryName()"></span>
-
-        <svg class="w-4 h-4 text-gray-400 transition-transform duration-200"
-             :class="{'rotate-180':open}"
-             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-    </button>
-
-    <!-- Dropdown -->
-    <div x-show="open"
-         x-transition
-         class="absolute mt-2 w-full bg-white border border-gray-200 
-                rounded-xl shadow-xl overflow-hidden z-50">
-
-        <div class="max-h-60 overflow-y-auto custom-scroll">
-
-            <!-- Semua -->
-            <div @click="category=''; open=false; fetchData()"
-                 class="px-4 py-2.5 text-sm cursor-pointer 
-                        hover:bg-gray-100 transition">
-                Semua Kategori
+            <!-- Search -->
+            <div class="relative flex-1 min-w-[200px]">
+                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                    data-icon="mdi:magnify"></span>
+                <input type="text" x-model="search" @input.debounce.400ms="fetchData"
+                    placeholder="Cari nama atau barcode..."
+                    class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
             </div>
 
-            @foreach($categories as $cat)
-            <div @click="category='{{ $cat->id }}'; open=false; fetchData()"
-                 class="px-4 py-2.5 text-sm cursor-pointer flex justify-between items-center
-                        hover:bg-blue-50 transition"
-                 :class="category=='{{ $cat->id }}' ? 'bg-blue-50 text-blue-600 font-medium' : ''">
-                {{ $cat->name }}
-
-                <svg x-show="category=='{{ $cat->id }}'"
-                     class="w-4 h-4"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
+            <!-- Kategori Dropdown -->
+            <div x-data="{ open: false }" class="relative min-w-[180px]">
+                <button type="button" @click="open = !open"
+                    class="w-full flex items-center justify-between gap-2 px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl hover:border-indigo-400 transition">
+                    <div class="flex items-center gap-2 text-slate-600">
+                        <span class="iconify text-slate-400" data-icon="mdi:shape-outline"></span>
+                        <span x-text="categoryName()"></span>
+                    </div>
+                    <span class="iconify text-slate-400 transition-transform" :class="{'rotate-180': open}"
+                        data-icon="mdi:chevron-down"></span>
+                </button>
+                <div x-show="open" @click.away="open = false" x-transition
+                    class="absolute top-full mt-1 left-0 w-full bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                    <div class="max-h-52 overflow-y-auto">
+                        <div @click="category = ''; open = false; fetchData()"
+                            class="px-4 py-2.5 text-sm cursor-pointer hover:bg-slate-50 transition"
+                            :class="category === '' ? 'text-indigo-600 font-semibold bg-indigo-50' : 'text-slate-700'">
+                            Semua Kategori
+                        </div>
+                        @foreach($categories as $cat)
+                        <div @click="category = '{{ $cat->id }}'; open = false; fetchData()"
+                            class="px-4 py-2.5 text-sm cursor-pointer hover:bg-slate-50 transition flex items-center justify-between"
+                            :class="category == '{{ $cat->id }}' ? 'text-indigo-600 font-semibold bg-indigo-50' : 'text-slate-700'">
+                            {{ $cat->name }}
+                            <span x-show="category == '{{ $cat->id }}'" class="iconify text-indigo-500"
+                                data-icon="mdi:check"></span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-            @endforeach
+
+            <!-- Sort -->
+            <div class="relative">
+                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                    data-icon="mdi:sort"></span>
+                <select x-model="sort" @change="fetchData"
+                    class="pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none">
+                    <option value="">Urutkan</option>
+                    <option value="price">Harga</option>
+                    <option value="stock">Stok</option>
+                </select>
+            </div>
+
+            <!-- Per Page -->
+            <select x-model="per_page" @change="fetchData"
+                class="px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                <option value="10">10 / halaman</option>
+                <option value="25">25 / halaman</option>
+                <option value="50">50 / halaman</option>
+            </select>
 
         </div>
     </div>
-</div>
 
-
-        <!-- Sorting -->
-        <select x-model="sort" @change="fetchData"
-                class="px-4 py-2 border rounded-lg text-sm">
-            <option value="">Urutkan</option>
-            <option value="price">Harga</option>
-            <option value="stock">Stok</option>
-        </select>
-
-        <!-- Per Page -->
-        <select x-model="per_page" @change="fetchData"
-                class="px-4 py-2 border rounded-lg text-sm">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-        </select>
-
-    </div>
-
-    <!-- TABLE CONTENT -->
-    <div id="tableContent">
-        @include('admin.products.partials.table')
+    <!-- Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div id="tableContent">
+            @include('admin.products.partials.table')
+        </div>
     </div>
 
 </div>
 
-
-    </div>
-    <script>
-function productTable() {
+<script>
+    function productTable() {
     return {
         search: '',
         category: '',
@@ -128,35 +114,28 @@ function productTable() {
 
         categoryName() {
             if (!this.category) return 'Semua Kategori';
-
-            const categories = @json($categories);
+            const categories = {!! json_encode($categories->values()->toArray()) !!};
             const found = categories.find(c => c.id == this.category);
             return found ? found.name : 'Semua Kategori';
         },
 
         fetchData() {
-            let params = new URLSearchParams({
+            const params = new URLSearchParams({
                 search: this.search,
                 category: this.category,
                 sort: this.sort,
                 per_page: this.per_page
             });
-
             fetch(`?${params.toString()}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
             .then(res => res.text())
             .then(html => {
                 document.getElementById('tableContent').innerHTML = html;
+                if (window.Iconify) window.Iconify.scan();
             });
         }
     }
 }
-
 </script>
-
-
-</div>
 @endsection
