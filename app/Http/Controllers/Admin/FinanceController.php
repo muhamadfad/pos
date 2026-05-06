@@ -38,51 +38,54 @@ class FinanceController extends Controller
     }
 
     public function cashflow()
-    {
-        // Breakdown per bulan (12 bulan terakhir)
-        $months = collect(range(11, 0))->map(function ($i) {
-            $start = Carbon::now()->subMonths($i)->startOfMonth();
-            $end   = Carbon::now()->subMonths($i)->endOfMonth();
+{
+    // Breakdown per bulan (12 bulan terakhir)
+    $months = collect(range(11, 0))->map(function ($i) {
+        $start = Carbon::now()->subMonths($i)->startOfMonth();
+        $end   = Carbon::now()->subMonths($i)->endOfMonth();
 
-            $summary = $this->calculateProfit($start, $end);
+        $summary = $this->calculateProfit($start, $end);
 
-            return [
-                'label'        => $start->translatedFormat('M Y'),
-                'income'       => $summary['income'],
-                'supplier'     => $summary['supplierPaid'],
-                'operasional'  => $summary['expenses'],
-                'net'          => $summary['netCashflow'],
-            ];
-        });
+        return [
+            'label'        => $start->translatedFormat('M Y'),
+            'income'       => $summary['income'],
+            'supplier'     => $summary['supplierPaid'],
+            'operasional'  => $summary['expenses'],
+            'profit'       => $summary['profit'],       // Keuntungan bersih
+            'net'          => $summary['netCashflow'], // Saldo kas bersih
+        ];
+    });
 
-        $total   = $this->calculateProfit();
-        $totalIncome       = $total['income'];
-        $totalSupplierPaid = $total['supplierPaid'];
-        $totalOperasional  = $total['expenses'];
-        $netCashflow       = $total['netCashflow'];
+    $total = $this->calculateProfit();
+    $totalIncome       = $total['income'];
+    $totalSupplierPaid = $total['supplierPaid'];
+    $totalOperasional  = $total['expenses'];
+    $netCashflow       = $total['netCashflow'];
+    $totalProfit       = $total['profit']; // total keuntungan bersih
 
-        // Rincian expenses per kategori
-        $expenseByCategory = Expense::select('category', DB::raw('SUM(amount) as total'))
-            ->groupBy('category')
-            ->orderByDesc('total')
-            ->get();
+    // Rincian expenses per kategori
+    $expenseByCategory = Expense::select('category', DB::raw('SUM(amount) as total'))
+        ->groupBy('category')
+        ->orderByDesc('total')
+        ->get();
 
-        // Top 10 pembelian supplier terbesar
-        $topSupplierPurchases = Purchase::with('supplier')
-            ->orderByDesc('total_paid')
-            ->limit(10)
-            ->get();
+    // Top 10 pembelian supplier terbesar
+    $topSupplierPurchases = Purchase::with('supplier')
+        ->orderByDesc('total_paid')
+        ->limit(10)
+        ->get();
 
-        return view('admin.finance.cashflow', compact(
-            'months',
-            'totalIncome',
-            'totalSupplierPaid',
-            'totalOperasional',
-            'netCashflow',
-            'expenseByCategory',
-            'topSupplierPurchases'
-        ));
-    }
+    return view('admin.finance.cashflow', compact(
+        'months',
+        'totalIncome',
+        'totalSupplierPaid',
+        'totalOperasional',
+        'netCashflow',
+        'totalProfit',
+        'expenseByCategory',
+        'topSupplierPurchases'
+    ));
+}
 
     public function daily()
     {
@@ -162,44 +165,60 @@ class FinanceController extends Controller
     }
 
     // ================= HELPER =================
-    private function calculateProfit($start = null, $end = null)
-    {
-        $query = DB::table('order_items')
-            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->join('products', 'order_items.product_id', '=', 'products.id')
-            ->select(
-                DB::raw('SUM(order_items.subtotal) as income'),
-                DB::raw('SUM(order_items.quantity * products.purchase_price) as cost')
-            );
+   private function calculateProfit($start = null, $end = null)
+{
+    $query = DB::table('order_items')
+        ->join('orders', 'order_items.order_id', '=', 'orders.id')
+        ->select(
+            DB::raw('SUM(order_items.subtotal) as income'),
+            DB::raw('SUM(order_items.cost_price * order_items.quantity) as cost'),
+            DB::raw('SUM((order_items.selling_price - order_items.cost_price) * order_items.quantity) as profit')
+        );
 
-        if ($start && $end) {
-            $query->whereBetween('orders.date', [$start, $end]);
-        } elseif ($start) {
-            $query->whereDate('orders.date', $start);
-        }
-
-        $result = $query->first();
-
-        $income = $result->income ?? 0;
-        $cost   = $result->cost ?? 0;
-        $profit = $income - $cost;
-
-        // Expenses in period
-        $expenseQuery = Expense::query();
-        $purchaseQuery = Purchase::query();
-
-        if ($start && $end) {
-            $expenseQuery->whereBetween('date', [$start, $end]);
-            $purchaseQuery->whereBetween('date', [$start, $end]);
-        } elseif ($start) {
-            $expenseQuery->whereDate('date', $start);
-            $purchaseQuery->whereDate('date', $start);
-        }
-
-        $expenses = $expenseQuery->sum('amount');
-        $supplierPaid = $purchaseQuery->sum('total_paid');
-        $netCashflow = $income - $supplierPaid - $expenses;
-
-        return compact('income', 'cost', 'profit', 'expenses', 'supplierPaid', 'netCashflow');
+    if ($start && $end) {
+        $query->whereBetween('orders.date', [
+            Carbon::parse($start)->startOfDay(),
+            Carbon::parse($end)->endOfDay()
+        ]);
+    } elseif ($start) {
+        $query->whereDate('orders.date', Carbon::parse($start));
     }
+
+    $result = $query->first();
+
+    $income = $result->income ?? 0;
+    $cost   = $result->cost ?? 0;
+    $profit = $result->profit ?? 0;
+
+    $expenseQuery  = Expense::query();
+    $purchaseQuery = Purchase::query();
+
+    if ($start && $end) {
+        $expenseQuery->whereBetween('date', [
+            Carbon::parse($start)->startOfDay(),
+            Carbon::parse($end)->endOfDay()
+        ]);
+        $purchaseQuery->whereBetween('date', [
+            Carbon::parse($start)->startOfDay(),
+            Carbon::parse($end)->endOfDay()
+        ]);
+    } elseif ($start) {
+        $expenseQuery->whereDate('date', Carbon::parse($start));
+        $purchaseQuery->whereDate('date', Carbon::parse($start));
+    }
+
+    $expenses     = $expenseQuery->sum('amount') ?? 0;
+    $supplierPaid = $purchaseQuery->sum('total_paid') ?? 0;
+
+    $netCashflow = $income - $supplierPaid - $expenses;
+
+    return compact(
+        'income',
+        'cost',
+        'profit',
+        'expenses',
+        'supplierPaid',
+        'netCashflow'
+    );
+}
 }

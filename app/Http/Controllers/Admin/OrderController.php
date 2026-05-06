@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\KasproService;
+
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -78,7 +80,7 @@ class OrderController extends Controller
         return view('admin.orders.create', compact('customer', 'products'));
     }
 
-    public function store(Request $request, Customer $customer)
+    public function store(Request $request, Customer $customer, KasproService $kaspro)
     {
         $request->validate([
             'date'                   => 'required|date',
@@ -127,6 +129,8 @@ class OrderController extends Controller
                     throw new \Exception("Stok {$product->name} tidak mencukupi (tersedia: {$product->stock})");
                 }
 
+                
+
                 $lineDiscount = $item['discount'] ?? 0;
                 $lineSubtotal = ($item['quantity'] * $item['selling_price']) - $lineDiscount;
 
@@ -135,9 +139,25 @@ class OrderController extends Controller
                     'product_id'    => $item['product_id'],
                     'quantity'      => $item['quantity'],
                     'selling_price' => $item['selling_price'],
+                    'cost_price'    => $product->purchase_price, // ✅ TAMBAHAN PENTING
                     'discount'      => $lineDiscount,
                     'subtotal'      => $lineSubtotal,
                 ]);
+
+                  // Auto-kategorisasi (untuk pemasukan)
+                $categorization = $kaspro->categorize($request->notes ?? 'Penjualan ke ' . $customer->name, 'INCOME');
+                $order->kaspro_category = $categorization['category'];
+                $order->kaspro_confidence = $categorization['confidence'];
+                
+                // Deteksi anomali
+                $anomaly = $kaspro->detectAnomaly($order, 'INCOME');
+                $order->kaspro_is_anomaly = $anomaly['is_anomaly'];
+                $order->kaspro_risk_score = $anomaly['risk_score'];
+                
+                $order->save();
+                
+                // Cek alert
+                $kaspro->checkAndCreateAlerts();
 
                 $product->decrement('stock', $item['quantity']);
             }
@@ -173,4 +193,15 @@ class OrderController extends Controller
 
         return $pdf->download("Orders_{$customer->name}.pdf");
     }
+   
+
+    public function printReceipt(Order $order)
+{
+    $order->load('items.product', 'customer');
+
+    $pdf = Pdf::loadView('orders.receipt', compact('order'))
+              ->setPaper([0, 0, 226, 500], 'portrait'); // ukuran thermal printer
+
+    return $pdf->stream("Struk_Order_{$order->id}.pdf"); // stream biar bisa auto print di browser
+}
 }

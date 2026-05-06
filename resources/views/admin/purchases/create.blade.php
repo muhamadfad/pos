@@ -55,14 +55,14 @@
                     </div>
 
                     <div class="overflow-x-auto font-sans">
-                        <table class="w-full text-sm">
-                            <thead
+                        <table class=" text-sm" style="width:1000px" >
+                            <thead 
                                 class="bg-slate-100/50 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left">Barang</th>
-                                    <th class="px-6 py-3 text-center w-24">Unit</th>
-                                    <th class="px-6 py-3 text-center w-24">Jumlah</th>
-                                    <th class="px-6 py-3 text-right w-40">Harga Beli</th>
+                                    <th class="px-6 py-3 text-left w-20">Barang</th>
+                                    <th class="px-6 py-3 text-center w-20">Unit</th>
+                                    <th class="px-6 py-3 text-center w-20">Jumlah</th>
+                                    <th class="px-6 py-3 text-right w-50">Harga Beli</th>
                                     <th class="px-6 py-3 text-right w-40">Subtotal</th>
                                     <th class="px-6 py-3 text-center w-12 text-transparent">Actions</th>
                                 </tr>
@@ -71,7 +71,7 @@
                                 <template x-for="(item, index) in items" :key="index">
                                     <tr class="hover:bg-slate-50 transition-colors">
                                         <!-- Product Combobox -->
-                                        <td class="px-4 py-3 min-w-[240px]">
+                                        <td class="px-4 py-3 min-w-[200px]">
                                             @include('components.product-combobox', ['priceKey' => 'purchase_price',
                                             'showStock' => false])
                                         </td>

@@ -16,14 +16,14 @@
                     Transaksi</th>
                 <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-44">
                     Aksi</th>
-            </tr>
+             </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
             @forelse($customers as $customer)
             <tr class="group hover:bg-slate-50 transition-colors">
                 <td class="px-5 py-3.5 text-center text-xs text-slate-400 font-medium">
                     {{ $customers->firstItem() + $loop->index }}
-                </td>
+                 </td>
                 <td class="px-5 py-3.5">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
@@ -31,7 +31,7 @@
                         </div>
                         <span class="font-semibold text-slate-800">{{ $customer->name }}</span>
                     </div>
-                </td>
+                 </td>
                 <td class="px-5 py-3.5 text-slate-500 text-xs">{{ Str::limit($customer->address, 40) ?: '-' }}</td>
                 <td class="px-5 py-3.5">
                     @if($customer->phone)
@@ -43,31 +43,41 @@
                     @else
                     <span class="text-slate-400 text-xs">-</span>
                     @endif
-                </td>
+                 </td>
                 <td class="px-5 py-3.5 text-center">
                     @php
+                    // Perbaiki tipe data yang sesuai dengan validasi di controller
                     $typeColor = match($customer->type) {
-                    'toko' => 'bg-blue-50 text-blue-700',
-                    'proyek' => 'bg-emerald-50 text-emerald-700',
-                    default => 'bg-slate-100 text-slate-600',
+                        'store' => 'bg-blue-50 text-blue-700',
+                        'project' => 'bg-emerald-50 text-emerald-700',
+                        'retail' => 'bg-purple-50 text-purple-700',
+                        default => 'bg-slate-100 text-slate-600',
+                    };
+                    
+                    $typeLabel = match($customer->type) {
+                        'store' => 'Toko',
+                        'project' => 'Proyek',
+                        'retail' => 'Retail',
+                        default => ucfirst($customer->type),
                     };
                     @endphp
                     <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium {{ $typeColor }}">
-                        {{ ucfirst($customer->type) }}
+                        {{ $typeLabel }}
                     </span>
-                </td>
+                 </td>
                 <td class="px-5 py-3.5 text-center">
-                    @if(($customer->stock_outs_count ?? 0) > 0)
+                    {{-- PERBAIKAN ADA DI SINI --}}
+                    @if(($customer->orders_count ?? 0) > 0)
                     <a href="{{ route('admin.customers.show', $customer) }}"
                         class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">
                         <span class="iconify" data-icon="mdi:receipt-text-outline"></span>
-                        {{ $customer->stock_outs_count }}
+                        {{ $customer->orders_count }}
                     </a>
                     @else
                     <span
                         class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-400">0</span>
                     @endif
-                </td>
+                 </td>
                 <td class="px-5 py-3.5">
                     <div class="flex items-center justify-center gap-1">
                         <a href="{{ route('admin.customers.show', $customer) }}"
@@ -87,10 +97,10 @@
                             Hapus
                         </button>
                     </div>
-                </td>
-            </tr>
+                 </td>
+             </tr>
             @empty
-            <tr>
+             <tr>
                 <td colspan="7" class="py-16 text-center">
                     <div class="flex flex-col items-center gap-3 text-slate-400">
                         <span class="iconify text-5xl" data-icon="mdi:account-group-outline"></span>
@@ -101,11 +111,11 @@
                             Tambah Customer
                         </a>
                     </div>
-                </td>
-            </tr>
+                 </td>
+             </tr>
             @endforelse
         </tbody>
-    </table>
+     </table>
 
     @if($customers->hasPages())
     <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/50">

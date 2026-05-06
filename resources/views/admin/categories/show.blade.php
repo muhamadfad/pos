@@ -3,160 +3,157 @@
 @section('title', 'Kategori: ' . $category->name)
 
 @section('content')
-<div class="w-full mx-auto space-y-6">
+<div class="max-w-[1100px] mx-auto space-y-6 pb-10">
 
-    <!-- Header -->
-    <div class="flex items-center gap-4">
+    <div class="flex flex-col md:flex-row md:items-center gap-4">
         <a href="{{ route('admin.categories.index') }}"
-            class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition shadow-sm">
-            <span class="iconify" data-icon="mdi:arrow-left"></span>
+            class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 transition-all shadow-sm group">
+            <span class="iconify text-xl group-active:scale-90 transition-transform" data-icon="lucide:chevron-left"></span>
         </a>
+        
         <div class="flex-1">
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Kategori</span>
-                <span class="text-slate-300">/</span>
-                <span class="text-xs font-semibold text-indigo-600">{{ $category->name }}</span>
-            </div>
-            <h1 class="text-2xl font-bold text-slate-800 mt-0.5">{{ $category->name }}</h1>
+            <nav class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kategori</span>
+                <span class="iconify text-slate-300 text-[10px]" data-icon="lucide:chevron-right"></span>
+                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">{{ $category->name }}</span>
+            </nav>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">{{ $category->name }}</h1>
         </div>
+
         <a href="{{ route('admin.categories.edit', $category) }}"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-100">
-            <span class="iconify" data-icon="mdi:pencil-outline"></span>
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-sm active:scale-95">
+            <span class="iconify text-lg" data-icon="lucide:edit-3"></span>
             Edit Kategori
         </a>
     </div>
 
-    <!-- Stat Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Produk</p>
-            <p class="text-3xl font-bold text-slate-800">{{ $products->total() }}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Koleksi</p>
+                <p class="text-3xl font-bold text-slate-900 tracking-tight">{{ $products->total() }}</p>
+                <p class="text-[11px] text-slate-400 mt-1 font-medium">Produk terdaftar</p>
+            </div>
+            <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-indigo-50/50 transition-colors" data-icon="lucide:package"></span>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Stok Habis</p>
-            <p class="text-3xl font-bold text-red-500">
-                {{ $category->products()->where('stock', 0)->count() }}
-            </p>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Stok Kosong</p>
+                <p class="text-3xl font-bold text-rose-500 tracking-tight">
+                    {{ $category->products()->where('stock', 0)->count() }}
+                </p>
+                <p class="text-[11px] text-rose-400 mt-1 font-medium">Perlu restock segera</p>
+            </div>
+            <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-rose-50/50 transition-colors" data-icon="lucide:alert-octagon"></span>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 col-span-2 sm:col-span-1">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Stok Menipis (≤5)</p>
-            <p class="text-3xl font-bold text-amber-500">
-                {{ $category->products()->where('stock', '>', 0)->where('stock', '<=', 5)->count() }}
-            </p>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Stok Menipis</p>
+                <p class="text-3xl font-bold text-amber-500 tracking-tight">
+                    {{ $category->products()->where('stock', '>', 0)->where('stock', '<=', 5)->count() }}
+                </p>
+                <p class="text-[11px] text-amber-500/70 mt-1 font-medium">Stok di bawah 5 unit</p>
+            </div>
+            <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-amber-50/50 transition-colors" data-icon="lucide:alert-triangle"></span>
         </div>
     </div>
 
-    <!-- Products Table -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-        <!-- Table Header -->
-        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h2 class="font-semibold text-slate-800 flex items-center gap-2">
-                <span class="iconify text-indigo-400" data-icon="mdi:package-variant-closed"></span>
-                Daftar Produk
-            </h2>
-            <a href="{{ route('admin.products.create') }}"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">
-                <span class="iconify" data-icon="mdi:plus"></span>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white">
+            <div>
+                <h2 class="font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                    <span class="w-2 h-5 bg-indigo-500 rounded-full"></span>
+                    Daftar Produk dalam Kategori
+                </h2>
+            </div>
+            <a href="{{ route('admin.products.create', ['category_id' => $category->id]) }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all active:scale-95">
+                <span class="iconify text-lg" data-icon="lucide:plus-circle"></span>
                 Tambah Produk
             </a>
         </div>
 
         @if($products->isEmpty())
-        <div class="flex flex-col items-center gap-3 py-16 text-slate-400">
-            <span class="iconify text-5xl" data-icon="mdi:package-variant-closed-remove"></span>
-            <p class="font-medium">Belum ada produk di kategori ini</p>
-            <a href="{{ route('admin.products.create') }}"
-                class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">
-                <span class="iconify" data-icon="mdi:plus"></span>
-                Tambah Produk
-            </a>
+        <div class="flex flex-col items-center justify-center py-20 bg-slate-50/30">
+            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mb-4">
+                <span class="iconify text-4xl text-slate-200" data-icon="lucide:package-search"></span>
+            </div>
+            <p class="text-sm font-bold text-slate-500">Belum ada produk</p>
+            <p class="text-xs text-slate-400 mt-1">Kategori ini masih kosong.</p>
         </div>
         @else
-        <table class="min-w-full text-sm">
-            <thead>
-                <tr class="bg-slate-50 border-b border-slate-100">
-                    <th
-                        class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-12">
-                        #</th>
-                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Barcode</th>
-                    <th class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama
-                        Produk</th>
-                    <th class="px-5 py-3.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Harga Beli</th>
-                    <th class="px-5 py-3.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Harga Jual</th>
-                    <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        Stok</th>
-                    <th
-                        class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-24">
-                        Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @foreach($products as $product)
-                <tr class="hover:bg-slate-50 transition-colors {{ $product->stock == 0 ? 'bg-red-50/40' : '' }}">
-                    <td class="px-5 py-3.5 text-center text-xs text-slate-400 font-medium">
-                        {{ $products->firstItem() + $loop->index }}
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <span class="font-mono text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">{{
-                            $product->barcode }}</span>
-                    </td>
-                    <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $product->name }}</td>
-                    <td class="px-5 py-3.5 text-right text-xs text-slate-500">
-                        Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
-                    </td>
-                    <td class="px-5 py-3.5 text-right font-semibold text-slate-800">
-                        Rp {{ number_format($product->selling_price, 0, ',', '.') }}
-                    </td>
-                    <td class="px-5 py-3.5 text-center">
-                        @if($product->stock == 0)
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-red-100 text-red-600">
-                            <span class="iconify" data-icon="mdi:alert-circle-outline"></span>
-                            Habis
-                        </span>
-                        @elseif($product->stock <= 5) <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-700">
-                            <span class="iconify" data-icon="mdi:alert-outline"></span>
-                            {{ $product->stock }}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-16 text-center">#</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Detail Produk</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Harga Jual</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Stok</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach($products as $product)
+                    <tr class="group hover:bg-slate-50/50 transition-colors {{ $product->stock == 0 ? 'bg-rose-50/20' : '' }}">
+                        <td class="px-6 py-4 text-center text-xs text-slate-400 font-mono">
+                            {{ $products->firstItem() + $loop->index }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{{ $product->name }}</span>
+                                <span class="text-[11px] text-slate-400 font-mono mt-0.5 tracking-tighter">{{ $product->barcode }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <span class="text-sm font-bold text-slate-700">
+                                Rp {{ number_format($product->selling_price, 0, ',', '.') }}
                             </span>
-                            @else
-                            <span
-                                class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-700">
-                                {{ $product->stock }}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @php
+                                $statusClass = $product->stock == 0 
+                                    ? 'bg-rose-50 text-rose-600 border-rose-100' 
+                                    : ($product->stock <= 5 ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100');
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold border shadow-sm {{ $statusClass }}">
+                                {{ $product->stock == 0 ? 'HABIS' : $product->stock . ' UNIT' }}
                             </span>
-                            @endif
-                    </td>
-                    <td class="px-5 py-3.5">
-                        <div class="flex items-center justify-center gap-1">
-                            <a href="{{ route('admin.products.show', $product) }}"
-                                class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 bg-slate-100 hover:bg-slate-200 transition"
-                                title="Detail">
-                                <span class="iconify text-sm" data-icon="mdi:eye-outline"></span>
-                            </a>
-                            <a href="{{ route('admin.products.edit', $product) }}"
-                                class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition"
-                                title="Edit">
-                                <span class="iconify text-sm" data-icon="mdi:pencil-outline"></span>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-end gap-1">
+                                <a href="{{ route('admin.products.show', $product) }}"
+                                    class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all"
+                                    title="Detail">
+                                    <span class="iconify text-lg" data-icon="lucide:eye"></span>
+                                </a>
+                                <a href="{{ route('admin.products.edit', $product) }}"
+                                    class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                                    title="Edit">
+                                    <span class="iconify text-lg" data-icon="lucide:edit-3"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         @if($products->hasPages())
-        <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/50">
-            {{ $products->links() }}
+        <div class="px-6 py-5 border-t border-slate-100 bg-slate-50/30 flex items-center justify-between">
+            <p class="text-[11px] text-slate-500 font-medium">
+                Showing <span class="text-slate-900 font-bold">{{ $products->firstItem() }}</span> to <span class="text-slate-900 font-bold">{{ $products->lastItem() }}</span>
+            </p>
+            <div class="flex items-center gap-1.5">
+                {{-- Gunakan template pagination yang sudah kita samakan tadi --}}
+                {{ $products->links('vendor.pagination.tailwind-custom') }}
+            </div>
         </div>
         @endif
         @endif
-
     </div>
-
 </div>
 @endsection

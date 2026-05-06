@@ -29,143 +29,128 @@
         </div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Stats Grid - 4 kolom untuk card utama -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Income Card -->
-        <div
-            class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div
-                class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-110 transition-transform">
-            </div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Total Pendapatan
-            </p>
+        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Total Pendapatan</p>
             <div class="flex items-baseline gap-1 relative">
                 <span class="text-sm font-bold text-emerald-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['income'], 0,
-                    ',', '.') }}</span>
+                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['income'], 0, ',', '.') }}</span>
             </div>
-            <div
-                class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:trending-up"></span>
-                Hari Ini
+                Penjualan Hari Ini
+            </div>
+        </div>
+
+        <!-- HPP Card -->
+        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">HPP (Cost of Goods Sold)</p>
+            <div class="flex items-baseline gap-1 relative">
+                <span class="text-sm font-bold text-orange-500">Rp</span>
+                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['cost'], 0, ',', '.') }}</span>
+            </div>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full w-fit">
+                <span class="iconify" data-icon="mdi:package-variant"></span>
+                Modal Barang Terjual
             </div>
         </div>
 
         <!-- Expense Card -->
-        <div
-            class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div
-                class="absolute -right-4 -top-4 w-24 h-24 bg-rose-50 rounded-full opacity-50 group-hover:scale-110 transition-transform">
-            </div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Pengeluaran
-                Operasional</p>
+        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Biaya Operasional</p>
             <div class="flex items-baseline gap-1 relative">
                 <span class="text-sm font-bold text-rose-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['expenses'],
-                    0, ',', '.') }}</span>
+                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['expenses'], 0, ',', '.') }}</span>
             </div>
-            <div
-                class="mt-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:cash-remove"></span>
-                Biaya Operasional
+                Listrik, Gaji, dll
             </div>
         </div>
 
-        <!-- Supplier Paid Card -->
-        <div
-            class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div
-                class="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-full opacity-50 group-hover:scale-110 transition-transform">
-            </div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Bayar Supplier</p>
+        <!-- Pembayaran Supplier Card -->
+        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Pembayaran Supplier</p>
             <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-orange-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{
-                    number_format($finance['supplierPaid'], 0, ',', '.') }}</span>
+                <span class="text-sm font-bold text-purple-500">Rp</span>
+                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['supplierPaid'], 0, ',', '.') }}</span>
             </div>
-            <div
-                class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:truck-outline"></span>
                 Pembelian Stok
             </div>
         </div>
+    </div>
 
-        <!-- Net Balance -->
-        @php $isPositive = $finance['netCashflow'] >= 0; @endphp
-        <div
-            class="relative overflow-hidden {{ $isPositive ? 'bg-indigo-600 shadow-indigo-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl md:col-span-3 block">
-            <div class="absolute right-0 bottom-0 opacity-10">
-                <span class="iconify text-9xl text-white"
-                    data-icon="{{ $isPositive ? 'mdi:piggy-bank' : 'mdi:alert-circle' }}"></span>
+    <!-- Baris kedua: Profit & Net Cashflow -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- PROFIT Card (Keuntungan Bersih) -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-7 rounded-[2rem] shadow-xl group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full opacity-30 group-hover:scale-110 transition-transform"></div>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
+                </div>
+                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
             </div>
-            <p class="text-[11px] font-black text-white/60 uppercase tracking-[0.2em] mb-3">Saldo Bersih (Net Cashflow)
-            </p>
+            <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
+            <p class="text-xs text-white/60 mt-2">Pendapatan − HPP − Biaya Operasional</p>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
+                <span class="iconify" data-icon="mdi:chart-line"></span>
+                Laba Bersih Hari Ini
+            </div>
+        </div>
+
+        <!-- Net Cashflow Card -->
+        @php $isPositive = $finance['netCashflow'] >= 0; @endphp
+        <div class="relative overflow-hidden {{ $isPositive ? 'bg-emerald-600 shadow-emerald-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl group">
+            <div class="absolute right-0 bottom-0 opacity-10">
+                <span class="iconify text-9xl text-white" data-icon="{{ $isPositive ? 'mdi:piggy-bank' : 'mdi:alert-circle' }}"></span>
+            </div>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <span class="iconify text-white text-xl" data-icon="mdi:currency-usd"></span>
+                </div>
+                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Arus Kas Bersih</p>
+            </div>
             <div class="flex items-baseline gap-1">
                 <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-4xl font-black text-white tracking-tighter">{{ number_format($finance['netCashflow'],
-                    0, ',', '.') }}</span>
+                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
             </div>
-            <p class="text-white/50 text-[10px] mt-4 font-medium uppercase tracking-widest">
-                {{ $isPositive ? 'Surplus Selisih Kas' : 'Defisit Selisih Kas' }}
+            <p class="text-white/50 text-[10px] mt-2 font-medium">
+                Pendapatan − (Pembayaran Supplier + Operasional)
             </p>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+                <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>
+                {{ $isPositive ? 'Surplus Kas' : 'Defisit Kas' }}
+            </div>
         </div>
 
     </div>
 
-    <!-- Analysis Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Chart -->
-        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Barang Terlaris</h3>
-                <span class="iconify text-slate-300 text-xl" data-icon="mdi:package-variant-closed"></span>
-            </div>
-            <div class="h-[300px]">
-                @if($topProducts->count() > 0)
-                <canvas id="salesChart"></canvas>
-                @else
-                <div class="flex flex-col items-center justify-center h-full text-slate-400">
-                    <span class="iconify text-5xl mb-2" data-icon="mdi:package-variant"></span>
-                    <p class="text-[10px] font-black uppercase tracking-widest">Tidak ada data</p>
-                </div>
-                @endif
-            </div>
+    <!-- Chart Section -->
+    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris Hari Ini</h3>
+            <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
         </div>
-
-        <!-- Expenses List -->
-        <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Rincian Pengeluaran</h3>
-                <span class="iconify text-slate-300 text-xl" data-icon="mdi:format-list-bulleted"></span>
+        <div class="h-[400px]">
+            @if($topProducts->count() > 0)
+            <canvas id="dailyChart"></canvas>
+            @else
+            <div class="flex flex-col items-center justify-center h-full text-slate-400">
+                <span class="iconify text-5xl mb-2" data-icon="mdi:database-off"></span>
+                <p class="text-[10px] font-black uppercase tracking-widest">Tidak ada data penjualan</p>
             </div>
-            <div class="space-y-4">
-                @forelse($expenses as $ex)
-                <div
-                    class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-rose-200 transition-colors group">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 font-bold text-xs uppercase tracking-tighter shrink-0">
-                            {{ substr($ex->category, 0, 3) }}
-                        </div>
-                        <div>
-                            <p class="text-xs font-black text-slate-400 uppercase tracking-wider mb-0.5">{{
-                                $ex->category }}</p>
-                            <p class="text-sm font-bold text-slate-800">{{ $ex->description }}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-black text-rose-600 tracking-tight">Rp {{ number_format($ex->amount, 0,
-                            ',', '.') }}</p>
-                    </div>
-                </div>
-                @empty
-                <div class="flex flex-col items-center justify-center h-[200px] text-slate-400">
-                    <span class="iconify text-5xl mb-2" data-icon="mdi:cash-off"></span>
-                    <p class="text-[10px] font-black uppercase tracking-widest">Tidak ada pengeluaran</p>
-                </div>
-                @endforelse
-            </div>
+            @endif
         </div>
     </div>
 
@@ -175,49 +160,50 @@
 @if($topProducts->count() > 0)
 <script>
     document.addEventListener('turbo:load', function () {
-    const canvas = document.getElementById('salesChart');
-    if (!canvas) return;
-    const existing = Chart.getChart(canvas);
-    if (existing) existing.destroy();
-    const ctx = canvas.getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($topProducts->pluck('name')) !!},
-            datasets: [{
-                label: 'Qty Terjual',
-                data: {!! json_encode($topProducts->pluck('total_qty')) !!},
-                backgroundColor: 'rgba(79, 70, 229, 0.8)',
-                borderRadius: 12,
-                borderSkipped: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1e293b',
-                    padding: 12,
-                    titleFont: { size: 10, weight: 'bold' },
-                    bodyFont: { size: 12, weight: 'bold' }
-                }
+        const canvas = document.getElementById('dailyChart');
+        if (!canvas) return;
+        const existing = Chart.getChart(canvas);
+        if (existing) existing.destroy();
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($topProducts->pluck('name')) !!},
+                datasets: [{
+                    label: 'Qty Terjual',
+                    data: {!! json_encode($topProducts->pluck('total_qty')) !!},
+                    backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                    borderRadius: 12,
+                    borderSkipped: false,
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: '#f1f5f9', drawTicks: false },
-                    ticks: { color: '#94a3b8', font: { weight: 'bold', size: 10 } }
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        titleFont: { size: 10, weight: 'bold' },
+                        bodyFont: { size: 12, weight: 'bold' }
+                    }
                 },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#64748b', font: { weight: 'bold', size: 10 } }
+                scales: {
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b', font: { weight: 'bold', size: 11 } }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#94a3b8', font: { weight: 'bold', size: 10 } }
+                    }
                 }
             }
-        }
+        });
     });
-});
 </script>
 @endif
 @endpush

@@ -45,4 +45,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // Tambahkan method ini
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'super_admin']);
+    }
+
+    public function isKasir(): bool
+    {
+        return $this->role === 'kasir';
+    }
+
+    public function canAccessBranch($branchId): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        return $this->branch_id == $branchId;
+    }
 }

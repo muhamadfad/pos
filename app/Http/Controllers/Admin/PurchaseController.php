@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Services\KasproService;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchase;
@@ -78,7 +79,7 @@ class PurchaseController extends Controller
         return view('admin.purchases.create', compact('supplier', 'products'));
     }
 
-    public function store(Request $request, Supplier $supplier)
+    public function store(Request $request, Supplier $supplier, KasproService $kaspro)
     {
         $request->validate([
             'date'                    => 'required|date',
@@ -119,7 +120,48 @@ class PurchaseController extends Controller
                     'subtotal'       => $subtotal,
                 ]);
 
-                Product::find($item['product_id'])->increment('stock', $item['quantity']);
+                $product = Product::find($item['product_id']);
+
+                $oldStock  = $product->stock;
+                $oldPrice  = $product->purchase_price ?? 0;
+
+                $newQty    = $item['quantity'];
+                $newPrice  = $item['purchase_price'];
+
+                // Hitung total nilai lama & baru
+                $oldTotal  = $oldStock * $oldPrice;
+                $newTotal  = $newQty * $newPrice;
+
+                // Hitung average baru
+                $totalQty  = $oldStock + $newQty;
+
+                $averagePrice = $totalQty > 0
+                    ? ($oldTotal + $newTotal) / $totalQty
+                    : $newPrice;
+
+
+                // Auto-kategorisasi
+                $categorization = $kaspro->categorize($request->notes ?? 'Pembelian dari ' . $supplier->name);
+                $purchase->kaspro_category = $categorization['category'];
+                $purchase->kaspro_confidence = $categorization['confidence'];
+                $purchase->kaspro_needs_review = $categorization['needs_review'];
+                
+                // Deteksi anomali
+                $anomaly = $kaspro->detectAnomaly($purchase, 'EXPENSE');
+                $purchase->kaspro_is_anomaly = $anomaly['is_anomaly'];
+                $purchase->kaspro_risk_score = $anomaly['risk_score'];
+                $purchase->kaspro_anomaly_flags = $anomaly['flags'];
+                
+                $purchase->save();
+                
+                // Cek alert
+                $kaspro->checkAndCreateAlerts();
+
+                // Update product
+                $product->update([
+                    'stock' => $totalQty,
+                    'purchase_price' => $averagePrice,
+                ]);
             }
         });
 

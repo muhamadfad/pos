@@ -1,119 +1,159 @@
-<div class="overflow-x-auto">
-    <table class="w-full text-sm text-left">
-        <thead
-            class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold tracking-widest border-b border-slate-200">
-            <tr>
-                <th class="px-6 py-4">Informasi Transaksi</th>
-                <th class="px-6 py-4">Detail Barang</th>
-                <th class="px-6 py-4 text-right">Keuangan</th>
-                <th class="px-6 py-4 text-center">Status</th>
-                <th class="px-6 py-4 text-center">Aksi</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 border-b border-slate-100">
-            @forelse($purchases as $row)
-            <tr class="hover:bg-slate-50/80 transition-colors align-top">
-                <!-- Info -->
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="font-bold text-slate-800 mb-0.5">
-                        #PUR-{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}
-                    </div>
-                    <div class="text-[12px] text-slate-500 flex items-center gap-1.5 mb-2">
-                        <span class="iconify" data-icon="mdi:calendar-range"></span>
-                        {{ \Carbon\Carbon::parse($row->date)->format('d M Y') }}
-                    </div>
-                    <div
-                        class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-[12px] font-medium border border-slate-200">
-                        <span class="iconify text-slate-400" data-icon="mdi:truck-outline"></span>
-                        {{ $row->supplier->name ?? 'N/A' }}
-                    </div>
-                </td>
+@extends('layouts.admin')
 
-                <!-- Items -->
-                <td class="px-6 py-4 max-w-xs">
-                    <div class="space-y-1.5 min-w-[200px]">
-                        @foreach($row->items->take(2) as $item)
-                        <div class="flex items-center justify-between text-[12px]">
-                            <span class="text-slate-600 truncate mr-2">{{ $item->product->name ?? '-' }}</span>
-                            <span class="text-slate-400 shrink-0">x{{ $item->quantity }}</span>
-                        </div>
-                        @endforeach
-                        @if($row->items->count() > 2)
-                        <div class="text-[11px] text-indigo-500 font-medium italic">
-                            +{{ $row->items->count() - 2 }} item lainnya...
-                        </div>
+@section('title', 'Daftar Pembelian')
+
+@section('content')
+<div class="max-w-[1400px] mx-auto p-6 bg-[#F9FAFB] min-h-screen font-sans antialiased text-slate-900">
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Inventory Ops</span>
+            </div>
+            <h1 class="text-3xl font-black tracking-tighter text-slate-900 uppercase italic">Purchasing</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative group">
+                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="lucide:search"></span>
+                <input type="text" placeholder="Quick Search..." 
+                    class="h-10 w-64 pl-10 pr-4 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 transition-all outline-none shadow-sm">
+            </div>
+            <a href="{{ route('admin.purchases.select-supplier') }}"
+                class="h-10 px-6 bg-slate-900 text-white text-[11px] font-black rounded-xl hover:bg-indigo-600 flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200 uppercase tracking-widest">
+                <span class="iconify text-lg" data-icon="lucide:plus"></span>
+                New Entry
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 text-slate-900">
+        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Volume</p>
+            <p class="text-3xl font-black tracking-tighter mt-1">{{ $stats['total'] }} <span class="text-[10px] text-slate-300 italic uppercase">Tx</span></p>
+        </div>
+        <div class="bg-white p-6 rounded-[1.5rem] border-b-4 border-emerald-500 shadow-sm">
+            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Settled</p>
+            <p class="text-3xl font-black tracking-tighter mt-1">{{ $stats['paid'] }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-[1.5rem] border-b-4 border-orange-500 shadow-sm">
+            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest">Liability</p>
+            <p class="text-3xl font-black tracking-tighter mt-1">{{ $stats['debt'] }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.04)] overflow-hidden">
+        
+        <div class="overflow-x-auto pb-2 custom-scrollbar">
+            <table class="w-full border-separate border-spacing-y-0 min-w-[900px]">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">Info / Ref</th>
+                        <th class="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">Supplier & Items</th>
+                        <th class="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">Valuation</th>
+                        <th class="px-8 py-5 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">Status</th>
+                        <th class="px-8 py-5 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100">Control</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($purchases as $row)
+                    <tr class="group hover:bg-slate-50/50 transition-colors duration-150">
+                        <td class="px-8 py-6">
+                            <span class="text-xs font-black text-slate-900 tracking-tighter block">#PUR-{{ str_pad($row->id, 5, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ \Carbon\Carbon::parse($row->date)->format('d.m.Y') }}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="text-[11px] font-black text-slate-700 uppercase tracking-tight mb-2 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                {{ $row->supplier->name ?? 'N/A' }}
+                            </div>
+                            <div class="flex flex-wrap gap-x-3 gap-y-1">
+                                @foreach($row->items->take(2) as $item)
+                                    <span class="text-[10px] font-bold text-slate-400 italic">{{ $item->product->name ?? '-' }} <span class="text-slate-900 font-black not-italic">x{{ $item->quantity }}</span></span>
+                                @endforeach
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <div class="text-sm font-black text-slate-900 tracking-tighter">Rp {{ number_format($row->total_amount, 0, ',', '.') }}</div>
+                            @if($row->remaining_debt > 0)
+                                <div class="text-[9px] font-black text-red-500 uppercase tracking-tighter italic">Rem: {{ number_format($row->remaining_debt, 0, ',', '.') }}</div>
+                            @endif
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            @php
+                                $statusMap = [
+                                    'paid' => ['bg' => 'bg-emerald-500', 'text' => 'text-white', 'label' => 'Settle'],
+                                    'partial' => ['bg' => 'bg-slate-900', 'text' => 'text-white', 'label' => 'Partial'],
+                                    'unpaid' => ['bg' => 'bg-white', 'text' => 'text-slate-400', 'label' => 'Void', 'border' => 'border-slate-200'],
+                                ];
+                                $s = $statusMap[$row->payment_status] ?? $statusMap['unpaid'];
+                            @endphp
+                            <span class="inline-block px-3 py-1 rounded text-[9px] font-black tracking-widest {{ $s['bg'] }} {{ $s['text'] }} {{ $s['border'] ?? '' }} border uppercase shadow-sm">
+                                {{ $s['label'] }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            <a href="{{ route('admin.purchases.show', $row->id) }}" 
+                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-900 transition-all active:scale-90">
+                                <span class="iconify text-lg" data-icon="lucide:arrow-right"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="py-24 text-center text-slate-300 font-black uppercase text-[10px] tracking-[0.5em]">No_Records_Found</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($purchases->hasPages())
+        <div class="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Log <span class="text-slate-900">{{ $purchases->firstItem() }}-{{ $purchases->lastItem() }}</span> // Total <span class="text-slate-900">{{ $purchases->total() }}</span>
+            </div>
+
+            <div class="flex items-center gap-1">
+                @if ($purchases->onFirstPage())
+                    <span class="p-2 text-slate-200 cursor-not-allowed"><span class="iconify text-xl" data-icon="lucide:chevron-left"></span></span>
+                @else
+                    <a href="{{ $purchases->previousPageUrl() }}" class="p-2 text-slate-900 hover:text-indigo-600 transition-colors"><span class="iconify text-xl" data-icon="lucide:chevron-left"></span></a>
+                @endif
+
+                <div class="flex gap-1 mx-2">
+                    @foreach ($purchases->getUrlRange(1, $purchases->lastPage()) as $page => $url)
+                        @if ($page == $purchases->currentPage())
+                            <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-900 text-white text-[10px] font-black shadow-lg shadow-slate-200">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-[10px] font-black text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-all">{{ $page }}</a>
                         @endif
-                    </div>
-                </td>
+                    @endforeach
+                </div>
 
-                <!-- Money -->
-                <td class="px-6 py-4 text-right whitespace-nowrap">
-                    <div class="text-slate-900 font-bold mb-0.5">
-                        Rp {{ number_format($row->total_amount, 0, ',', '.') }}
-                    </div>
-                    @if($row->remaining_debt > 0)
-                    <div class="text-[11px] text-red-500 font-medium tracking-tight">
-                        Sisa: Rp {{ number_format($row->remaining_debt, 0, ',', '.') }}
-                    </div>
-                    @else
-                    <div
-                        class="text-[11px] text-emerald-500 font-medium flex items-center justify-end gap-1 uppercase tracking-tighter">
-                        <span class="iconify" data-icon="mdi:check-circle"></span>
-                        Lunas
-                    </div>
-                    @endif
-                </td>
-
-                <!-- Status -->
-                <td class="px-6 py-4 text-center whitespace-nowrap">
-                    @php
-                    $statusMap = [
-                    'paid' => ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-700', 'border' => 'border-emerald-200',
-                    'label' => 'Lunas', 'icon' => 'mdi:check-circle'],
-                    'partial' => ['bg' => 'bg-amber-50', 'text' => 'text-amber-700', 'border' => 'border-amber-200',
-                    'label' => 'Sebagian', 'icon' => 'mdi:adjust'],
-                    'unpaid' => ['bg' => 'bg-red-50', 'text' => 'text-red-700', 'border' => 'border-red-200', 'label' =>
-                    'Belum Bayar', 'icon' => 'mdi:alert-circle'],
-                    ];
-                    $s = $statusMap[$row->payment_status] ?? $statusMap['unpaid'];
-                    @endphp
-                    <span
-                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold {{ $s['bg'] }} {{ $s['text'] }} border {{ $s['border'] }} shadow-sm uppercase tracking-wider">
-                        <span class="iconify text-[14px]" data-icon="{{ $s['icon'] }}"></span>
-                        {{ $s['label'] }}
-                    </span>
-                </td>
-
-                <!-- Actions -->
-                <td class="px-6 py-4 text-center whitespace-nowrap">
-                    <a href="{{ route('admin.purchases.show', $row->id) }}"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-all font-semibold text-[12px]">
-                        <span class="iconify" data-icon="mdi:eye"></span>
-                        Detail
-                    </a>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="py-16 text-center">
-                    <div class="flex flex-col items-center justify-center gap-3">
-                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300">
-                            <span class="iconify text-4xl" data-icon="mdi:cart-off"></span>
-                        </div>
-                        <div>
-                            <p class="text-slate-800 font-bold text-lg">Belum Ada Pembelian</p>
-                            <p class="text-slate-500 text-sm">Semua transaksi barang masuk akan muncul di sini</p>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                @if ($purchases->hasMorePages())
+                    <a href="{{ $purchases->nextPageUrl() }}" class="p-2 text-slate-900 hover:text-indigo-600 transition-colors"><span class="iconify text-xl" data-icon="lucide:chevron-right"></span></a>
+                @else
+                    <span class="p-2 text-slate-200 cursor-not-allowed"><span class="iconify text-xl" data-icon="lucide:chevron-right"></span></span>
+                @endif
+            </div>
+        </div>
+        @endif
+    </div>
 </div>
 
-@if($purchases->hasPages())
-<div class="px-6 py-4 bg-slate-50">
-    {{ $purchases->links() }}
-</div>
-@endif
+<style>
+    /* Styling Scrollbar agar Tipis & Modern */
+    .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+    /* Fix table border collapse for rounded corners */
+    table { border-collapse: separate; text-indent: 0; border-spacing: 0; }
+    
+    /* Font tajam */
+    body { background-color: #F9FAFB !important; }
+</style>
+@endsection

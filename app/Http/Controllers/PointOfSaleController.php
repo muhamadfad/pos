@@ -145,6 +145,7 @@ class PointOfSaleController extends Controller
                     'product_id'    => $item['product_id'],
                     'quantity'      => $item['qty'],
                     'selling_price' => $item['price'],
+                    
                     'discount'      => 0,
                     'subtotal'      => $lineTotal,
                     'product'       => $product,
@@ -191,6 +192,7 @@ class PointOfSaleController extends Controller
                     'product_id'    => $data['product_id'],
                     'quantity'      => $data['quantity'],
                     'selling_price' => $data['selling_price'],
+                    'cost_price'    => $data['product']->purchase_price, 
                     'discount'      => $data['discount'],
                     'subtotal'      => $data['subtotal'],
                 ]);

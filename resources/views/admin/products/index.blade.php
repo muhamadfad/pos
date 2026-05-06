@@ -1,141 +1,152 @@
 @extends('layouts.admin')
 
-@section('title', 'Daftar Produk')
+@section('title', 'Katalog Produk')
 
 @section('content')
-<div x-data="productTable()">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+<div x-data="productTable()" 
+     class="p-2 lg:p-4 max-w-[1600px] mx-auto space-y-6" 
+     style="font-family: 'Inter', sans-serif;">
+
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Daftar Produk</h1>
-            <p class="text-sm text-slate-500 mt-0.5">Kelola semua produk yang tersedia di toko</p>
+            <nav class="flex mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span>Inventory</span>
+                <span class="mx-2">/</span>
+                <span class="text-indigo-600">Products</span>
+            </nav>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Katalog Produk</h1>
         </div>
-        <a href="{{ route('admin.products.create') }}"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-all shadow-md shadow-indigo-100">
-            <span class="iconify" data-icon="mdi:plus"></span>
-            Tambah Produk
-        </a>
+        
+        <div class="flex items-center gap-3">
+            <button @click="fetchData()" 
+                class="inline-flex items-center justify-center w-10 h-10 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                <span class="iconify text-lg" data-icon="lucide:refresh-cw" :class="loading ? 'animate-spin' : ''"></span>
+            </button>
+            <a href="{{ route('admin.products.create') }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all shadow-sm active:scale-95">
+                <span class="iconify text-lg" data-icon="lucide:plus"></span>
+                Tambah Produk
+            </a>
+        </div>
     </div>
 
-    <!-- Flash Message -->
-    @if(session('success'))
-    <div
-        class="mb-4 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
-        <span class="iconify shrink-0" data-icon="mdi:check-circle-outline"></span>
-        {{ session('success') }}
-    </div>
-    @endif
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+        
+        <div class="lg:col-span-6 relative group">
+            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="lucide:search"></span>
+            <input type="text" x-model="search" @input.debounce.500ms="fetchData"
+                placeholder="Cari SKU, Nama, atau Barcode..."
+                class="w-full pl-11 pr-4 py-2.5 text-sm bg-transparent border-none focus:ring-0 text-slate-700 placeholder:text-slate-400">
+        </div>
 
-    <!-- Filter Bar -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-4">
-        <div class="flex flex-wrap gap-3 items-center">
-
-            <!-- Search -->
-            <div class="relative flex-1 min-w-[200px]">
-                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                    data-icon="mdi:magnify"></span>
-                <input type="text" x-model="search" @input.debounce.400ms="fetchData"
-                    placeholder="Cari nama atau barcode..."
-                    class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
-            </div>
-
-            <!-- Kategori Dropdown -->
-            <div x-data="{ open: false }" class="relative min-w-[180px]">
-                <button type="button" @click="open = !open"
-                    class="w-full flex items-center justify-between gap-2 px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl hover:border-indigo-400 transition">
-                    <div class="flex items-center gap-2 text-slate-600">
-                        <span class="iconify text-slate-400" data-icon="mdi:shape-outline"></span>
-                        <span x-text="categoryName()"></span>
-                    </div>
-                    <span class="iconify text-slate-400 transition-transform" :class="{'rotate-180': open}"
-                        data-icon="mdi:chevron-down"></span>
-                </button>
-                <div x-show="open" @click.away="open = false" x-transition
-                    class="absolute top-full mt-1 left-0 w-full bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden">
-                    <div class="max-h-52 overflow-y-auto">
-                        <div @click="category = ''; open = false; fetchData()"
-                            class="px-4 py-2.5 text-sm cursor-pointer hover:bg-slate-50 transition"
-                            :class="category === '' ? 'text-indigo-600 font-semibold bg-indigo-50' : 'text-slate-700'">
-                            Semua Kategori
-                        </div>
-                        @foreach($categories as $cat)
-                        <div @click="category = '{{ $cat->id }}'; open = false; fetchData()"
-                            class="px-4 py-2.5 text-sm cursor-pointer hover:bg-slate-50 transition flex items-center justify-between"
-                            :class="category == '{{ $cat->id }}' ? 'text-indigo-600 font-semibold bg-indigo-50' : 'text-slate-700'">
-                            {{ $cat->name }}
-                            <span x-show="category == '{{ $cat->id }}'" class="iconify text-indigo-500"
-                                data-icon="mdi:check"></span>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sort -->
-            <div class="relative">
-                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-                    data-icon="mdi:sort"></span>
-                <select x-model="sort" @change="fetchData"
-                    class="pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition appearance-none">
-                    <option value="">Urutkan</option>
-                    <option value="price">Harga</option>
-                    <option value="stock">Stok</option>
-                </select>
-            </div>
-
-            <!-- Per Page -->
-            <select x-model="per_page" @change="fetchData"
-                class="px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                <option value="10">10 / halaman</option>
-                <option value="25">25 / halaman</option>
-                <option value="50">50 / halaman</option>
+        <div class="lg:col-span-6 flex flex-wrap lg:justify-end items-center gap-3 pr-2">
+            <select x-model="category" @change="fetchData"
+                class="text-sm font-medium text-slate-600 bg-slate-50 border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer py-2 pl-3 pr-10">
+                <option value="">Semua Kategori</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                @endforeach
             </select>
 
+            <div class="h-8 w-px bg-slate-200 hidden sm:block"></div>
+
+            <div class="flex items-center gap-2">
+                <select x-model="sort" @change="fetchData"
+                    class="text-[11px] font-bold text-slate-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
+                    <option value="">Urutkan</option>
+                    <option value="price_asc">Harga Terendah</option>
+                    <option value="price_desc">Harga Tertinggi</option>
+                    <option value="stock_asc">Stok Terkecil</option>
+                </select>
+                
+                <select x-model="per_page" @change="fetchData"
+                    class="text-[11px] font-bold text-slate-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
+                    <option value="10">10 Baris</option>
+                    <option value="25">25 Baris</option>
+                    <option value="50">50 Baris</option>
+                </select>
+            </div>
         </div>
     </div>
 
-    <!-- Table Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div id="tableContent">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden relative min-h-[400px]">
+        <div x-show="loading" x-transition.opacity
+            class="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-20 flex items-center justify-center">
+            <div class="flex flex-col items-center gap-3">
+                <div class="w-8 h-8 border-[3px] border-slate-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                <span class="text-xs font-medium text-slate-500 tracking-wide">Memuat data...</span>
+            </div>
+        </div>
+
+        <div id="tableContent" class="overflow-x-auto">
             @include('admin.products.partials.table')
         </div>
     </div>
-
 </div>
 
 <script>
     function productTable() {
-    return {
-        search: '',
-        category: '',
-        sort: '',
-        per_page: 10,
+        return {
+            search: '',
+            category: '',
+            sort: '',
+            per_page: 10,
+            loading: false,
 
-        categoryName() {
-            if (!this.category) return 'Semua Kategori';
-            const categories = {!! json_encode($categories->values()->toArray()) !!};
-            const found = categories.find(c => c.id == this.category);
-            return found ? found.name : 'Semua Kategori';
-        },
+            fetchData() {
+                this.loading = true;
+                const params = new URLSearchParams({
+                    search: this.search,
+                    category: this.category,
+                    sort: this.sort,
+                    per_page: this.per_page
+                });
+                
+                fetch(`?${params.toString()}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('tableContent').innerHTML = html;
+                    if (window.Iconify) window.Iconify.scan();
+                    this.loading = false;
+                });
+            },
 
-        fetchData() {
-            const params = new URLSearchParams({
-                search: this.search,
-                category: this.category,
-                sort: this.sort,
-                per_page: this.per_page
-            });
-            fetch(`?${params.toString()}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('tableContent').innerHTML = html;
-                if (window.Iconify) window.Iconify.scan();
-            });
+            fetchPage(url) {
+                if (!url) return;
+                this.loading = true;
+                const currentUrl = new URL(url);
+                currentUrl.searchParams.set('search', this.search);
+                currentUrl.searchParams.set('category', this.category);
+                currentUrl.searchParams.set('sort', this.sort);
+                currentUrl.searchParams.set('per_page', this.per_page);
+
+                fetch(currentUrl.toString(), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('tableContent').innerHTML = html;
+                    if (window.Iconify) window.Iconify.scan();
+                    this.loading = false;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         }
     }
-}
 </script>
+
+<style>
+    /* Fokus tipis khas aplikasi premium */
+    input:focus { outline: none !important; }
+    
+    /* Custom scrollbar untuk table agar tidak merusak UI */
+    #tableContent::-webkit-scrollbar { height: 6px; }
+    #tableContent::-webkit-scrollbar-track { background: #f1f1f1; }
+    #tableContent::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    #tableContent::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+</style>
 @endsection

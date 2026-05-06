@@ -11,480 +11,244 @@
     @vite(['resources/js/app.js', 'resources/css/app.css'])
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <meta name="turbo-cache-control" content="no-preview">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <style>
-        [x-cloak] {
-            display: none !important;
-        }
+        [x-cloak] { display: none !important; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 20px; }
+        .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
-    <style>
-        /* ===== Custom Sidebar Scrollbar ===== */
-
-        .sidebar-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-scroll::-webkit-scrollbar-thumb {
-            background-color: #334155;
-            /* slate-700 */
-            border-radius: 20px;
-        }
-
-        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-            background-color: #475569;
-            /* slate-600 */
-        }
-
-        /* Firefox */
-        .sidebar-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #334155 transparent;
-        }
-    </style>
-
 </head>
 
-
-<body class="font-sans antialiased bg-slate-100 text-slate-800">
+<body class="font-sans antialiased bg-slate-50 text-slate-800">
 
     <div x-data="{
         sidebarOpen: false,
-        sidebarCollapsed: window.innerWidth < 768
-    }" class="h-screen overflow-hidden">
+        sidebarCollapsed: window.innerWidth < 1024
+    }" class="h-screen flex overflow-hidden">
 
-        <!-- Overlay -->
-        <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" class="fixed inset-0 bg-black/40 z-30 md:hidden">
-        </div>
+        <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" 
+             class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden"></div>
 
-        <!-- SIDEBAR -->
         <aside x-cloak :class="[
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            sidebarCollapsed ? 'w-20' : 'w-64'
-        ]" class="fixed inset-y-0 left-0 z-40
-               bg-slate-900 text-slate-400
-               border-r border-slate-800
-               shadow-xl
-               transform transition-all duration-300
-               flex flex-col md:translate-x-0">
+            sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'
+        ]" class="fixed inset-y-0 left-0 z-50 bg-[#0f172a] text-slate-400 border-r border-slate-800 shadow-2xl sidebar-transition flex flex-col lg:translate-x-0">
 
-            <!-- Logo -->
-            <div class="px-5 py-5 border-b border-slate-800 space-y-1">
-
+            <div class="h-20 flex items-center px-6 border-b border-slate-800/50 shrink-0">
                 <div class="flex items-center gap-3">
                     <span class="iconify text-2xl text-indigo-500" data-icon="mdi:storefront"></span>
-                    <span x-show="!sidebarCollapsed" class="font-semibold text-white text-base tracking-tight">
-                        Depo Bangunan
-                    </span>
+                    <div x-show="!sidebarCollapsed" class="flex flex-col">
+                        <span class="font-bold text-white text-base tracking-tight leading-none">RM. Coto Makassar Selera Rakyat</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Kendari</span>
+                    </div>
                 </div>
-
-                <div x-show="!sidebarCollapsed" class="pl-9">
-                    <p class="text-xs text-slate-400">Sumber Jaya</p>
-                    <p class="text-[11px] text-slate-500">Kolaka</p>
-                </div>
-
             </div>
 
+            <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto sidebar-scroll text-[13px]">
+                
+                @php
+                    $navBase = "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group ";
+                    $active = "bg-indigo-600/10 text-white font-medium border-l-4 border-indigo-500 rounded-l-none";
+                    $inactive = "hover:bg-slate-800 hover:text-white text-slate-400";
+                @endphp
 
-            <!-- NAV -->
-            <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto sidebar-scroll text-sm">
-
-                <!-- Dashboard -->
-                <!-- Dashboard -->
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.dashboard')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:view-dashboard-outline"></span>
+                <a href="{{ route('admin.dashboard') }}" class="{{ $navBase }} {{ request()->routeIs('admin.dashboard') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:view-dashboard-outline"></span>
                     <span x-show="!sidebarCollapsed">Dashboard</span>
                 </a>
 
-                <!-- POS Kasir -->
-                <a href="{{ route('pos.shift.index') }}" data-turbo="false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('pos.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:cash-register"></span>
+                <a href="{{ route('pos.shift.index') }}" data-turbo="false" class="{{ $navBase }} {{ request()->routeIs('pos.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:cash-register"></span>
                     <span x-show="!sidebarCollapsed">POS Kasir</span>
                 </a>
 
-                <!-- Produk -->
-                <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.products.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:package-variant-closed"></span>
+                <a href="{{ route('admin.products.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.products.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:package-variant-closed"></span>
                     <span x-show="!sidebarCollapsed">Produk</span>
                 </a>
 
-                <!-- Kategori -->
-                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.categories.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:shape-outline"></span>
+                <a href="{{ route('admin.categories.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.categories.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:shape-outline"></span>
                     <span x-show="!sidebarCollapsed">Kategori</span>
                 </a>
 
-                <!-- Supplier -->
-                <a href="{{ route('admin.suppliers.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.suppliers.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:truck-outline"></span>
+                <a href="{{ route('admin.suppliers.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.suppliers.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:truck-outline"></span>
                     <span x-show="!sidebarCollapsed">Supplier</span>
                 </a>
 
-                <!-- Customer -->
-                <a href="{{ route('admin.customers.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.customers.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:account-group-outline"></span>
+                <a href="{{ route('admin.customers.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.customers.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:account-group-outline"></span>
                     <span x-show="!sidebarCollapsed">Customer</span>
                 </a>
 
-                <!-- TRANSAKSI DROPDOWN -->
-                <div
-                    x-data="{ open: {{ request()->routeIs('admin.purchases.*', 'admin.orders.*', 'admin.purchase-payments.*', 'admin.order-payments.*') ? 'true' : 'false' }} }">
-
-                    <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl
-                           hover:bg-slate-800 hover:text-white transition">
-
+                <div x-data="{ open: {{ request()->routeIs('admin.purchases.*', 'admin.orders.*', 'admin.purchase-payments.*', 'admin.order-payments.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="iconify text-xl text-slate-400" data-icon="mdi:swap-horizontal"></span>
+                            <span class="iconify text-xl" data-icon="mdi:swap-horizontal"></span>
                             <span x-show="!sidebarCollapsed">Transaksi</span>
                         </div>
-
-                        <span x-show="!sidebarCollapsed" class="iconify text-base transition-transform"
-                            :class="{'rotate-180': open}" data-icon="mdi:chevron-down"></span>
+                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
                     </button>
-
-                    <div x-show="open" x-collapse class="mt-1 space-y-1 pl-6">
-
-                        <a href="{{ route('admin.purchases.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.purchases.*')
-                            ? 'bg-slate-800 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Pembelian
-                        </a>
-
-                        <a href="{{ route('admin.orders.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.orders.*')
-                            ? 'bg-slate-800 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Penjualan
-                        </a>
-
-                        <a href="{{ route('admin.purchase-payments.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.purchase-payments.*')
-                            ? 'bg-slate-800 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Hutang
-                        </a>
-
-                        <a href="{{ route('admin.order-payments.index') }}" class="block px-4 py-2 rounded-xl transition
-                       {{ request()->routeIs('admin.order-payments.*')
-                            ? 'bg-slate-800 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                            Piutang
-                        </a>
-
+                    <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
+                        <a href="{{ route('admin.purchases.index') }}" class="block py-2 hover:text-white transition">Pembelian</a>
+                        <a href="{{ route('admin.orders.index') }}" class="block py-2 hover:text-white transition">Penjualan</a>
+                        <a href="{{ route('admin.purchase-payments.index') }}" class="block py-2 hover:text-white transition">Hutang</a>
+                        <a href="{{ route('admin.order-payments.index') }}" class="block py-2 hover:text-white transition">Piutang</a>
                     </div>
                 </div>
 
-                <!-- FINANCE DROPDOWN -->
-                <div x-data="{ openFinance: {{ request()->routeIs('admin.finance.*') ? 'true' : 'false' }} }">
-
-                    <button @click="openFinance = !openFinance" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl
-                           hover:bg-slate-800 hover:text-white transition">
-
+                <div x-data="{ open: {{ request()->routeIs('admin.finance.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="iconify text-xl text-slate-400" data-icon="mdi:finance"></span>
+                            <span class="iconify text-xl" data-icon="mdi:finance"></span>
                             <span x-show="!sidebarCollapsed">Finance</span>
                         </div>
-
-                        <span x-show="!sidebarCollapsed" class="iconify text-base transition-transform"
-                            :class="{'rotate-180': openFinance}" data-icon="mdi:chevron-down"></span>
+                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
                     </button>
-
-                    <div x-show="openFinance" x-collapse class="mt-1 space-y-1 pl-6">
-
-                        <a href="{{ route('admin.finance.index') }}"
-                            class="block px-4 py-2 rounded-xl hover:bg-slate-800 hover:text-white transition">
-                            Laporan
-                        </a>
-                        <a href="{{ route('admin.finance.daily') }}"
-                            class="block px-4 py-2 rounded-xl hover:bg-slate-800 hover:text-white transition">
-                            Harian
-                        </a>
-                        <a href="{{ route('admin.finance.weekly') }}"
-                            class="block px-4 py-2 rounded-xl hover:bg-slate-800 hover:text-white transition">
-                            Mingguan
-                        </a>
-                        <a href="{{ route('admin.finance.monthly') }}"
-                            class="block px-4 py-2 rounded-xl hover:bg-slate-800 hover:text-white transition">
-                            Bulanan
-                        </a>
-
+                    <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
+                        <a href="{{ route('admin.finance.index') }}" class="block py-2 hover:text-white transition">Laporan</a>
+                        <a href="{{ route('admin.finance.daily') }}" class="block py-2 hover:text-white transition">Harian</a>
+                        <a href="{{ route('admin.finance.weekly') }}" class="block py-2 hover:text-white transition">Mingguan</a>
+                        <a href="{{ route('admin.finance.monthly') }}" class="block py-2 hover:text-white transition">Bulanan</a>
                     </div>
                 </div>
 
-                <!-- Pengeluaran -->
-                <a href="{{ route('admin.expenses.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200
-               {{ request()->routeIs('admin.expenses.*')
-                    ? 'bg-slate-800 text-white'
-                    : 'hover:bg-slate-800 hover:text-white' }}">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:cash-minus"></span>
+                <a href="{{ route('admin.expenses.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.expenses.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:cash-minus"></span>
                     <span x-show="!sidebarCollapsed">Pengeluaran</span>
                 </a>
 
-                <!-- User -->
-                <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-slate-800 hover:text-white">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:account-multiple-outline"></span>
+                <div x-data="{ open: {{ request()->routeIs('kaspro.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="iconify text-xl" data-icon="mdi:chart-line"></span>
+                            <span x-show="!sidebarCollapsed">KasPro</span>
+                        </div>
+                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
+                        <a href="{{ route('kaspro.dashboard') }}" class="block py-2 hover:text-white transition text-[12px]">Dashboard KasPro</a>
+                        <a href="{{ route('kaspro.prediction') }}" class="block py-2 hover:text-white transition text-[12px]">Prediksi Arus Kas</a>
+                        <a href="{{ route('kaspro.alerts') }}" class="flex items-center justify-between py-2 hover:text-white transition text-[12px]">
+                            <span>Peringatan</span>
+                            @php
+                                $unread = \App\Models\KasproAlert::where('user_id', Auth::id())->where('is_read', false)->count();
+                            @endphp
+                            @if($unread > 0)
+                                <span class="bg-red-500 text-white text-[10px] px-1.5 rounded-full mr-4">{{ $unread }}</span>
+                            @endif
+                        </a>
+                        <a href="{{ route('kaspro.margin-analysis') }}" class="block py-2 hover:text-white transition text-[12px]">Analisis Margin</a>
+                    </div>
+                </div>
+
+                <a href="{{ route('admin.users.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.users.index') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:account-multiple-outline"></span>
                     <span x-show="!sidebarCollapsed">User</span>
                 </a>
 
-                <!-- Profil -->
-                <a href="{{ route('profile.edit') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-slate-800 hover:text-white">
-                    <span class="iconify text-xl text-slate-400" data-icon="mdi:account-circle-outline"></span>
+                <a href="{{ route('profile.edit') }}" class="{{ $navBase }} {{ request()->routeIs('profile.edit') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:account-circle-outline"></span>
                     <span x-show="!sidebarCollapsed">Profil</span>
                 </a>
 
             </nav>
 
-            <div class="border-t border-slate-800 p-4 space-y-4">
-
-
-
-                <!-- Credit -->
-                <div x-show="!sidebarCollapsed" class="text-[11px] text-slate-500 leading-relaxed">
-                    <p>Built by</p>
-                    <p class="text-slate-400 font-medium">
-                        Anoadev
-                    </p>
-                    <p class="text-slate-600">
-                        CV. Anoa Nusantara Solusi
-                    </p>
+            <div class="p-4 border-t border-slate-800 shrink-0">
+                <div x-show="!sidebarCollapsed" class="text-[11px] text-slate-500">
+                    <p>Built by <span class="text-white">Anoadev</span></p>
+                    <p>CV. Anoa Nusantara Solusi</p>
                 </div>
-
             </div>
-
-
         </aside>
 
-        <!-- MAIN -->
-        <div class="h-screen overflow-y-auto transition-all duration-300"
-            :class="sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'">
+        <div class="flex-1 flex flex-col min-w-0 h-screen sidebar-transition"
+             :class="sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'">
 
-            <!-- TOPBAR -->
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-20">
-                <div class="flex items-center justify-between px-8 py-4">
+            <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 z-30 flex items-center justify-between px-6 shrink-0">
+                <div class="flex items-center gap-4">
+                    <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg hover:bg-slate-100">
+                        <span class="iconify text-2xl" data-icon="mdi:menu"></span>
+                    </button>
+                    <button @click="sidebarCollapsed = !sidebarCollapsed" class="hidden lg:block p-2 rounded-lg hover:bg-slate-100">
+                        <span class="iconify text-2xl" :data-icon="sidebarCollapsed ? 'mdi:menu' : 'mdi:menu-open'"></span>
+                    </button>
+                    <h2 class="text-xl font-semibold tracking-tight text-slate-800">@yield('title', 'Dashboard')</h2>
+                </div>
 
-                    <!-- LEFT -->
-                    <div class="flex items-center gap-4">
-
-                        <button @click="sidebarOpen = true" class="md:hidden p-2 rounded hover:bg-slate-100">
-                            <span class="iconify text-2xl" data-icon="mdi:menu"></span>
-                        </button>
-
-                        <button @click="sidebarCollapsed = !sidebarCollapsed"
-                            class="hidden md:inline-flex p-2 rounded hover:bg-slate-100">
-                            <span class="iconify text-xl" data-icon="mdi:menu-open"></span>
-                        </button>
-
-                        <h2 class="text-xl font-semibold tracking-tight">
-                            @yield('title', 'Dashboard')
-                        </h2>
-
+                <div class="flex items-center gap-4 sm:gap-6">
+                    <div class="hidden md:relative md:block">
+                        <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="mdi:magnify"></span>
+                        <input type="text" placeholder="Cari..." class="w-64 pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20">
                     </div>
 
-
-                    <!-- CENTER SEARCH -->
-                    <div class="hidden md:flex flex-1 justify-center px-8">
-                        <div class="relative w-full max-w-md">
-                            <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                                data-icon="mdi:magnify"></span>
-                            <input type="text" placeholder="Cari produk, transaksi..." class="w-full pl-10 pr-4 py-2.5 rounded-xl
-                              bg-slate-100 border border-slate-200
-                              focus:outline-none focus:ring-2 focus:ring-indigo-500
-                              text-sm transition">
-                        </div>
-                    </div>
-
-
-                    <!-- RIGHT -->
-                    <div class="flex items-center gap-6">
-
-                        <!-- Location -->
-                        <div class="hidden lg:flex items-center gap-2 text-sm text-slate-600">
-                            <span class="iconify text-lg text-indigo-500" data-icon="mdi:map-marker"></span>
-                            <span>Kolaka</span>
-                        </div>
-
-                        <!-- Notification -->
-                        <div class="relative">
-                            <button class="p-2 rounded-xl hover:bg-slate-100 transition relative">
-                                <span class="iconify text-xl text-slate-600" data-icon="mdi:bell-outline"></span>
-
-                                <!-- Badge -->
-                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px]
-                                 w-5 h-5 flex items-center justify-center rounded-full">
-                                    3
-                                </span>
-                            </button>
-                        </div>
-
-
-                        <!-- PROFILE DROPDOWN -->
-                        <div x-data="{ openProfile:false }" class="relative">
-
-                            <button @click="openProfile = !openProfile"
-                                class="flex items-center gap-3 p-1.5 rounded-xl hover:bg-slate-100 transition">
-
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}"
-                                    class="w-9 h-9 rounded-xl" alt="User Avatar">
-
-                                <div class="hidden sm:block text-left">
-                                    <p class="text-sm font-medium leading-tight">
-                                        {{ Auth::user()->name }}
-                                    </p>
-                                    <p class="text-xs text-slate-500">
-                                        Administrator
-                                    </p>
-                                </div>
-
-                                <span class="iconify text-base text-slate-500" data-icon="mdi:chevron-down"></span>
-                            </button>
-
-
-                            <!-- DROPDOWN -->
-                            <div x-show="openProfile" @click.away="openProfile=false" x-transition class="absolute right-0 mt-3 w-56 bg-white border border-slate-200
-                            rounded-2xl shadow-xl py-2 text-sm z-50">
-
-                                <a href="{{ route('profile.edit') }}"
-                                    class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-100 transition">
-                                    <span class="iconify text-lg text-slate-500"
-                                        data-icon="mdi:account-circle-outline"></span>
-                                    Profil
-                                </a>
-
-                                <div class="border-t my-2"></div>
-
-                                <form method="POST" action="{{ route('logout') }}" data-turbo="false">
-                                    @csrf
-                                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5
-                                       text-red-500 hover:bg-red-50 transition">
-                                        <span class="iconify text-lg" data-icon="mdi:logout-variant"></span>
-                                        Logout
-                                    </button>
-                                </form>
-
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 p-1 rounded-xl hover:bg-slate-100 transition">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=6366f1&color=fff" class="w-10 h-10 rounded-xl shadow-sm" alt="Avatar">
+                            <div class="hidden sm:block text-left">
+                                <p class="text-sm font-bold leading-none mb-1">{{ Auth::user()->name }}</p>
+                                <p class="text-[11px] text-slate-500 leading-none">Administrator</p>
                             </div>
-
+                            <span class="iconify text-slate-400" data-icon="mdi:chevron-down"></span>
+                        </button>
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50">
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 text-sm">
+                                <span class="iconify text-lg" data-icon="mdi:account-outline"></span> Profil
+                            </a>
+                            <div class="border-t my-2 border-slate-100"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 text-sm font-medium">
+                                    <span class="iconify text-lg" data-icon="mdi:logout"></span> Logout
+                                </button>
+                            </form>
                         </div>
-
                     </div>
-
                 </div>
             </header>
 
-
-            <main class="p-8 bg-slate-100 min-h-full">
-                @yield('content')
+            <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+                <div class="max-w-7xl mx-auto">
+                    @yield('content')
+                </div>
             </main>
-
         </div>
-
     </div>
 
-    <!-- ===== GLOBAL DELETE CONFIRM MODAL ===== -->
-    <div id="deleteModal" class="fixed inset-0 z-[999] flex items-center justify-center p-4"
-        style="display:none!important">
-
-        <!-- Backdrop -->
+    <div id="deleteModal" class="fixed inset-0 z-[999] flex items-center justify-center p-4" style="display:none">
         <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
-
-        <!-- Card -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
-
-            <!-- Icon -->
-            <div class="flex items-center gap-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                    <span class="iconify text-2xl text-red-600" data-icon="mdi:trash-can-outline"></span>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-slate-800">Konfirmasi Hapus</h3>
-                    <p class="text-sm text-slate-500 mt-0.5">Tindakan ini tidak dapat dibatalkan.</p>
-                </div>
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 text-center space-y-4">
+            <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto">
+                <span class="iconify text-3xl" data-icon="mdi:trash-can-outline"></span>
             </div>
-
-            <!-- Message -->
-            <div class="bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-600 border border-slate-200">
-                Apakah Anda yakin ingin menghapus
-                <span id="deleteModalName" class="font-semibold text-slate-800"></span>?
-            </div>
-
-            <!-- Actions -->
-            <div class="flex justify-end gap-3">
-                <button onclick="closeDeleteModal()"
-                    class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
-                    Batal
-                </button>
-                <form id="deleteModalForm" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl transition shadow-sm shadow-red-100">
-                        <span class="iconify" data-icon="mdi:trash-can-outline"></span>
-                        Ya, Hapus
-                    </button>
+            <h3 class="text-lg font-bold text-slate-800">Hapus Data?</h3>
+            <p class="text-sm text-slate-500">Yakin ingin menghapus <span id="deleteModalName" class="font-bold text-slate-800"></span>?</p>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 text-sm font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition">Batal</button>
+                <form id="deleteModalForm" method="POST" class="flex-1">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2.5 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 transition">Hapus</button>
                 </form>
             </div>
-
         </div>
     </div>
 
     @stack('scripts')
-
     <script>
         function confirmDelete(url, name) {
-        document.getElementById('deleteModalName').textContent = name ?? 'item ini';
-        document.getElementById('deleteModalForm').action = url;
-        document.getElementById('deleteModal').style.removeProperty('display');
-    }
-    function confirmAction(formId, name) {
-        document.getElementById('deleteModalName').textContent = name ?? 'tindakan ini';
-        // Override submit to submit the target form instead
-        const btn = document.querySelector('#deleteModalForm button[type=submit]');
-        const originalClick = btn.onclick;
-        document.getElementById('deleteModalForm').onsubmit = function(e) {
-            e.preventDefault();
-            document.getElementById(formId).submit();
-            closeDeleteModal();
-        };
-        document.getElementById('deleteModal').style.removeProperty('display');
-    }
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').style.display = 'none';
-        // Reset form submit
-        document.getElementById('deleteModalForm').onsubmit = null;
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeDeleteModal();
-    });
+            document.getElementById('deleteModalName').textContent = name ?? 'item ini';
+            document.getElementById('deleteModalForm').action = url;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDeleteModal(); });
     </script>
-
 </body>
-
 </html>

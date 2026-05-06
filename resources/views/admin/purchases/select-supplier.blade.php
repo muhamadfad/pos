@@ -3,77 +3,86 @@
 @section('title', 'Pilih Supplier')
 
 @section('content')
-<div x-data="{ search: '' }">
+<div class="max-w-[1200px] mx-auto p-6 font-sans antialiased text-slate-900" x-data="{ search: '' }">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Pilih Supplier</h1>
-            <p class="text-sm text-slate-500 mt-0.5">Tentukan supplier untuk transaksi pembelian ini</p>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-8 h-[2px] bg-indigo-600"></span>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Step 01 // Selection</span>
+            </div>
+            <h1 class="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">Select Supplier</h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tentukan mitra untuk entri pembelian baru</p>
         </div>
+        
         <a href="{{ route('admin.purchases.index') }}"
-            class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
-            <span class="iconify" data-icon="mdi:arrow-left"></span>
-            Kembali
+            class="h-10 px-5 flex items-center gap-3 bg-white border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+            <span class="iconify text-lg" data-icon="lucide:arrow-left"></span>
+            Back to Registry
         </a>
     </div>
 
-    <!-- Search Bar -->
-    <div class="mb-6 relative group">
-        <div
-            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-indigo-500 text-slate-400">
-            <span class="iconify text-xl" data-icon="mdi:magnify"></span>
+    <div class="mb-8 relative group">
+        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+            <span class="iconify text-xl" data-icon="lucide:search"></span>
         </div>
         <input type="text" x-model="search"
-            class="block w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all shadow-sm"
-            placeholder="Cari nama supplier...">
+            class="block w-full pl-14 pr-6 py-5 bg-white border-2 border-slate-100 rounded-2xl text-sm font-bold text-slate-800 placeholder:text-slate-300 placeholder:font-medium focus:outline-none focus:border-indigo-600 transition-all shadow-sm shadow-slate-100/50"
+            placeholder="TYPE SUPPLIER NAME / ID...">
     </div>
 
-    <!-- Table Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-                <thead
-                    class="bg-slate-50 text-slate-600 uppercase text-[11px] font-bold tracking-widest border-b border-slate-200 text-center">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto pb-2 custom-scrollbar">
+            <table class="w-full border-collapse">
+                <thead class="bg-slate-50/50 border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-4 text-left">Nama Supplier</th>
-                        <th class="px-6 py-4">Kontak</th>
-                        <th class="px-6 py-4">Alamat</th>
-                        <th class="px-6 py-4">Aksi</th>
+                        <th class="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Supplier Entity</th>
+                        <th class="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Communication</th>
+                        <th class="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Location Data</th>
+                        <th class="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 border-b border-slate-100">
+                <tbody class="divide-y divide-slate-50">
                     @forelse ($suppliers as $supplier)
-                    <tr class="hover:bg-slate-50/80 transition-colors"
+                    <tr class="group hover:bg-slate-50/50 transition-colors duration-150"
                         x-show="search === '' || '{{ strtolower($supplier->name) }}'.includes(search.toLowerCase())">
-                        <td class="px-6 py-4">
-                            <div class="font-bold text-slate-800">{{ $supplier->name }}</div>
-                            <div class="text-[12px] text-slate-500">ID: #SUP-{{ str_pad($supplier->id, 4, '0',
-                                STR_PAD_LEFT) }}</div>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <div
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-[12px] font-medium">
-                                <span class="iconify text-slate-400" data-icon="mdi:phone"></span>
-                                {{ $supplier->phone ?? '-' }}
+                        
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-black text-slate-900 tracking-tight leading-none mb-1 group-hover:text-indigo-600 transition-colors italic uppercase">
+                                    {{ $supplier->name }}
+                                </span>
+                                <span class="text-[10px] font-bold text-slate-400 tracking-[0.1em]">
+                                    ID: SUP/{{ str_pad($supplier->id, 4, '0', STR_PAD_LEFT) }}
+                                </span>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-600 max-w-xs truncate">
-                            {{ $supplier->address ?? '-' }}
+
+                        <td class="px-8 py-6">
+                            <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded text-[11px] font-black text-slate-600 border border-transparent group-hover:border-slate-200 transition-all">
+                                <span class="iconify" data-icon="lucide:phone"></span>
+                                {{ $supplier->phone ?? 'NO_CONTACT' }}
+                            </div>
                         </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
+
+                        <td class="px-8 py-6">
+                            <p class="text-[11px] font-bold text-slate-500 max-w-xs truncate italic">
+                                {{ $supplier->address ?? '// ADDRESS_NOT_SET' }}
+                            </p>
+                        </td>
+
+                        <td class="px-8 py-6 text-right">
                             <a href="{{ route('admin.purchases.per-supplier', $supplier->id) }}"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all font-bold group">
-                                Pilih Supplier
-                                <span class="iconify group-hover:translate-x-1 transition-transform"
-                                    data-icon="mdi:arrow-right"></span>
+                                class="inline-flex items-center gap-3 px-5 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-lg hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-slate-100">
+                                Select
+                                <span class="iconify text-lg" data-icon="lucide:arrow-right"></span>
                             </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="py-16 text-center text-slate-500">
-                            Belum ada data supplier.
+                        <td colspan="4" class="py-24 text-center">
+                            <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">No_Supplier_Entities_Available</span>
                         </td>
                     </tr>
                     @endforelse
@@ -81,6 +90,16 @@
             </table>
         </div>
     </div>
-
 </div>
+
+<style>
+    /* Custom Scrollbar Industrial */
+    .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    
+    /* Clean Table */
+    table { border-spacing: 0; }
+    tr { outline: none; }
+</style>
 @endsection

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Services\KasproService;
 
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
@@ -61,7 +62,7 @@ class ExpenseController extends Controller
         return view('admin.expenses.form', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request,KasproService $kaspro)
     {
         $request->validate([
             'description' => 'required|string|max:255',
@@ -81,6 +82,27 @@ class ExpenseController extends Controller
             'reference'   => $request->reference,
             'notes'       => $request->notes,
         ]);
+
+        // ... validasi ...
+    
+        $expense = Expense::create($validated);
+        
+        // Auto-kategorisasi
+        $categorization = $kaspro->categorize($expense->description);
+        $expense->kaspro_category = $categorization['category'];
+        $expense->kaspro_confidence = $categorization['confidence'];
+        $expense->kaspro_needs_review = $categorization['needs_review'];
+        
+        // Deteksi anomali
+        $anomaly = $kaspro->detectAnomaly($expense, 'EXPENSE');
+        $expense->kaspro_is_anomaly = $anomaly['is_anomaly'];
+        $expense->kaspro_risk_score = $anomaly['risk_score'];
+        $expense->kaspro_anomaly_flags = $anomaly['flags'];
+        
+        $expense->save();
+        
+        // Cek alert
+        $kaspro->checkAndCreateAlerts();
 
         return redirect()
             ->route('admin.expenses.index')

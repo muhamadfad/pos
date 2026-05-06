@@ -82,6 +82,17 @@
             <p class="text-2xl font-black text-white">Rp {{ number_format(abs($netCashflow), 0, ',', '.') }}</p>
             <p class="text-xs text-white/60 mt-1">{{ $isPositive ? 'Surplus' : 'Defisit' }}</p>
         </div>
+        {{-- Keuntungan Bersih --}}
+            <div class="bg-yellow-500 rounded-[2rem] shadow-xl p-7">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                        <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
+                    </div>
+                    <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
+                </div>
+                <p class="text-2xl font-black text-white">Rp {{ number_format($totalProfit, 0, ',', '.') }}</p>
+                <p class="text-xs text-white/60 mt-1">Pendapatan − HPP</p>
+            </div>
     </div>
 
     {{-- Formula Visual --}}

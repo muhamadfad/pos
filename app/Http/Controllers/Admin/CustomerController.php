@@ -28,15 +28,21 @@ class CustomerController extends Controller
         return view('admin.customers.index', compact('customers', 'total'));
     }
 
-    public function show(Customer $customer)
+        public function show(Request $request, Customer $customer)
     {
-        $orders = $customer->orders()
-            ->with('items.product')
-            ->latest()
-            ->paginate(15);
-        $totalTransaksi   = $customer->orders()->count();
-        $totalPembelian   = $customer->orders()->sum('total_amount');
-        $totalPiutang     = $customer->orders()->where('payment_status', '!=', 'paid')->sum('remaining_receivable');
+        // Mengambil data orders dengan pagination
+        $orders = $customer->orders()->latest()->paginate(10);
+
+        // Hitung data pendukung
+        $totalTransaksi = $customer->orders()->count();
+        $totalPembelian = $customer->orders()->sum('total_amount');
+        $totalPiutang = $customer->orders()->sum('remaining_receivable');
+
+        // JIKA REQUEST AJAX (dari pagination), kirimkan partial saja
+        if ($request->ajax()) {
+            return view('admin.customers.partials.table-detail', compact('customer', 'orders'))->render();
+        }
+
         return view('admin.customers.show', compact('customer', 'orders', 'totalTransaksi', 'totalPembelian', 'totalPiutang'));
     }
 

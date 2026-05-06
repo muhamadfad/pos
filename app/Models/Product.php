@@ -50,4 +50,17 @@ class Product extends Model
     {
         return $this->stock <= $this->min_stock;
     }
+    // Relasi ke recipe_items
+    public function recipeItems()
+    {
+        return $this->hasMany(RecipeItem::class);
+    }
+
+    // Relasi ke ingredients melalui recipe_items
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredient::class, 'recipe_items')
+                    ->withPivot('quantity', 'unit_id', 'waste_percentage')
+                    ->withTimestamps();
+    }
 }
