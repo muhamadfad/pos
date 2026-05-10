@@ -68,14 +68,40 @@
                     <span x-show="!sidebarCollapsed">POS Kasir</span>
                 </a>
 
-                <a href="{{ route('admin.products.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.products.*') ? $active : $inactive }}">
-                    <span class="iconify text-xl" data-icon="mdi:package-variant-closed"></span>
-                    <span x-show="!sidebarCollapsed">Produk</span>
-                </a>
+                <!-- INVENTORY MANAGEMENT GROUP -->
+                <div x-data="{ open: {{ request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.ingredients.*', 'admin.recipes.*', 'admin.branch-stock.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="iconify text-xl" data-icon="mdi:package-variant"></span>
+                            <span x-show="!sidebarCollapsed">Inventory</span>
+                        </div>
+                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
+                        <a href="{{ route('admin.products.index') }}" class="block py-2 hover:text-white transition">Menu</a>
+                        <a href="{{ route('admin.categories.index') }}" class="block py-2 hover:text-white transition">Kategori</a>
+                        <a href="{{ route('admin.ingredients.index') }}" class="block py-2 hover:text-white transition">Bahan Baku</a>
+                        <a href="{{ route('admin.recipes.index') }}" class="block py-2 hover:text-white transition">Resep Menu</a>
+                        <a href="{{ route('admin.branch-stock.index') }}" class="block py-2 hover:text-white transition text-[12px] flex items-center justify-between">
+                            <span>Stok Bahan per Cabang</span>
+                            @php
+                                $lowStockCount = \App\Models\BranchStock::whereColumn('quantity', '<=', 'min_stock')
+                                    ->where('quantity', '>', 0)
+                                    ->count();
+                            @endphp
+                            @if($lowStockCount > 0)
+                                <span class="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{{ $lowStockCount }}</span>
+                            @endif
+                        </a>
+                        <a href="{{ route('admin.branch-stock.low-stock') }}" class="block py-2 hover:text-white transition text-[12px] pl-4 text-amber-400">
+                            ⚠️ Stok Menipis
+                        </a>
+                    </div>
+                </div>
 
-                <a href="{{ route('admin.categories.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.categories.*') ? $active : $inactive }}">
-                    <span class="iconify text-xl" data-icon="mdi:shape-outline"></span>
-                    <span x-show="!sidebarCollapsed">Kategori</span>
+                <a href="/admin/hpp-report" class="{{ $navBase }} {{ request()->routeIs('admin.recipes.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:chart-line"></span>
+                    <span x-show="!sidebarCollapsed">HPP & Margin</span>
                 </a>
 
                 <a href="{{ route('admin.suppliers.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.suppliers.*') ? $active : $inactive }}">

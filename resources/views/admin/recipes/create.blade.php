@@ -1,0 +1,181 @@
+@extends('layouts.admin')
+
+@section('title', 'Tambah Resep')
+
+@section('content')
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="p-2 lg:p-4 max-w-[1200px] mx-auto space-y-6" style="font-family: 'Inter', sans-serif;">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <nav class="flex mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span>Inventory</span>
+                <span class="mx-2">/</span>
+                <span>Recipes</span>
+                <span class="mx-2">/</span>
+                <span class="text-indigo-600">Create</span>
+            </nav>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Tambah Resep Baru</h1>
+            <p class="text-sm text-slate-500 mt-1">Tambahkan komposisi bahan baku untuk menu</p>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.recipes.index') }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+                <span class="iconify text-lg" data-icon="lucide:arrow-left"></span>
+                Kembali
+            </a>
+        </div>
+    </div>
+
+    @if ($errors->any())
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl flex gap-3">
+        <span class="iconify text-rose-500 text-xl shrink-0" data-icon="lucide:alert-circle"></span>
+        <div class="text-sm">
+            <h4 class="font-bold text-rose-800">Ada kendala pada input Anda:</h4>
+            <ul class="text-rose-700/80 list-disc list-inside mt-1">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+    @endif
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <form action="{{ route('admin.recipes.store') }}" method="POST" id="recipeForm">
+            @csrf
+            
+            <div class="p-6 space-y-6">
+                <!-- Header Form -->
+                <div class="border-b border-slate-200 pb-4">
+                    <h2 class="text-lg font-semibold text-slate-900">Informasi Resep</h2>
+                    <p class="text-sm text-slate-500 mt-0.5">Pilih menu dan tentukan komposisi bahan bakunya</p>
+                </div>
+
+                <!-- Pilih Menu -->
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        Pilih Menu <span class="text-rose-500">*</span>
+                    </label>
+                    <select name="product_id" class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer" required>
+                        <option value="">-- Pilih Menu --</option>
+                        @foreach($products as $product)
+                        <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                            {{ $product->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    @error('product_id')
+                        <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="border-t border-slate-200 pt-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                            <span class="iconify text-indigo-500" data-icon="lucide:package"></span>
+                            Komposisi Bahan Baku
+                        </h3>
+                        <button type="button" id="add-row"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg hover:bg-emerald-100 transition-all">
+                            <span class="iconify text-sm" data-icon="lucide:plus"></span>
+                            Tambah Bahan
+                        </button>
+                    </div>
+                    
+                    <div id="items-container" class="space-y-3">
+                        <div class="item-row grid grid-cols-12 gap-3 items-start bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                            <div class="col-span-5">
+                                <select name="items[0][ingredient_id]" class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all" required>
+                                    <option value="">Pilih Bahan Baku</option>
+                                    @foreach($ingredients as $ingredient)
+                                    <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-span-3">
+                                <input type="number" step="0.01" name="items[0][quantity]" 
+                                    class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                                    placeholder="Jumlah" required>
+                            </div>
+                            <div class="col-span-3">
+                                <select name="items[0][unit_id]" class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                                    <option value="">Pilih Satuan</option>
+                                    @foreach($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-span-1">
+                                <button type="button" class="remove-row w-full py-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all">
+                                    <span class="iconify text-lg" data-icon="lucide:trash-2"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-slate-400 mt-3">* Minimal 1 bahan baku untuk setiap resep</p>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 px-6 py-4 bg-slate-50/50 border-t border-slate-200">
+                <a href="{{ route('admin.recipes.index') }}"
+                    class="px-6 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+                    Batal
+                </a>
+                <button type="submit" 
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm active:scale-95">
+                    <span class="iconify text-base mr-1" data-icon="lucide:save"></span>
+                    Simpan Resep
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let rowIndex = 1;
+    
+    document.getElementById('add-row').addEventListener('click', function() {
+        const container = document.getElementById('items-container');
+        const firstRow = container.querySelector('.item-row');
+        const newRow = firstRow.cloneNode(true);
+        
+        // Reset semua nilai input dan select
+        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
+        
+        // Update name attributes dengan index baru
+        newRow.querySelectorAll('[name]').forEach(el => {
+            el.name = el.name.replace(/\[(\d+)\]/, '[' + rowIndex + ']');
+        });
+        
+        // Hapus event listener lama dan tambah baru
+        const removeBtn = newRow.querySelector('.remove-row');
+        removeBtn.replaceWith(removeBtn.cloneNode(true));
+        newRow.querySelector('.remove-row').addEventListener('click', function() {
+            if(document.querySelectorAll('.item-row').length > 1) {
+                newRow.remove();
+            } else {
+                alert('Minimal 1 bahan baku');
+            }
+        });
+        
+        container.appendChild(newRow);
+        rowIndex++;
+    });
+    
+    // Event listener untuk remove button pertama
+    document.querySelectorAll('.remove-row').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if(document.querySelectorAll('.item-row').length > 1) {
+                btn.closest('.item-row').remove();
+            } else {
+                alert('Minimal 1 bahan baku');
+            }
+        });
+    });
+</script>
+@endsection

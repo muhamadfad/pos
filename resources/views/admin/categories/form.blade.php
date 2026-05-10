@@ -51,7 +51,7 @@
                         <span class="iconify" data-icon="mdi:shape-outline"></span>
                     </div>
                     <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}"
-                        placeholder="Contoh: Semen, Cat, Paku" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-xl transition
+                        placeholder="Contoh: Makanan, Minuman" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-xl transition
                                {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-slate-300 focus:ring-indigo-200 focus:border-indigo-400' }}
                                focus:outline-none focus:ring-2">
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', isset($isEdit) && $isEdit ? 'Edit Produk' : 'Tambah Produk')
+@section('title', isset($isEdit) && $isEdit ? 'Edit Menu' : 'Tambah Menu')
 
 @section('content')
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,9 +15,9 @@
             </a>
             <div>
                 <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
-                    {{ isset($isEdit) && $isEdit ? 'Edit Produk' : 'Tambah Produk Baru' }}
+                    {{ isset($isEdit) && $isEdit ? 'Edit Menu' : 'Tambah Menu Baru' }}
                 </h1>
-                <p class="text-sm text-slate-500 font-medium">Lengkapi detail informasi produk inventaris Anda.</p>
+                <p class="text-sm text-slate-500 font-medium">Lengkapi detail informasi daftar menu Anda.</p>
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
         <div class="lg:col-span-8 space-y-6">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="text-sm font-semibold text-slate-800">Informasi Produk</h3>
+                    <h3 class="text-sm font-semibold text-slate-800">Informasi Menu</h3>
                 </div>
                 
                 <div class="p-6 space-y-6">
@@ -74,10 +74,10 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Nama Produk</label>
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Menu</label>
                         <input type="text" id="name" name="name" required
                             class="w-full px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-800 placeholder:text-slate-400"
-                            placeholder="Contoh: Oli Mesin Shell Helix 1L" value="{{ old('name', $product->name ?? '') }}">
+                            placeholder="Contoh: Coto, Telur, Es Teh" value="{{ old('name', $product->name ?? '') }}">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -114,7 +114,7 @@
         <div class="lg:col-span-4 space-y-6">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden sticky top-6">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="text-sm font-semibold text-slate-800 text-center">Finansial & Stok</h3>
+                    <h3 class="text-sm font-semibold text-slate-800 text-center">Finansial</h3>
                 </div>
 
                 <div class="p-6 space-y-5">
@@ -138,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div class="space-y-2">
+                    <!-- <div class="space-y-2">
                         <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Stok Awal</label>
                         <div class="relative group">
                             <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="lucide:layers"></span>
@@ -146,7 +146,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 text-sm font-semibold bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-400 transition-all text-slate-800"
                                 placeholder="0" value="{{ old('stock', $product->stock ?? '') }}">
                         </div>
-                    </div>
+                    </div> -->
 
                     <div id="marginInfo" class="hidden p-4 rounded-lg bg-indigo-50/50 border border-indigo-100 space-y-1">
                         <div class="flex items-center gap-1.5 text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
@@ -160,7 +160,7 @@
                         <button type="submit"
                             class="w-full py-3 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 shadow-sm hover:shadow-indigo-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                             <span class="iconify text-lg" data-icon="{{ isset($isEdit) && $isEdit ? 'lucide:save' : 'lucide:check-circle' }}"></span>
-                            {{ isset($isEdit) && $isEdit ? 'Simpan Perubahan' : 'Terbitkan Produk' }}
+                            {{ isset($isEdit) && $isEdit ? 'Simpan Perubahan' : 'Terbitkan Menu' }}
                         </button>
                         <a href="{{ route('admin.products.index') }}"
                             class="w-full py-3 bg-white text-slate-500 text-sm font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center">

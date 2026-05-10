@@ -143,9 +143,9 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @php
             $metrics = [
-                ['label' => 'Total Produk', 'val' => $totalProducts, 'icon' => 'mdi:package-variant', 'color' => 'indigo', 'trend' => '+12%', 'bg' => 'indigo-50', 'text' => 'indigo-600'],
-                ['label' => 'Stok Menipis', 'val' => $lowStock, 'icon' => 'mdi:alert-decagram', 'color' => 'amber', 'trend' => $lowStock > 0 ? 'Perlu restock' : 'Aman', 'bg' => 'amber-50', 'text' => 'amber-600'],
-                ['label' => 'Stok Habis', 'val' => $outOfStock, 'icon' => 'mdi:close-octagon', 'color' => 'rose', 'trend' => $outOfStock > 0 ? 'Kritis!' : 'Habis', 'bg' => 'rose-50', 'text' => 'rose-600'],
+                ['label' => 'Total Menu', 'val' => $totalProducts, 'icon' => 'mdi:food', 'color' => 'indigo', 'trend' => '+12%', 'bg' => 'indigo-50', 'text' => 'indigo-600'],
+                ['label' => 'Stok Bahan Menipis', 'val' => $lowStock, 'icon' => 'mdi:alert-decagram', 'color' => 'amber', 'trend' => $lowStock > 0 ? 'Perlu restock' : 'Aman', 'bg' => 'amber-50', 'text' => 'amber-600'],
+                ['label' => 'Stok Bahan Habis', 'val' => $outOfStock, 'icon' => 'mdi:close-octagon', 'color' => 'rose', 'trend' => $outOfStock > 0 ? 'Kritis!' : 'Habis', 'bg' => 'rose-50', 'text' => 'rose-600'],
                 ['label' => 'User Aktif', 'val' => $totalUsers, 'icon' => 'mdi:account-group', 'color' => 'emerald', 'trend' => 'Terdaftar', 'bg' => 'emerald-50', 'text' => 'emerald-600'],
             ];
         @endphp
@@ -368,45 +368,47 @@
     }
 
     // Load Activity Log via AJAX
-    function loadActivities(branchId = null) {
-        let url = '/dashboard/activities';
-        if (branchId && branchId !== 'all') {
-            url += '?branch_id=' + branchId;
-        }
-        
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(response) {
-                const container = $('#activityLog');
-                if (response.activities && response.activities.length > 0) {
-                    let html = '';
-                    response.activities.forEach(activity => {
-                        const icon = getActivityIcon(activity.type);
-                        const color = getActivityColor(activity.type);
-                        html += `
-                            <div class="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors rounded-2xl cursor-pointer group">
-                                <div class="w-10 h-10 rounded-xl bg-${color}-50 text-${color}-600 flex items-center justify-center shrink-0">
-                                    <span class="iconify text-xl" data-icon="${icon}"></span>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">${activity.message}</p>
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">${activity.type} &bull; ${activity.time}</p>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    container.html(html);
-                } else {
-                    container.html('<div class="text-center py-10 text-slate-400">✨ Belum ada aktivitas</div>');
-                }
-                if (window.Iconify) window.Iconify.scan();
-            },
-            error: function() {
-                $('#activityLog').html('<div class="text-center py-10 text-rose-500">⚠️ Gagal memuat aktivitas</div>');
-            }
-        });
+    // Load Activity Log via AJAX
+function loadActivities(branchId = null) {
+    let url = '/dashboard/activities';
+    if (branchId && branchId !== 'all') {
+        url += '?branch_id=' + branchId;
     }
+    
+    $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(response) {
+            const container = $('#activityLog');
+            if (response.activities && response.activities.length > 0) {
+                let html = '';
+                response.activities.forEach(activity => {
+                    const icon = activity.icon || getActivityIcon(activity.type);
+                    const color = activity.color || getActivityColor(activity.type);
+                    html += `
+                        <div class="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors rounded-2xl cursor-pointer group">
+                            <div class="w-10 h-10 rounded-xl bg-${color}-50 text-${color}-600 flex items-center justify-center shrink-0">
+                                <span class="iconify text-xl" data-icon="${icon}"></span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">${activity.message}</p>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">${activity.time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.html(html);
+            } else {
+                container.html('<div class="text-center py-10 text-slate-400">✨ Belum ada aktivitas transaksi</div>');
+            }
+            if (window.Iconify) window.Iconify.scan();
+        },
+        error: function(xhr) {
+            console.error('Error loading activities:', xhr);
+            $('#activityLog').html('<div class="text-center py-10 text-rose-500">⚠️ Gagal memuat aktivitas</div>');
+        }
+    });
+}
 
     function getActivityIcon(type) {
         const icons = { order: 'mdi:shopping', stock: 'mdi:package-down', payment: 'mdi:cash', user: 'mdi:account' };

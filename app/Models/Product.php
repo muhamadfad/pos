@@ -53,7 +53,7 @@ class Product extends Model
     // Relasi ke recipe_items
     public function recipeItems()
     {
-        return $this->hasMany(RecipeItem::class);
+        return $this->hasMany(RecipeItem::class, 'product_id');
     }
 
     // Relasi ke ingredients melalui recipe_items
@@ -63,4 +63,5 @@ class Product extends Model
                     ->withPivot('quantity', 'unit_id', 'waste_percentage')
                     ->withTimestamps();
     }
+    
 }

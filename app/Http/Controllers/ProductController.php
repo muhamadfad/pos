@@ -28,11 +28,14 @@ class ProductController extends Controller
 
         if ($request->sort === 'price') {
             $query->orderBy('selling_price', 'asc');
-        } elseif ($request->sort === 'stock') {
-            $query->orderBy('stock', 'asc');
         }
+        // Hapus sort by stock karena kolom stock tidak ada
+        // elseif ($request->sort === 'stock') {
+        //     $query->orderBy('stock', 'asc');
+        // }
 
-        $query->orderByRaw('stock = 0 DESC')->orderBy('name');
+        // Hapus orderBy stock karena kolom stock tidak ada
+        $query->orderBy('name');
 
         $perPage = $request->per_page ?? 10;
         $products = $query->paginate($perPage)->withQueryString();
@@ -60,14 +63,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'barcode'        => 'nullable|unique:products,barcode',
+            'barcode'        => 'nullable|string|max:255|unique:products,barcode',
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            'stock'          => 'required|integer|min:0',
-            'min_stock'      => 'nullable|integer|min:0',
+            // Hapus validasi stock dan min_stock
         ]);
 
         Product::create([
@@ -77,8 +79,7 @@ class ProductController extends Controller
             'unit_id'        => $request->unit_id,
             'purchase_price' => $request->purchase_price,
             'selling_price'  => $request->selling_price,
-            'stock'          => $request->stock,
-            'min_stock'      => $request->min_stock ?? 0,
+            // Hapus stock dan min_stock
         ]);
 
         return redirect()->route('admin.products.index')
@@ -120,14 +121,13 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'barcode'        => 'nullable|unique:products,barcode,' . $product->id,
+            'barcode'        => 'nullable|string|max:255|unique:products,barcode,' . $product->id,
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
             'purchase_price' => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            'stock'          => 'required|integer|min:0',
-            'min_stock'      => 'nullable|integer|min:0',
+            // Hapus validasi stock dan min_stock
         ]);
 
         $product->update([
@@ -137,8 +137,7 @@ class ProductController extends Controller
             'unit_id'        => $request->unit_id,
             'purchase_price' => $request->purchase_price,
             'selling_price'  => $request->selling_price,
-            'stock'          => $request->stock,
-            'min_stock'      => $request->min_stock ?? 0,
+            // Hapus stock dan min_stock
         ]);
 
         return redirect()->route('admin.products.index')
@@ -157,7 +156,7 @@ class ProductController extends Controller
     {
         $product = Product::where('barcode', $barcode)->first();
 
-        if (sortproduct) {
+        if (!$product) {
             return response()->json(null, 404);
         }
 
@@ -167,7 +166,8 @@ class ProductController extends Controller
             'selling_price'  => $product->selling_price,
             'purchase_price' => $product->purchase_price,
             'category_id'    => $product->category_id,
-            'stock'          => $product->stock,
+            // Hapus 'stock' karena tidak ada
+            // 'stock'          => $product->stock,
         ]);
     }
 }

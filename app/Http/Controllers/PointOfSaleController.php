@@ -27,8 +27,8 @@ class PointOfSaleController extends Controller
             return redirect()->route('pos.shift.index');
         }
 
+        // HAPUS where('stock', '>', 0) karena kolom stock tidak ada
         $products = Product::with('category')
-            ->where('stock', '>', 0)
             ->where('is_active', true)
             ->orderBy('name')
             ->get()
@@ -37,7 +37,7 @@ class PointOfSaleController extends Controller
                 'barcode'     => $p->barcode,
                 'name'        => $p->name,
                 'price'       => $p->selling_price,
-                'stock'       => $p->stock,
+                'stock'       => null, // Set null karena kolom stock tidak ada
                 'category'    => $p->category?->name ?? '-',
                 'category_id' => $p->category_id,
             ]);
@@ -134,9 +134,10 @@ class PointOfSaleController extends Controller
             foreach ($request->items as $item) {
                 $product = Product::findOrFail($item['product_id']);
 
-                if ($product->stock < $item['qty']) {
-                    throw new \Exception("Stok {$product->name} tidak cukup (tersedia: {$product->stock})");
-                }
+                // HAPUS pengecekan stok karena kolom stock tidak ada
+                // if ($product->stock < $item['qty']) {
+                //     throw new \Exception("Stok {$product->name} tidak cukup (tersedia: {$product->stock})");
+                // }
 
                 $lineTotal = $item['price'] * $item['qty'];
                 $subtotal += $lineTotal;
@@ -145,7 +146,6 @@ class PointOfSaleController extends Controller
                     'product_id'    => $item['product_id'],
                     'quantity'      => $item['qty'],
                     'selling_price' => $item['price'],
-                    
                     'discount'      => 0,
                     'subtotal'      => $lineTotal,
                     'product'       => $product,
@@ -173,6 +173,7 @@ class PointOfSaleController extends Controller
 
             $order = Order::create([
                 'customer_id'          => $customerId,
+                'branch_id'            => auth()->user()->branch_id,
                 'cashier_shift_id'     => $activeShift->id,
                 'user_id'              => Auth::id(),
                 'date'                 => now()->toDateString(),
@@ -192,12 +193,13 @@ class PointOfSaleController extends Controller
                     'product_id'    => $data['product_id'],
                     'quantity'      => $data['quantity'],
                     'selling_price' => $data['selling_price'],
-                    'cost_price'    => $data['product']->purchase_price, 
+                    'cost_price'    => $data['product']->purchase_price,
                     'discount'      => $data['discount'],
                     'subtotal'      => $data['subtotal'],
                 ]);
 
-                $data['product']->decrement('stock', $data['quantity']);
+                // HAPUS pengurangan stok karena kolom stock tidak ada
+                // $data['product']->decrement('stock', $data['quantity']);
             }
 
             $activeShift->increment('total_sales', $totalAmount);

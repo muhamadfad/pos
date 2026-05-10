@@ -19,9 +19,39 @@ class CashierShiftController extends Controller
             ? $activeShift->opening_balance + $activeShift->total_sales
             : 0;
 
-        // Get transactions for active shift
+        // Get transactions for active shift with proper item data
         $transactions = $activeShift
-            ? $activeShift->orders()->with(['customer', 'items.product'])->latest('date')->get()
+            ? $activeShift->orders()
+                ->with([
+                    'customer', 
+                    'items' => function($query) {
+                        $query->with('product');
+                    }
+                ])
+                ->latest('date')
+                ->get()
+                // Di bagian map function, ubah return dari array [] menjadi object (object)
+                ->map(function($order) {
+                    return (object) [
+                        'id' => $order->id,
+                        'created_at' => $order->created_at,
+                        'date' => $order->date,
+                        'customer' => $order->customer,
+                        'payment_status' => $order->payment_status,
+                        'total_amount' => $order->total_amount,
+                        'total_paid' => $order->total_paid,
+                        'remaining_receivable' => $order->remaining_receivable,
+                        'items' => $order->items->map(function($item) {
+                            return (object) [
+                                'product_name' => $item->product->name ?? 'Produk tidak ditemukan',
+                                'quantity' => $item->quantity,
+                                'selling_price' => $item->selling_price,
+                                'price' => $item->selling_price,
+                                'subtotal' => $item->subtotal,
+                            ];
+                        })->values()
+                    ];
+                })
             : collect();
 
         // Get last closed shift

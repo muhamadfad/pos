@@ -23,6 +23,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\KasproController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\BranchStockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Dashboard (berdasarkan role akan diarahkan ke view yang sesuai)
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.home');
     Route::get('/dashboard/activities', [DashboardController::class, 'activities'])->name('dashboard.activities');
     Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
     Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
@@ -213,6 +214,22 @@ Route::middleware(['auth', 'admin'])
             Route::get('/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
             Route::get('/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
         });
+
+        // =======================
+        // BRANCH STOCK MANAGEMENT (Stok Bahan Baku per Cabang) - TAMBAHKAN DI SINI
+        // =======================
+        Route::prefix('branch-stock')->name('branch-stock.')->group(function () {
+            Route::get('/', [BranchStockController::class, 'index'])->name('index');
+            Route::get('/create', [BranchStockController::class, 'create'])->name('create');
+            Route::post('/', [BranchStockController::class, 'store'])->name('store');
+            Route::get('/{id}', [BranchStockController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [BranchStockController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [BranchStockController::class, 'update'])->name('update');
+            Route::delete('/{id}', [BranchStockController::class, 'destroy'])->name('destroy');
+            Route::post('/{id}/adjust', [BranchStockController::class, 'adjustStock'])->name('adjust');
+            Route::post('/bulk-update', [BranchStockController::class, 'bulkUpdate'])->name('bulk-update');
+            Route::get('/low-stock/report', [BranchStockController::class, 'lowStockReport'])->name('low-stock');
+        });
     });
 
 // =======================
@@ -288,6 +305,8 @@ Route::middleware(['auth', 'super_admin'])
             Route::post('/restore', [DatabaseController::class, 'restore'])->name('restore');
             Route::get('/optimize', [DatabaseController::class, 'optimize'])->name('optimize');
         });
+
+
     });
 
 // =======================
@@ -323,6 +342,9 @@ Route::middleware(['auth', 'kasir'])
         Route::get('/report/daily', [ReportController::class, 'kasirDaily'])->name('report.daily');
     });
 
+        Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+            Route::get('/hpp-report', [App\Http\Controllers\RecipeController::class, 'hppReport']);
+        });
 // =======================
 // AUTHENTICATION ROUTES
 // =======================

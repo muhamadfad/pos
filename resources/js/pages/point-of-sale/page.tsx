@@ -70,41 +70,37 @@ export default function PointOfSalePage() {
     const change = paidAmount - totalPrice;
 
     function addToCart(product: Product) {
-        setCart((prev) => {
-            const existing = prev.find((c) => c.product_id === product.id);
-            if (existing) {
-                if (existing.qty >= product.stock) return prev;
-                return prev.map((c) =>
-                    c.product_id === product.id ? { ...c, qty: c.qty + 1 } : c,
-                );
-            }
-            return [
-                ...prev,
-                {
-                    product_id: product.id,
-                    barcode: product.barcode,
-                    name: product.name,
-                    price: product.price,
-                    qty: 1,
-                    stock: product.stock,
-                },
-            ];
-        });
-    }
-
-    function updateQty(productId: number, qty: number) {
-        if (qty < 1) {
-            removeFromCart(productId);
-            return;
+    setCart((prev) => {
+        const existing = prev.find((c) => c.product_id === product.id);
+        if (existing) {
+            return prev.map((c) =>
+                c.product_id === product.id ? { ...c, qty: c.qty + 1 } : c,
+            );
         }
-        setCart((prev) =>
-            prev.map((c) =>
-                c.product_id === productId
-                    ? { ...c, qty: Math.min(qty, c.stock) }
-                    : c,
-            ),
-        );
+        return [
+            ...prev,
+            {
+                product_id: product.id,
+                barcode: product.barcode,
+                name: product.name,
+                price: product.price,
+                qty: 1,
+            },
+        ];
+    });
+}
+
+function updateQty(productId: number, qty: number) {
+    if (qty < 1) {
+        removeFromCart(productId);
+        return;
     }
+    setCart((prev) =>
+        prev.map((c) =>
+            c.product_id === productId ? { ...c, qty: qty } : c,
+        ),
+    );
+}
 
     function removeFromCart(productId: number) {
         setCart((prev) => prev.filter((c) => c.product_id !== productId));

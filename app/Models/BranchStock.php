@@ -13,7 +13,7 @@ class BranchStock extends Model
     
     protected $fillable = [
         'branch_id',
-        'product_id',
+        'ingredient_id', // Changed from product_id to ingredient_id
         'quantity',
         'min_stock',
         'max_stock',
@@ -35,10 +35,10 @@ class BranchStock extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    // Relasi ke Product
-    public function product()
+    // Relasi ke Ingredient (changed from Product)
+    public function ingredient()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Ingredient::class);
     }
 
     // Scope untuk stok menipis

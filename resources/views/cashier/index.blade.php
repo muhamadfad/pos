@@ -455,9 +455,9 @@
             'remaining_receivable' => $t->remaining_receivable,
             'items' => $t->items->map(function($item) {
                 return [
-                    'product_name' => $item->product->name,
+                    'product_name' => $item->product->name ?? 'Produk tidak ditemukan',
                     'quantity' => $item->quantity,
-                    'price' => $item->price,
+                    'price' => $item->selling_price, // ← PERBAIKAN DI SINI
                     'subtotal' => $item->subtotal,
                 ];
             })->values()

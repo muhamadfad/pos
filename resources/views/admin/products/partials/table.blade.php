@@ -3,18 +3,18 @@
         <thead>
             <tr class="bg-slate-50/80 border-b border-slate-200">
                 <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-12 text-center">#</th>
-                <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Produk</th>
+                <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Menu</th>
                 <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-right">Harga Jual</th>
-                <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-center">Status Stok</th>
+                {{-- HAPUS KOLOM STATUS STOK --}}
                 <th class="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
-            </tr>
+             </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
             @forelse ($products as $product)
-            <tr class="group hover:bg-slate-50/50 transition-colors {{ $product->stock == 0 ? 'bg-rose-50/20' : '' }}">
+            <tr class="group hover:bg-slate-50/50 transition-colors">
                 <td class="px-6 py-4 text-center text-xs text-slate-400 font-medium">
                     {{ $products->firstItem() + $loop->index }}
-                </td>
+                 </td>
                 
                 <td class="px-6 py-4">
                     <div class="flex flex-col">
@@ -22,28 +22,19 @@
                             {{ $product->name }}
                         </span>
                         <div class="flex items-center gap-2 mt-0.5">
-                            <span class="text-[11px] text-slate-500 font-mono">{{ $product->barcode }}</span>
+                            <span class="text-[11px] text-slate-500 font-mono">{{ $product->barcode ?? '-' }}</span>
                             <span class="text-[11px] text-indigo-500/80 font-medium">• {{ $product->category->name ?? 'Uncategorized' }}</span>
                         </div>
                     </div>
-                </td>
+                 </td>
 
                 <td class="px-6 py-4 text-right">
                     <span class="text-sm font-medium text-slate-700">
                         IDR {{ number_format($product->selling_price, 0, ',', '.') }}
                     </span>
-                </td>
+                 </td>
 
-                <td class="px-6 py-4 text-center">
-                    @php
-                        $statusClass = $product->stock == 0 
-                            ? 'bg-rose-50 text-rose-600 border-rose-100' 
-                            : ($product->stock <= 5 ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100');
-                    @endphp
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold border {{ $statusClass }}">
-                        {{ $product->stock == 0 ? 'Out of Stock' : $product->stock . ' Unit' }}
-                    </span>
-                </td>
+                {{-- HAPUS CELL STATUS STOK --}}
 
                 <td class="px-6 py-4">
                     <div class="flex items-center justify-end gap-1.5">
@@ -63,21 +54,21 @@
                             <span class="iconify text-lg" data-icon="lucide:trash-2"></span>
                         </button>
                     </div>
-                </td>
-            </tr>
+                 </td>
+             </tr>
             @empty
-            <tr>
-                <td colspan="5" class="py-24 text-center">
+             <tr>
+                <td colspan="4" class="py-24 text-center">
                     <div class="flex flex-col items-center justify-center text-slate-400">
                         <span class="iconify text-4xl mb-3 opacity-20" data-icon="lucide:package-open"></span>
                         <p class="text-sm font-medium">No products found</p>
                         <p class="text-xs opacity-60">Try adjusting your search or filters</p>
                     </div>
-                </td>
-            </tr>
+                 </td>
+             </tr>
             @endforelse
         </tbody>
-    </table>
+     </table>
 </div>
 
 @if($products->hasPages())

@@ -10,6 +10,7 @@ use App\Models\Expense;
 use App\Models\Purchase;
 use App\Models\BranchStock;
 use App\Models\Branch;
+use App\Models\Ingredient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,7 @@ class DashboardController extends Controller
         
         $totalProducts = Product::count();
         
-        // Low stock & Out of stock dari branch_stock
+        // Low stock & Out of stock dari branch_stock (untuk INGREDIENTS)
         $lowStockQuery = BranchStock::where('quantity', '>', 0)
             ->whereColumn('quantity', '<=', 'min_stock');
         
@@ -98,20 +99,23 @@ class DashboardController extends Controller
         }
         
         // =======================
-        // DISTRIBUSI STOK
+        // DISTRIBUSI STOK (BERDASARKAN INGREDIENTS/Bahan Baku)
         // =======================
         
-        $stockQuery = BranchStock::join('products', 'branch_stock.product_id', '=', 'products.id')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->selectRaw('categories.name as category, SUM(branch_stock.quantity) as total');
+        // Perbaikan: Gunakan ingredients, bukan products + categories
+        $stockQuery = BranchStock::join('ingredients', 'branch_stock.ingredient_id', '=', 'ingredients.id')
+            ->selectRaw('ingredients.name as ingredient_name, SUM(branch_stock.quantity) as total');
         
         if (!$isSuperAdmin || ($filterBranch && $filterBranch !== 'all')) {
             $stockQuery->where('branch_stock.branch_id', $branchId);
         }
         
-        $stockData = $stockQuery->groupBy('categories.name')->get();
+        $stockData = $stockQuery->groupBy('ingredients.id', 'ingredients.name')
+            ->orderBy('total', 'desc')
+            ->limit(10) // Batasi 10 bahan baku teratas
+            ->get();
         
-        $stockNames = $stockData->pluck('category')->toArray();
+        $stockNames = $stockData->pluck('ingredient_name')->toArray();
         $stockSeries = $stockData->pluck('total')
             ->map(fn($v) => (int)$v)
             ->toArray();
@@ -124,13 +128,16 @@ class DashboardController extends Controller
         $branchStats = [];
         
         if ($isSuperAdmin) {
-            $branches = Branch::all();
+            $branches = Branch::where('is_active', true)->get();
             
             foreach ($branches as $branch) {
                 $branchStats[$branch->id] = [
                     'name' => $branch->name,
                     'total_orders' => Order::where('branch_id', $branch->id)->count(),
                     'total_revenue' => Order::where('branch_id', $branch->id)->sum('total_amount') ?? 0,
+                    'total_ingredients' => BranchStock::where('branch_id', $branch->id)
+                        ->distinct('ingredient_id')
+                        ->count('ingredient_id'),
                     'low_stock_count' => BranchStock::where('branch_id', $branch->id)
                         ->whereColumn('quantity', '<=', 'min_stock')
                         ->where('quantity', '>', 0)

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Katalog Produk')
+@section('title', 'Daftar Menu')
 
 @section('content')
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
                 <span class="mx-2">/</span>
                 <span class="text-indigo-600">Products</span>
             </nav>
-            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Katalog Produk</h1>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Daftar Menu</h1>
         </div>
         
         <div class="flex items-center gap-3">
@@ -27,7 +27,7 @@
             <a href="{{ route('admin.products.create') }}"
                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all shadow-sm active:scale-95">
                 <span class="iconify text-lg" data-icon="lucide:plus"></span>
-                Tambah Produk
+                Tambah Menu
             </a>
         </div>
     </div>
@@ -58,7 +58,8 @@
                     <option value="">Urutkan</option>
                     <option value="price_asc">Harga Terendah</option>
                     <option value="price_desc">Harga Tertinggi</option>
-                    <option value="stock_asc">Stok Terkecil</option>
+                    {{-- HAPUS OPSI STOK TERKECIL --}}
+                    {{-- <option value="stock_asc">Stok Terkecil</option> --}}
                 </select>
                 
                 <select x-model="per_page" @change="fetchData"
