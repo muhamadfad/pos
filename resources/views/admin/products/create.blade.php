@@ -114,20 +114,10 @@
         <div class="lg:col-span-4 space-y-6">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden sticky top-6">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h3 class="text-sm font-semibold text-slate-800 text-center">Finansial</h3>
+                    <h3 class="text-sm font-semibold text-slate-800 text-center">Harga Jual</h3>
                 </div>
 
                 <div class="p-6 space-y-5">
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Harga Beli (Modal)</label>
-                        <div class="relative group">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rp</span>
-                            <input type="number" id="purchase_price" name="purchase_price" required
-                                class="w-full pl-10 pr-4 py-2.5 text-sm font-semibold bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-rose-500/5 focus:border-rose-400 transition-all text-slate-800"
-                                placeholder="0" value="{{ old('purchase_price', $product->purchase_price ?? '') }}">
-                        </div>
-                    </div>
-
                     <div class="space-y-2">
                         <label class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Harga Jual</label>
                         <div class="relative group">
@@ -136,24 +126,6 @@
                                 class="w-full pl-10 pr-4 py-2.5 text-sm font-semibold bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-400 transition-all text-slate-800"
                                 placeholder="0" value="{{ old('selling_price', $product->selling_price ?? '') }}">
                         </div>
-                    </div>
-
-                    <!-- <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Stok Awal</label>
-                        <div class="relative group">
-                            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="lucide:layers"></span>
-                            <input type="number" id="stock" name="stock" required
-                                class="w-full pl-10 pr-4 py-2.5 text-sm font-semibold bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-400 transition-all text-slate-800"
-                                placeholder="0" value="{{ old('stock', $product->stock ?? '') }}">
-                        </div>
-                    </div> -->
-
-                    <div id="marginInfo" class="hidden p-4 rounded-lg bg-indigo-50/50 border border-indigo-100 space-y-1">
-                        <div class="flex items-center gap-1.5 text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
-                            <span class="iconify" data-icon="lucide:trending-up"></span>
-                            Estimated Margin
-                        </div>
-                        <span id="marginText" class="text-sm font-bold text-indigo-700 tracking-tight"></span>
                     </div>
 
                     <div class="pt-4 space-y-3">
@@ -175,7 +147,6 @@
 
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 <script>
-    // Logika JS tetap sama karena sudah fungsional, hanya UI yang kita kurangi beratnya.
     let codeReader;
     let scanning = false;
 
@@ -197,25 +168,5 @@
         document.getElementById('scanner-container').classList.add('hidden');
         if (codeReader) codeReader.reset();
     }
-
-    function updateMargin() {
-        const buy = parseFloat(document.getElementById('purchase_price').value) || 0;
-        const sell = parseFloat(document.getElementById('selling_price').value) || 0;
-        const info = document.getElementById('marginInfo');
-        const text = document.getElementById('marginText');
-
-        if (buy > 0 && sell > 0) {
-            const margin = sell - buy;
-            const pct = ((margin / buy) * 100).toFixed(1);
-            text.textContent = `Rp ${margin.toLocaleString('id-ID')} (${pct}%)`;
-            info.classList.remove('hidden');
-        } else {
-            info.classList.add('hidden');
-        }
-    }
-
-    document.getElementById('purchase_price').addEventListener('input', updateMargin);
-    document.getElementById('selling_price').addEventListener('input', updateMargin);
-    window.addEventListener('load', updateMargin);
 </script>
 @endsection

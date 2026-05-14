@@ -24,10 +24,19 @@ class AuthenticatedSessionController extends Controller
         // Redirect berdasarkan role
         $user = Auth::user();
         
-        if (in_array($user->role, ['super_admin', 'admin'])) {
+        if ($user->role === 'super_admin') {
+            return redirect()->intended(route('dashboard'));
+        }
+        
+        if ($user->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         }
         
+        if ($user->role === 'kasir') {
+            return redirect()->intended(route('kasir.shift.index'));
+        }
+        
+        // Default redirect untuk role lain (jika ada)
         return redirect()->intended(route('dashboard'));
     }
 

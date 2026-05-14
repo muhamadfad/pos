@@ -69,6 +69,10 @@
                 </a>
 
                 <!-- INVENTORY MANAGEMENT GROUP -->
+                @php
+                    $isSuperAdmin = Auth::user()->role === 'super_admin';
+                @endphp
+
                 <div x-data="{ open: {{ request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.ingredients.*', 'admin.recipes.*', 'admin.branch-stock.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
                         <div class="flex items-center gap-3">
@@ -78,24 +82,17 @@
                         <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
                     </button>
                     <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
-                        <a href="{{ route('admin.products.index') }}" class="block py-2 hover:text-white transition">Menu</a>
-                        <a href="{{ route('admin.categories.index') }}" class="block py-2 hover:text-white transition">Kategori</a>
+                        
+                        @if($isSuperAdmin)
+                            <!-- Menu khusus Super Admin -->
+                            <a href="{{ route('admin.products.index') }}" class="block py-2 hover:text-white transition">Menu</a>
+                            <a href="{{ route('admin.categories.index') }}" class="block py-2 hover:text-white transition">Kategori</a>
+                            <a href="{{ route('admin.recipes.index') }}" class="block py-2 hover:text-white transition">Resep Menu</a>
+                        @endif
+                        
+                        <!-- Menu untuk semua user (termasuk Super Admin) -->
                         <a href="{{ route('admin.ingredients.index') }}" class="block py-2 hover:text-white transition">Bahan Baku</a>
-                        <a href="{{ route('admin.recipes.index') }}" class="block py-2 hover:text-white transition">Resep Menu</a>
-                        <a href="{{ route('admin.branch-stock.index') }}" class="block py-2 hover:text-white transition text-[12px] flex items-center justify-between">
-                            <span>Stok Bahan per Cabang</span>
-                            @php
-                                $lowStockCount = \App\Models\BranchStock::whereColumn('quantity', '<=', 'min_stock')
-                                    ->where('quantity', '>', 0)
-                                    ->count();
-                            @endphp
-                            @if($lowStockCount > 0)
-                                <span class="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{{ $lowStockCount }}</span>
-                            @endif
-                        </a>
-                        <a href="{{ route('admin.branch-stock.low-stock') }}" class="block py-2 hover:text-white transition text-[12px] pl-4 text-amber-400">
-                            ⚠️ Stok Menipis
-                        </a>
+                        
                     </div>
                 </div>
 

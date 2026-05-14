@@ -13,12 +13,17 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PointOfSaleController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+        $branchId = $user->branch_id;
+        
         $activeShift = CashierShift::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)  // Tambahkan filter branch
             ->where('status', 'open')
             ->latest()
             ->first();
@@ -27,7 +32,6 @@ class PointOfSaleController extends Controller
             return redirect()->route('pos.shift.index');
         }
 
-        // HAPUS where('stock', '>', 0) karena kolom stock tidak ada
         $products = Product::with('category')
             ->where('is_active', true)
             ->orderBy('name')
@@ -37,7 +41,7 @@ class PointOfSaleController extends Controller
                 'barcode'     => $p->barcode,
                 'name'        => $p->name,
                 'price'       => $p->selling_price,
-                'stock'       => null, // Set null karena kolom stock tidak ada
+                'stock'       => null,
                 'category'    => $p->category?->name ?? '-',
                 'category_id' => $p->category_id,
             ]);
@@ -52,15 +56,16 @@ class PointOfSaleController extends Controller
                 'phone' => $c->phone,
             ]);
 
-        // Data hutang per customer (hanya yang punya unpaid/partial order)
         $customerDebts = Customer::whereHas(
             'orders',
             fn($q) =>
             $q->whereIn('payment_status', ['unpaid', 'partial'])
+                ->where('branch_id', $branchId)  // Filter branch
         )
             ->with([
                 'orders' => fn($q) =>
                 $q->whereIn('payment_status', ['unpaid', 'partial'])
+                    ->where('branch_id', $branchId)  // Filter branch
                     ->orderBy('date', 'asc')
                     ->orderBy('id', 'asc')
                     ->select('id', 'customer_id', 'invoice_number', 'date', 'total_amount', 'total_paid', 'remaining_receivable', 'payment_status')
@@ -84,7 +89,7 @@ class PointOfSaleController extends Controller
                 'id'               => $activeShift->id,
                 'opened_at'        => $activeShift->opened_at->format('Y-m-d H:i:s'),
                 'opening_balance'  => $activeShift->opening_balance,
-                'total_sales'      => $activeShift->total_sales,
+                'total_sales'      => (float) $activeShift->total_sales,
                 'transaction_count' => $activeShift->transaction_count,
             ],
         ])->rootView('inertia');
@@ -103,7 +108,11 @@ class PointOfSaleController extends Controller
             'payment_type'           => 'nullable|in:lunas,partial,kasbon',
         ]);
 
+        $user = auth()->user();
+        $branchId = $user->branch_id;
+        
         $activeShift = CashierShift::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)
             ->where('status', 'open')
             ->first();
 
@@ -111,13 +120,14 @@ class PointOfSaleController extends Controller
             return back()->withErrors(['error' => 'Silakan buka shift kasir terlebih dahulu.']);
         }
 
-        // Kasbon & partial wajib pilih customer
         $paymentType = $request->payment_type ?? 'lunas';
         if (in_array($paymentType, ['kasbon', 'partial']) && !$request->customer_id) {
             return back()->withErrors(['customer_id' => 'Kasbon / Pembayaran sebagian wajib memilih customer.']);
         }
 
-        DB::transaction(function () use ($request, $activeShift) {
+        DB::beginTransaction();
+        
+        try {
             // Use selected customer or default walk-in
             $customerId = $request->customer_id;
             if (!$customerId) {
@@ -134,11 +144,6 @@ class PointOfSaleController extends Controller
             foreach ($request->items as $item) {
                 $product = Product::findOrFail($item['product_id']);
 
-                // HAPUS pengecekan stok karena kolom stock tidak ada
-                // if ($product->stock < $item['qty']) {
-                //     throw new \Exception("Stok {$product->name} tidak cukup (tersedia: {$product->stock})");
-                // }
-
                 $lineTotal = $item['price'] * $item['qty'];
                 $subtotal += $lineTotal;
 
@@ -146,6 +151,7 @@ class PointOfSaleController extends Controller
                     'product_id'    => $item['product_id'],
                     'quantity'      => $item['qty'],
                     'selling_price' => $item['price'],
+                    'cost_price'    => $product->purchase_price ?? 0,
                     'discount'      => 0,
                     'subtotal'      => $lineTotal,
                     'product'       => $product,
@@ -153,16 +159,12 @@ class PointOfSaleController extends Controller
             }
 
             $totalAmount = $subtotal;
-            $paymentType = $request->payment_type ?? 'lunas';
-            $paymentMethod = $request->payment_method ?? 'cash';
-
-            // Kasbon: tidak bayar sama sekali
-            // Partial: bayar sebagian
-            // Lunas: bayar penuh (atau lebih)
+            
+            // Calculate payment
             $totalPaid = match ($paymentType) {
                 'kasbon'  => 0,
                 'partial' => min($request->paid, $totalAmount),
-                default   => $request->paid, // lunas
+                default   => $request->paid,
             };
             $remaining = max(0, $totalAmount - $totalPaid);
             $status = match (true) {
@@ -171,9 +173,14 @@ class PointOfSaleController extends Controller
                 default                  => 'unpaid',
             };
 
+            // Generate invoice number
+            $invoiceNumber = $this->generateInvoiceNumber($branchId);
+
+            // Create order
             $order = Order::create([
+                'invoice_number'       => $invoiceNumber,
                 'customer_id'          => $customerId,
-                'branch_id'            => auth()->user()->branch_id,
+                'branch_id'            => $branchId,
                 'cashier_shift_id'     => $activeShift->id,
                 'user_id'              => Auth::id(),
                 'date'                 => now()->toDateString(),
@@ -184,46 +191,88 @@ class PointOfSaleController extends Controller
                 'total_paid'           => $totalPaid,
                 'remaining_receivable' => $remaining,
                 'payment_status'       => $status,
-                'payment_method'       => $paymentType === 'kasbon' ? 'credit' : $paymentMethod,
+                'payment_method'       => $paymentType === 'kasbon' ? 'credit' : ($request->payment_method ?? 'cash'),
             ]);
 
+            // Create order items
             foreach ($itemsData as $data) {
                 OrderItem::create([
                     'order_id'      => $order->id,
                     'product_id'    => $data['product_id'],
                     'quantity'      => $data['quantity'],
                     'selling_price' => $data['selling_price'],
-                    'cost_price'    => $data['product']->purchase_price,
+                    'cost_price'    => $data['cost_price'],
                     'discount'      => $data['discount'],
                     'subtotal'      => $data['subtotal'],
                 ]);
-
-                // HAPUS pengurangan stok karena kolom stock tidak ada
-                // $data['product']->decrement('stock', $data['quantity']);
             }
 
-            $activeShift->increment('total_sales', $totalAmount);
-            $activeShift->increment('transaction_count');
-        });
+            // If payment is made (not kasbon), record payment
+            if ($totalPaid > 0) {
+                OrderPayment::create([
+                    'order_id'       => $order->id,
+                    'user_id'        => Auth::id(),
+                    'branch_id'      => $branchId,
+                    'payment_date'   => now()->toDateString(),
+                    'amount'         => $totalPaid,
+                    'payment_method' => $request->payment_method ?? 'cash',
+                    'notes'          => $paymentType === 'partial' ? 'Pembayaran sebagian' : 'Lunas',
+                ]);
+            }
 
-        $msg = match ($paymentType) {
-            'kasbon'  => 'Transaksi berhasil dicatat sebagai kasbon!',
-            'partial' => 'Transaksi berhasil! Sisa tagihan dicatat sebagai kasbon.',
-            default   => 'Transaksi berhasil!',
-        };
+            // Update cashier shift - PERBAIKAN DI SINI
+            // Gunakan method increment atau update langsung dengan nilai numerik
+            $activeShift->total_sales = $activeShift->total_sales + $totalAmount;
+            $activeShift->transaction_count = $activeShift->transaction_count + 1;
+            $activeShift->expected_cash = $activeShift->opening_balance + $activeShift->total_sales;
+            $activeShift->save();
+            
+            // Refresh model untuk memastikan nilai terupdate
+            $activeShift->refresh();
 
-        return back()->with('success', $msg);
+            DB::commit();
+
+            $msg = match ($paymentType) {
+                'kasbon'  => 'Transaksi berhasil dicatat sebagai kasbon!',
+                'partial' => 'Transaksi berhasil! Sisa tagihan dicatat sebagai kasbon.',
+                default   => 'Transaksi berhasil!',
+            };
+
+            return back()->with('success', $msg);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Checkout error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
     }
 
-    /**
-     * GET /pos/customer-debt/{customer}
-     * Kembalikan data hutang customer untuk DebtPaymentPanel (JSON)
-     */
+    private function generateInvoiceNumber($branchId)
+    {
+        $branchCode = sprintf('%03d', $branchId);
+        $date = now()->format('Ymd');
+        $lastOrder = Order::where('branch_id', $branchId)
+            ->whereDate('created_at', today())
+            ->orderBy('id', 'desc')
+            ->first();
+        
+        $sequence = $lastOrder ? (intval(substr($lastOrder->invoice_number, -4)) + 1) : 1;
+        
+        return sprintf('INV/%s/%s/%04d', $branchCode, $date, $sequence);
+    }
+
     public function customerDebt(Customer $customer)
     {
+        $user = auth()->user();
+        $branchId = $user->branch_id;
+        
         $orders = Order::where('customer_id', $customer->id)
+            ->where('branch_id', $branchId)  // Filter branch
             ->whereIn('payment_status', ['unpaid', 'partial'])
-            ->orderBy('date', 'asc')   // FIFO: terlama dulu
+            ->orderBy('date', 'asc')
             ->orderBy('id', 'asc')
             ->get(['id', 'invoice_number', 'date', 'total_amount', 'total_paid', 'remaining_receivable', 'payment_status']);
 
@@ -236,10 +285,6 @@ class PointOfSaleController extends Controller
         ]);
     }
 
-    /**
-     * POST /pos/pay-debt
-     * Proses pembayaran kasbon dengan alokasi FIFO
-     */
     public function payDebt(Request $request)
     {
         $request->validate([
@@ -248,10 +293,13 @@ class PointOfSaleController extends Controller
             'payment_method' => 'required|in:cash,transfer',
         ]);
 
+        $user = auth()->user();
+        $branchId = $user->branch_id;
+
         $customer = Customer::findOrFail($request->customer_id);
 
-        // Ambil hutang terlama dulu (FIFO)
         $orders = Order::where('customer_id', $customer->id)
+            ->where('branch_id', $branchId)  // Filter branch
             ->whereIn('payment_status', ['unpaid', 'partial'])
             ->orderBy('date', 'asc')
             ->orderBy('id', 'asc')
@@ -263,7 +311,9 @@ class PointOfSaleController extends Controller
             return back()->withErrors(['amount' => 'Jumlah pembayaran melebihi total hutang.']);
         }
 
-        DB::transaction(function () use ($request, $orders) {
+        DB::beginTransaction();
+        
+        try {
             $remaining = $request->amount;
 
             foreach ($orders as $order) {
@@ -271,16 +321,16 @@ class PointOfSaleController extends Controller
 
                 $toApply = min($remaining, $order->remaining_receivable);
 
-                // Catat di order_payments
                 OrderPayment::create([
                     'order_id'       => $order->id,
+                    'user_id'        => Auth::id(),
+                    'branch_id'      => $branchId,
                     'payment_date'   => now()->toDateString(),
                     'amount'         => $toApply,
                     'payment_method' => $request->payment_method,
                     'notes'          => 'Bayar kasbon via POS',
                 ]);
 
-                // Update order
                 $newTotalPaid  = $order->total_paid + $toApply;
                 $newRemaining  = $order->remaining_receivable - $toApply;
                 $newStatus     = $newRemaining <= 0 ? 'paid' : 'partial';
@@ -293,8 +343,23 @@ class PointOfSaleController extends Controller
 
                 $remaining -= $toApply;
             }
-        });
 
-        return back()->with('debt_success', 'Pembayaran kasbon berhasil diproses.');
+            DB::commit();
+            return back()->with('debt_success', 'Pembayaran kasbon berhasil diproses.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Pay debt error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+    }
+
+    public function printReceipt($order)
+    {
+        $order = Order::with(['customer', 'items.product', 'cashierShift'])
+            ->where('branch_id', auth()->user()->branch_id)
+            ->findOrFail($order);
+            
+        return view('pos.receipt', compact('order'));
     }
 }

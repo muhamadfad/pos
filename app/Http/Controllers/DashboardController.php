@@ -20,12 +20,20 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $isSuperAdmin = $user->role === 'super_admin';
-        $branchId = $user->branch_id;
+        $userBranchId = $user->branch_id;
         
-        // Jika ada filter branch_id dari request (untuk super admin)
-        $filterBranch = $request->get('branch_id');
-        if ($isSuperAdmin && $filterBranch && $filterBranch !== 'all') {
-            $branchId = $filterBranch;
+        // Untuk Super Admin: bisa pilih branch atau 'all'
+        // Untuk user biasa: hanya branch sendiri
+        $selectedBranchId = $request->get('branch_id');
+        
+        if ($isSuperAdmin) {
+            // Super admin bisa memilih branch
+            $branchId = ($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : null;
+            $showAllBranches = ($selectedBranchId === 'all' || !$selectedBranchId);
+        } else {
+            // User biasa hanya branch sendiri
+            $branchId = $userBranchId;
+            $showAllBranches = false;
         }
         
         // =======================
@@ -40,7 +48,7 @@ class DashboardController extends Controller
         
         $outOfStockQuery = BranchStock::where('quantity', 0);
         
-        if (!$isSuperAdmin || ($filterBranch && $filterBranch !== 'all')) {
+        if (!$showAllBranches && $branchId) {
             $lowStockQuery->where('branch_id', $branchId);
             $outOfStockQuery->where('branch_id', $branchId);
         }
@@ -49,10 +57,49 @@ class DashboardController extends Controller
         $outOfStock = $outOfStockQuery->count();
         
         // Total users
-        if ($isSuperAdmin && (!$filterBranch || $filterBranch === 'all')) {
+        if ($showAllBranches) {
             $totalUsers = User::count();
         } else {
             $totalUsers = User::where('branch_id', $branchId)->count();
+        }
+        
+        // =======================
+        // PENDAPATAN HARI INI
+        // =======================
+        $todayRevenueQuery = Order::whereDate('date', Carbon::today())
+            ->where('payment_status', 'paid');
+        
+        if (!$showAllBranches && $branchId) {
+            $todayRevenueQuery->where('branch_id', $branchId);
+        }
+        
+        $todayRevenue = $todayRevenueQuery->sum('total_amount') ?? 0;
+        
+        // Jumlah transaksi hari ini
+        $todayTransactionsQuery = Order::whereDate('date', Carbon::today());
+        
+        if (!$showAllBranches && $branchId) {
+            $todayTransactionsQuery->where('branch_id', $branchId);
+        }
+        
+        $todayTransactions = $todayTransactionsQuery->count();
+        
+        // Pendapatan kemarin untuk perbandingan
+        $yesterdayRevenueQuery = Order::whereDate('date', Carbon::yesterday())
+            ->where('payment_status', 'paid');
+        
+        if (!$showAllBranches && $branchId) {
+            $yesterdayRevenueQuery->where('branch_id', $branchId);
+        }
+        
+        $yesterdayRevenue = $yesterdayRevenueQuery->sum('total_amount') ?? 0;
+        
+        // Hitung persentase perubahan
+        $revenueChange = 0;
+        if ($yesterdayRevenue > 0) {
+            $revenueChange = (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100;
+        } elseif ($todayRevenue > 0) {
+            $revenueChange = 100;
         }
         
         // =======================
@@ -62,7 +109,7 @@ class DashboardController extends Controller
         $piutangQuery = Order::where('payment_status', '!=', 'paid');
         $hutangQuery = Purchase::where('payment_status', '!=', 'paid');
         
-        if (!$isSuperAdmin || ($filterBranch && $filterBranch !== 'all')) {
+        if (!$showAllBranches && $branchId) {
             $piutangQuery->where('branch_id', $branchId);
             $hutangQuery->where('branch_id', $branchId);
         }
@@ -75,12 +122,13 @@ class DashboardController extends Controller
         // =======================
         
         $revenueQuery = Order::selectRaw('MONTH(date) as month, SUM(total_amount) as total')
-            ->whereYear('date', now()->year);
+            ->whereYear('date', now()->year)
+            ->where('payment_status', 'paid');
         
         $expenseQuery = Expense::selectRaw('MONTH(date) as month, SUM(amount) as total')
             ->whereYear('date', now()->year);
         
-        if (!$isSuperAdmin || ($filterBranch && $filterBranch !== 'all')) {
+        if (!$showAllBranches && $branchId) {
             $revenueQuery->where('branch_id', $branchId);
             $expenseQuery->where('branch_id', $branchId);
         }
@@ -94,25 +142,24 @@ class DashboardController extends Controller
         
         for ($m = 1; $m <= 12; $m++) {
             $months[] = Carbon::create()->month($m)->format('M');
-            $revenues[] = $revenueRaw[$m] ?? 0;
-            $expenses[] = $expenseRaw[$m] ?? 0;
+            $revenues[] = (float)($revenueRaw[$m] ?? 0);
+            $expenses[] = (float)($expenseRaw[$m] ?? 0);
         }
         
         // =======================
         // DISTRIBUSI STOK (BERDASARKAN INGREDIENTS/Bahan Baku)
         // =======================
         
-        // Perbaikan: Gunakan ingredients, bukan products + categories
         $stockQuery = BranchStock::join('ingredients', 'branch_stock.ingredient_id', '=', 'ingredients.id')
             ->selectRaw('ingredients.name as ingredient_name, SUM(branch_stock.quantity) as total');
         
-        if (!$isSuperAdmin || ($filterBranch && $filterBranch !== 'all')) {
+        if (!$showAllBranches && $branchId) {
             $stockQuery->where('branch_stock.branch_id', $branchId);
         }
         
         $stockData = $stockQuery->groupBy('ingredients.id', 'ingredients.name')
             ->orderBy('total', 'desc')
-            ->limit(10) // Batasi 10 bahan baku teratas
+            ->limit(10)
             ->get();
         
         $stockNames = $stockData->pluck('ingredient_name')->toArray();
@@ -132,9 +179,14 @@ class DashboardController extends Controller
             
             foreach ($branches as $branch) {
                 $branchStats[$branch->id] = [
+                    'id' => $branch->id,
                     'name' => $branch->name,
                     'total_orders' => Order::where('branch_id', $branch->id)->count(),
-                    'total_revenue' => Order::where('branch_id', $branch->id)->sum('total_amount') ?? 0,
+                    'total_revenue' => (float)(Order::where('branch_id', $branch->id)->sum('total_amount') ?? 0),
+                    'today_revenue' => (float)(Order::where('branch_id', $branch->id)
+                        ->whereDate('date', Carbon::today())
+                        ->where('payment_status', 'paid')
+                        ->sum('total_amount') ?? 0),
                     'total_ingredients' => BranchStock::where('branch_id', $branch->id)
                         ->distinct('ingredient_id')
                         ->count('ingredient_id'),
@@ -142,8 +194,21 @@ class DashboardController extends Controller
                         ->whereColumn('quantity', '<=', 'min_stock')
                         ->where('quantity', '>', 0)
                         ->count(),
+                    'out_of_stock_count' => BranchStock::where('branch_id', $branch->id)
+                        ->where('quantity', 0)
+                        ->count(),
                 ];
             }
+        }
+        
+        // Branch name untuk display
+        $currentBranchName = 'Semua Cabang';
+        if (!$showAllBranches && $branchId) {
+            $currentBranch = Branch::find($branchId);
+            $currentBranchName = $currentBranch ? $currentBranch->name : 'Cabang ' . $branchId;
+        } elseif (!$showAllBranches && !$branchId && $userBranchId) {
+            $currentBranch = Branch::find($userBranchId);
+            $currentBranchName = $currentBranch ? $currentBranch->name : 'Cabang ' . $userBranchId;
         }
         
         return view('dashboard', compact(
@@ -151,6 +216,9 @@ class DashboardController extends Controller
             'lowStock',
             'outOfStock',
             'totalUsers',
+            'todayRevenue',
+            'todayTransactions',
+            'revenueChange',
             'totalPiutang',
             'totalHutang',
             'months',
@@ -161,7 +229,10 @@ class DashboardController extends Controller
             'isSuperAdmin',
             'branches',
             'branchStats',
-            'branchId'
+            'branchId',
+            'showAllBranches',
+            'currentBranchName',
+            'userBranchId'
         ));
     }
     
@@ -171,81 +242,155 @@ class DashboardController extends Controller
     public function filter(Request $request)
     {
         $branchId = $request->get('branch_id');
-        
-        // Ambil data yang sudah difilter
         $user = auth()->user();
-        $isSuperAdmin = $user->role === 'super_admin';
         
-        if (!$isSuperAdmin) {
-            $branchId = $user->branch_id;
+        if ($user->role !== 'super_admin') {
+            return redirect()->route('dashboard');
         }
         
-        $queryParams = [];
         if ($branchId && $branchId !== 'all') {
-            $queryParams['branch_id'] = $branchId;
+            return redirect()->route('dashboard', ['branch_id' => $branchId]);
         }
         
-        return redirect()->route('dashboard', $queryParams);
+        return redirect()->route('dashboard');
     }
     
     /**
      * Get activities for AJAX
      */
+/**
+ * Get activities for AJAX
+ */
+/**
+ * Get activities for AJAX
+ */
     public function activities(Request $request)
     {
-        $user = auth()->user();
-        $isSuperAdmin = $user->role === 'super_admin';
-        $branchId = $request->get('branch_id');
-        
-        if (!$isSuperAdmin) {
-            $branchId = $user->branch_id;
-        }
-        
-        $activities = collect();
-        
-        // Ambil 5 order terakhir
-        $orderQuery = Order::with('customer')
-            ->orderBy('created_at', 'desc')
-            ->limit(5);
-        
-        if ($branchId && $branchId !== 'all') {
-            $orderQuery->where('branch_id', $branchId);
-        }
-        
-        $recentOrders = $orderQuery->get();
-        
-        foreach ($recentOrders as $order) {
-            $activities->push([
-                'type' => 'order',
-                'message' => "Transaksi #{$order->id} - " . ($order->customer->name ?? 'Umum') . " - Rp " . number_format($order->total_amount, 0, ',', '.'),
-                'time' => $order->created_at->diffForHumans(),
+        try {
+            $user = auth()->user();
+            $isSuperAdmin = $user->role === 'super_admin';
+            $branchId = $request->get('branch_id');
+            
+            // Validasi: user biasa hanya bisa lihat branch sendiri
+            if (!$isSuperAdmin) {
+                $branchId = $user->branch_id;
+            }
+            
+            $showAllBranches = ($branchId === 'all' || !$branchId) && $isSuperAdmin;
+            
+            $activities = collect();
+            
+            // Ambil 5 order terakhir
+            $orderQuery = Order::with('customer', 'branch')
+                ->orderBy('created_at', 'desc')
+                ->limit(5);
+            
+            if (!$showAllBranches && $branchId && $branchId !== 'all') {
+                $orderQuery->where('branch_id', $branchId);
+            }
+            
+            $recentOrders = $orderQuery->get();
+            
+            foreach ($recentOrders as $order) {
+                $branchInfo = ($isSuperAdmin && $showAllBranches && $order->branch) 
+                    ? " [{$order->branch->name}]" 
+                    : '';
+                
+                $activities->push([
+                    'type' => 'order',
+                    'icon' => 'mdi:cart',
+                    'color' => 'indigo',
+                    'message' => "Transaksi #{$order->id}{$branchInfo} - " . ($order->customer->name ?? 'Umum') . " - Rp " . number_format($order->total_amount, 0, ',', '.'),
+                    'time' => $order->created_at->diffForHumans(),
+                    'sort_time' => $order->created_at->timestamp,
+                ]);
+            }
+            
+            // Ambil 5 stok menipis terakhir (ingredients) - PERBAIKAN: gunakan id untuk sorting
+            $stockQuery = BranchStock::with(['ingredient', 'branch'])
+                ->where('quantity', '>', 0)
+                ->whereRaw('quantity <= min_stock')
+                ->orderBy('id', 'desc')  // Gunakan id karena tidak ada created_at/updated_at
+                ->limit(5);
+            
+            if (!$showAllBranches && $branchId && $branchId !== 'all') {
+                $stockQuery->where('branch_id', $branchId);
+            }
+            
+            $lowStocks = $stockQuery->get();
+            
+            foreach ($lowStocks as $stock) {
+                // Pastikan ingredient ada
+                $ingredientName = $stock->ingredient ? $stock->ingredient->name : 'Bahan tidak diketahui';
+                $unitName = $stock->ingredient && $stock->ingredient->unit 
+                    ? ($stock->ingredient->unit->name ?? 'unit') 
+                    : 'unit';
+                
+                $branchInfo = ($isSuperAdmin && $showAllBranches && $stock->branch) 
+                    ? " [{$stock->branch->name}]" 
+                    : '';
+                
+                $activities->push([
+                    'type' => 'stock',
+                    'icon' => 'mdi:alert',
+                    'color' => 'amber',
+                    'message' => "⚠️ Stok menipis: {$ingredientName}{$branchInfo} (sisa {$stock->quantity} {$unitName})",
+                    'time' => 'Baru saja',
+                    'sort_time' => $stock->id, // Gunakan id untuk sorting
+                ]);
+            }
+            
+            // Ambil 3 transaksi pending
+            $paymentQuery = Order::with('branch')
+                ->where('payment_status', '!=', 'paid')
+                ->orderBy('created_at', 'desc')
+                ->limit(3);
+            
+            if (!$showAllBranches && $branchId && $branchId !== 'all') {
+                $paymentQuery->where('branch_id', $branchId);
+            }
+            
+            $pendingPayments = $paymentQuery->get();
+            
+            foreach ($pendingPayments as $payment) {
+                $branchInfo = ($isSuperAdmin && $showAllBranches && $payment->branch) 
+                    ? " [{$payment->branch->name}]" 
+                    : '';
+                
+                $remainingAmount = $payment->remaining_receivable ?? ($payment->total_amount - $payment->total_paid);
+                
+                $activities->push([
+                    'type' => 'payment',
+                    'icon' => 'mdi:cash-clock',
+                    'color' => 'purple',
+                    'message' => "💳 Pembayaran tertunda #{$payment->id}{$branchInfo} - Rp " . number_format($remainingAmount, 0, ',', '.'),
+                    'time' => $payment->created_at->diffForHumans(),
+                    'sort_time' => $payment->created_at->timestamp,
+                ]);
+            }
+            
+            // Sort activities by sort_time (newest first)
+            $sortedActivities = $activities->sortByDesc(function($activity) {
+                return $activity['sort_time'];
+            })->values();
+            
+            return response()->json([
+                'success' => true,
+                'activities' => $sortedActivities->take(10)
             ]);
-        }
-        
-        // Ambil 5 stok menipis terakhir
-        $stockQuery = BranchStock::with('product')
-            ->whereRaw('quantity <= min_stock')
-            ->where('quantity', '>', 0)
-            ->orderBy('last_updated', 'desc')
-            ->limit(5);
-        
-        if ($branchId && $branchId !== 'all') {
-            $stockQuery->where('branch_id', $branchId);
-        }
-        
-        $lowStocks = $stockQuery->get();
-        
-        foreach ($lowStocks as $stock) {
-            $activities->push([
-                'type' => 'stock',
-                'message' => "Stok menipis: {$stock->product->name} (sisa {$stock->quantity})",
-                'time' => $stock->last_updated ? $stock->last_updated->diffForHumans() : 'Baru saja',
+            
+        } catch (\Exception $e) {
+            \Log::error('Activities error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
             ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat aktivitas: ' . $e->getMessage(),
+                'activities' => []
+            ], 500);
         }
-        
-        return response()->json([
-            'activities' => $activities->take(10)
-        ]);
     }
     
     /**
@@ -254,8 +399,6 @@ class DashboardController extends Controller
     public function export(Request $request)
     {
         // Implementasi export sesuai kebutuhan
-        // Bisa menggunakan Barryvdh\DomPDF atau Maatwebsite\Excel
-        
         return back()->with('info', 'Fitur export sedang dalam pengembangan');
     }
 }

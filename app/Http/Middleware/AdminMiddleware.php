@@ -18,7 +18,7 @@ class AdminMiddleware
         
         // Admin atau Super Admin bisa akses
         if (!in_array($role, ['admin', 'super_admin'])) {
-            abort(403, 'Aksus khusus admin');
+            abort(403, 'Akses khusus admin');
         }
 
         return $next($request);

@@ -16,7 +16,23 @@ class IngredientController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $isAdmin = $user->role === 'admin';
+        $userBranchId = $user->branch_id;
+        
         $query = Ingredient::with('unit', 'branch');
+        
+        // Filter berdasarkan role
+        if (!$isSuperAdmin) {
+            // Admin dan kasir hanya melihat bahan baku di cabangnya sendiri
+            $query->where('branch_id', $userBranchId);
+        } else {
+            // Super admin: filter berdasarkan branch_id yang dipilih
+            if ($request->has('branch_id') && $request->branch_id) {
+                $query->where('branch_id', $request->branch_id);
+            }
+        }
         
         // Search filter
         if ($request->has('search') && $request->search) {
@@ -24,26 +40,46 @@ class IngredientController extends Controller
             $query->where('name', 'LIKE', "%{$search}%");
         }
         
-        // Branch filter
-        if ($request->has('branch_id') && $request->branch_id) {
-            $query->where('branch_id', $request->branch_id);
+        $ingredients = $query->orderBy('name')->paginate($request->per_page ?? 15);
+        
+        // Units untuk dropdown
+        $units = Unit::all();
+        
+        // Branches untuk filter (hanya untuk super admin)
+        $branches = [];
+        if ($isSuperAdmin) {
+            $branches = Branch::where('is_active', true)->get();
+        } else {
+            // Untuk admin biasa, kirim branch mereka saja
+            $currentBranch = Branch::find($userBranchId);
+            if ($currentBranch) {
+                $branches = collect([$currentBranch]);
+            }
         }
         
-        $ingredients = $query->orderBy('name')->paginate(15);
-        $units = Unit::all();
-        $branches = Branch::where('is_active', true)->get();
+        // Get statistics berdasarkan role
+        $statsQuery = Ingredient::query();
+        if (!$isSuperAdmin) {
+            $statsQuery->where('branch_id', $userBranchId);
+        } elseif ($request->has('branch_id') && $request->branch_id) {
+            $statsQuery->where('branch_id', $request->branch_id);
+        }
         
-        // Get statistics
         $stats = [
-            'total_ingredients' => Ingredient::count(),
-            'low_stock' => Ingredient::whereColumn('current_stock', '<=', 'min_stock')
-                                      ->where('current_stock', '>', 0)
-                                      ->count(),
-            'out_of_stock' => Ingredient::where('current_stock', 0)->count(),
-            'total_value' => Ingredient::sum(DB::raw('current_stock * unit_cost')) ?? 0,
+            'total_ingredients' => $statsQuery->count(),
+            'low_stock' => (clone $statsQuery)->whereColumn('current_stock', '<=', 'min_stock')
+                                          ->where('current_stock', '>', 0)
+                                          ->count(),
+            'out_of_stock' => (clone $statsQuery)->where('current_stock', 0)->count(),
+            'total_value' => (clone $statsQuery)->sum(DB::raw('current_stock * unit_cost')) ?? 0,
         ];
         
-        return view('admin.ingredients.index', compact('ingredients', 'units', 'branches', 'stats'));
+        // Jika request AJAX, return partial view
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('admin.ingredients.partials.table', compact('ingredients'))->render();
+        }
+        
+        return view('admin.ingredients.index', compact('ingredients', 'units', 'branches', 'stats', 'isSuperAdmin', 'userBranchId'));
     }
 
     /**
@@ -51,10 +87,20 @@ class IngredientController extends Controller
      */
     public function create()
     {
-        $units = Unit::all();
-        $branches = Branch::where('is_active', true)->get();
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
         
-        return view('admin.ingredients.create', compact('units', 'branches'));
+        $units = Unit::all();
+        
+        // Branches: super admin bisa pilih cabang, admin biasa hanya cabang sendiri
+        if ($isSuperAdmin) {
+            $branches = Branch::where('is_active', true)->get();
+        } else {
+            $branches = Branch::where('id', $userBranchId)->where('is_active', true)->get();
+        }
+        
+        return view('admin.ingredients.create', compact('units', 'branches', 'isSuperAdmin', 'userBranchId'));
     }
 
     /**
@@ -62,20 +108,37 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
+        $rules = [
             'name' => 'required|string|max:255|unique:ingredients,name',
             'unit_id' => 'nullable|exists:units,id',
             'current_stock' => 'required|numeric|min:0',
             'min_stock' => 'required|numeric|min:0',
             'unit_cost' => 'nullable|numeric|min:0',
-            'branch_id' => 'nullable|exists:branches,id',
-        ]);
+        ];
+        
+        // Super admin bisa memilih cabang, admin biasa menggunakan cabang sendiri
+        if ($isSuperAdmin) {
+            $rules['branch_id'] = 'required|exists:branches,id';
+        }
+        
+        $validator = Validator::make($request->all(), $rules);
         
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
         
-        Ingredient::create($request->all());
+        $data = $request->all();
+        
+        // Jika bukan super admin, set branch_id ke cabang user
+        if (!$isSuperAdmin) {
+            $data['branch_id'] = $userBranchId;
+        }
+        
+        Ingredient::create($data);
         
         return redirect()->route('admin.ingredients.index')
             ->with('success', 'Bahan baku berhasil ditambahkan');
@@ -86,13 +149,20 @@ class IngredientController extends Controller
      */
     public function show($id)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
         $ingredient = Ingredient::with('unit', 'branch')->findOrFail($id);
         
-        // Get stock movement history (if you have stock_movements table)
-        // $movements = StockMovement::where('ingredient_id', $id)->orderBy('created_at', 'desc')->paginate(20);
-        $movements = collect(); // Placeholder
+        // Cek akses: non-super admin hanya bisa melihat bahan baku di cabangnya sendiri
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+            abort(403, 'Anda tidak memiliki akses ke bahan baku ini.');
+        }
         
-        return view('inventory.ingredients.show', compact('ingredient', 'movements'));
+        $movements = collect(); // Placeholder untuk stock movements
+        
+        return view('admin.ingredients.show', compact('ingredient', 'movements'));
     }
 
     /**
@@ -100,11 +170,27 @@ class IngredientController extends Controller
      */
     public function edit($id)
     {
-        $ingredient = Ingredient::findOrFail($id);
-        $units = Unit::all();
-        $branches = Branch::where('is_active', true)->get();
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
         
-        return view('admin.ingredients.edit', compact('ingredient', 'units', 'branches'));
+        $ingredient = Ingredient::findOrFail($id);
+        
+        // Cek akses: non-super admin hanya bisa edit bahan baku di cabangnya sendiri
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit bahan baku ini.');
+        }
+        
+        $units = Unit::all();
+        
+        // Branches: super admin bisa pilih cabang, admin biasa hanya cabang sendiri
+        if ($isSuperAdmin) {
+            $branches = Branch::where('is_active', true)->get();
+        } else {
+            $branches = Branch::where('id', $userBranchId)->where('is_active', true)->get();
+        }
+        
+        return view('admin.ingredients.edit', compact('ingredient', 'units', 'branches', 'isSuperAdmin', 'userBranchId'));
     }
 
     /**
@@ -112,22 +198,44 @@ class IngredientController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
         $ingredient = Ingredient::findOrFail($id);
         
-        $validator = Validator::make($request->all(), [
+        // Cek akses: non-super admin hanya bisa update bahan baku di cabangnya sendiri
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+            abort(403, 'Anda tidak memiliki akses untuk mengupdate bahan baku ini.');
+        }
+        
+        $rules = [
             'name' => 'required|string|max:255|unique:ingredients,name,' . $id,
             'unit_id' => 'nullable|exists:units,id',
             'current_stock' => 'required|numeric|min:0',
             'min_stock' => 'required|numeric|min:0',
             'unit_cost' => 'nullable|numeric|min:0',
-            'branch_id' => 'nullable|exists:branches,id',
-        ]);
+        ];
+        
+        // Super admin bisa mengubah cabang
+        if ($isSuperAdmin) {
+            $rules['branch_id'] = 'required|exists:branches,id';
+        }
+        
+        $validator = Validator::make($request->all(), $rules);
         
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
         
-        $ingredient->update($request->all());
+        $data = $request->all();
+        
+        // Jika bukan super admin, branch_id tidak boleh berubah
+        if (!$isSuperAdmin) {
+            unset($data['branch_id']);
+        }
+        
+        $ingredient->update($data);
         
         return redirect()->route('admin.ingredients.index')
             ->with('success', 'Bahan baku berhasil diperbarui');
@@ -138,7 +246,16 @@ class IngredientController extends Controller
      */
     public function destroy($id)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
         $ingredient = Ingredient::findOrFail($id);
+        
+        // Cek akses: non-super admin hanya bisa hapus bahan baku di cabangnya sendiri
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus bahan baku ini.');
+        }
         
         // Check if ingredient is used in recipes
         $recipeCount = DB::table('recipe_items')->where('ingredient_id', $id)->count();
@@ -159,7 +276,16 @@ class IngredientController extends Controller
      */
     public function adjustStock(Request $request, $id)
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
         $ingredient = Ingredient::findOrFail($id);
+        
+        // Cek akses: non-super admin hanya bisa adjust stok di cabangnya sendiri
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+            return response()->json(['error' => 'Anda tidak memiliki akses ke bahan baku ini.'], 403);
+        }
         
         $validator = Validator::make($request->all(), [
             'adjustment' => 'required|numeric|not_in:0',
@@ -179,16 +305,6 @@ class IngredientController extends Controller
         
         $ingredient->current_stock = $newStock;
         $ingredient->save();
-        
-        // Log movement (if you have stock_movements table)
-        // StockMovement::create([
-        //     'ingredient_id' => $ingredient->id,
-        //     'old_stock' => $oldStock,
-        //     'new_stock' => $newStock,
-        //     'adjustment' => $request->adjustment,
-        //     'reason' => $request->reason,
-        //     'user_id' => auth()->id(),
-        // ]);
         
         return response()->json([
             'success' => true,

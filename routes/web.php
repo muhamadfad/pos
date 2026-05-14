@@ -24,6 +24,7 @@ use App\Http\Controllers\KasproController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\BranchStockController;
+use App\Http\Controllers\SuperDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +37,24 @@ use App\Http\Controllers\BranchStockController;
 // =======================
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Dashboard (berdasarkan role akan diarahkan ke view yang sesuai)
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.home');
+    // Home - redirect berdasarkan role
+    Route::get('/', function () {
+        $user = auth()->user();
+        
+        if ($user->role === 'kasir') {
+            return redirect()->route('kasir.shift.index');
+        }
+        
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        
+        // super_admin
+        return redirect()->route('dashboard');
+    })->name('home');
+    
+    // Dashboard untuk super_admin dan admin
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/activities', [DashboardController::class, 'activities'])->name('dashboard.activities');
     Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
     Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
@@ -82,11 +98,9 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 
-        // Dashboard Admin
+        // Dashboard Admin (redirect ke dashboard utama)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard/activities', [DashboardController::class, 'activities'])->name('dashboard.activities');
-        Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
-
+        
         // =======================
         // MASTER DATA
         // =======================
@@ -216,7 +230,7 @@ Route::middleware(['auth', 'admin'])
         });
 
         // =======================
-        // BRANCH STOCK MANAGEMENT (Stok Bahan Baku per Cabang) - TAMBAHKAN DI SINI
+        // BRANCH STOCK MANAGEMENT (Stok Bahan Baku per Cabang)
         // =======================
         Route::prefix('branch-stock')->name('branch-stock.')->group(function () {
             Route::get('/', [BranchStockController::class, 'index'])->name('index');
@@ -230,6 +244,9 @@ Route::middleware(['auth', 'admin'])
             Route::post('/bulk-update', [BranchStockController::class, 'bulkUpdate'])->name('bulk-update');
             Route::get('/low-stock/report', [BranchStockController::class, 'lowStockReport'])->name('low-stock');
         });
+        
+        // HPP Report
+        Route::get('/hpp-report', [RecipeController::class, 'hppReport'])->name('hpp-report');
     });
 
 // =======================
@@ -240,7 +257,7 @@ Route::middleware(['auth', 'super_admin'])
     ->name('super.')
     ->group(function () {
 
-        // Super Admin Dashboard
+        // Super Admin Dashboard (redirect ke dashboard utama dengan filter)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         // =======================
@@ -305,8 +322,6 @@ Route::middleware(['auth', 'super_admin'])
             Route::post('/restore', [DatabaseController::class, 'restore'])->name('restore');
             Route::get('/optimize', [DatabaseController::class, 'optimize'])->name('optimize');
         });
-
-
     });
 
 // =======================
@@ -317,15 +332,24 @@ Route::middleware(['auth', 'kasir'])
     ->name('kasir.')
     ->group(function () {
         
-        // Kasir Dashboard
-        Route::get('/dashboard', [PointOfSaleController::class, 'index'])->name('dashboard');
+        // Redirect root kasir ke shift
+        Route::get('/', function () {
+            return redirect()->route('kasir.shift.index');
+        });
         
-        // POS
+        // Dashboard Kasir (redirect ke shift)
+        Route::get('/dashboard', function () {
+            return redirect()->route('kasir.shift.index');
+        });
+        
+        // POS - hanya bisa akses setelah shift dibuka
         Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos');
         Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('checkout');
         Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('print');
+        Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('customer-debt');
+        Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pay-debt');
         
-        // Cashier Shift
+        // Cashier Shift (halaman utama kasir)
         Route::get('/shift', [CashierShiftController::class, 'index'])->name('shift.index');
         Route::post('/shift/open', [CashierShiftController::class, 'store'])->name('shift.open');
         Route::post('/shift/close', [CashierShiftController::class, 'close'])->name('shift.close');
@@ -342,9 +366,6 @@ Route::middleware(['auth', 'kasir'])
         Route::get('/report/daily', [ReportController::class, 'kasirDaily'])->name('report.daily');
     });
 
-        Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-            Route::get('/hpp-report', [App\Http\Controllers\RecipeController::class, 'hppReport']);
-        });
 // =======================
 // AUTHENTICATION ROUTES
 // =======================

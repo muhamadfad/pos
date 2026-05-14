@@ -17,16 +17,41 @@
             <p class="text-slate-500 font-medium">Monitoring pergerakan kas dan profitabilitas toko</p>
         </div>
 
-        <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
-            <a href="{{ route('admin.finance.index') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
-            <a href="{{ route('admin.finance.daily') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
-            <a href="{{ route('admin.finance.weekly') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
-            <a href="{{ route('admin.finance.monthly') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
+        <div class="flex items-center gap-3">
+            <!-- Branch Filter (Hanya untuk Super Admin) -->
+            @if($isSuperAdmin)
+            <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
+                <option value="">🌍 Semua Cabang</option>
+                @foreach($branches as $branch)
+                <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>
+                    🏪 {{ $branch->name }}
+                </option>
+                @endforeach
+            </select>
+            @endif
+            
+            <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
+                <a href="{{ route('admin.finance.index') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
+                <a href="{{ route('admin.finance.daily') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
+                <a href="{{ route('admin.finance.weekly') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
+                <a href="{{ route('admin.finance.monthly') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
+            </div>
         </div>
+    </div>
+    
+    <!-- Info Cabang -->
+    <div class="bg-indigo-50 rounded-2xl p-3 px-5 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="iconify text-indigo-600" data-icon="mdi:store"></span>
+            <span class="text-sm font-semibold text-indigo-800">Cabang: {{ $currentBranchName }}</span>
+        </div>
+        @if($isSuperAdmin && $branchId)
+        <a href="{{ route('admin.finance.index') }}" class="text-xs text-indigo-600 hover:text-indigo-800">Reset Filter</a>
+        @endif
     </div>
 
     <!-- Stats Grid (3 kolom: Pendapatan | Operasional | Supplier, lalu Net span-full) -->
@@ -95,7 +120,7 @@
 
         <!-- Net Balance (clickable → detail) -->
         @php $isPositive = $netCashflow >= 0; @endphp
-        <a href="{{ route('admin.finance.cashflow') }}"
+        <a href="{{ route('admin.finance.cashflow') . ($branchId ? '?branch_id=' . $branchId : '') }}"
             class="relative overflow-hidden {{ $isPositive ? 'bg-indigo-600 shadow-indigo-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl hover:scale-[1.02] active:scale-[0.99] transition-all group md:col-span-3 block">
             <div class="absolute right-0 bottom-0 opacity-10">
                 <span class="iconify text-9xl text-white"
@@ -158,13 +183,13 @@
         <div class="bg-indigo-50/50 rounded-3xl border border-indigo-100 p-8">
             <h3 class="text-sm font-black text-indigo-700 tracking-widest uppercase mb-6">Navigasi Cepat</h3>
             <div class="grid grid-cols-1 gap-3">
-                <a href="{{ route('admin.purchase-payments.index') }}"
+                <a href="{{ route('admin.purchase-payments.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
                     class="flex items-center justify-between p-4 bg-white rounded-2xl border border-indigo-100 hover:border-indigo-300 hover:shadow-sm transition-all text-sm font-bold text-indigo-700 group">
                     Kontrol Hutang
                     <span class="iconify group-hover:translate-x-1 transition-transform"
                         data-icon="mdi:chevron-right"></span>
                 </a>
-                <a href="{{ route('admin.order-payments.index') }}"
+                <a href="{{ route('admin.order-payments.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
                     class="flex items-center justify-between p-4 bg-white rounded-2xl border border-indigo-100 hover:border-indigo-300 hover:shadow-sm transition-all text-sm font-bold text-indigo-700 group">
                     Kontrol Piutang
                     <span class="iconify group-hover:translate-x-1 transition-transform"
@@ -175,4 +200,17 @@
     </div>
 
 </div>
+
+<script>
+    document.getElementById('branchFilter')?.addEventListener('change', function() {
+        const branchId = this.value;
+        const url = new URL(window.location.href);
+        if (branchId) {
+            url.searchParams.set('branch_id', branchId);
+        } else {
+            url.searchParams.delete('branch_id');
+        }
+        window.location.href = url.toString();
+    });
+</script>
 @endsection

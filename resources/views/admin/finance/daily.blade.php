@@ -14,20 +14,47 @@
                 </span>
                 Laporan Harian
             </h1>
-            <p class="text-slate-500 font-medium">{{ $today->translatedFormat('d F Y') }}</p>
+            <p class="text-slate-500 font-medium">{{ $todayObj->translatedFormat('d F Y') }}</p>
         </div>
 
-        <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
-            <a href="{{ route('admin.finance.index') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
-            <a href="{{ route('admin.finance.daily') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
-            <a href="{{ route('admin.finance.weekly') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
-            <a href="{{ route('admin.finance.monthly') }}"
-                class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
+        <div class="flex items-center gap-3">
+            <!-- Branch Filter (Hanya untuk Super Admin) -->
+            @if($isSuperAdmin ?? false)
+            <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
+                <option value="">🌍 Semua Cabang</option>
+                @foreach($branches ?? [] as $branch)
+                <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
+                    🏪 {{ $branch->name }}
+                </option>
+                @endforeach
+            </select>
+            @endif
+            
+            <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
+                <a href="{{ route('admin.finance.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
+                <a href="{{ route('admin.finance.daily') . ($branchId ? '?branch_id=' . $branchId : '') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
+                <a href="{{ route('admin.finance.weekly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
+                <a href="{{ route('admin.finance.monthly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
+            </div>
         </div>
     </div>
+    
+    <!-- Info Cabang -->
+    @if(isset($currentBranchName))
+    <div class="bg-indigo-50 rounded-2xl p-3 px-5 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="iconify text-indigo-600" data-icon="mdi:store"></span>
+            <span class="text-sm font-semibold text-indigo-800">Cabang: {{ $currentBranchName }}</span>
+        </div>
+        @if(($isSuperAdmin ?? false) && ($branchId ?? false))
+        <a href="{{ route('admin.finance.daily') }}" class="text-xs text-indigo-600 hover:text-indigo-800">Reset Filter</a>
+        @endif
+    </div>
+    @endif
 
     <!-- Stats Grid - 4 kolom untuk card utama -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -153,13 +180,69 @@
             @endif
         </div>
     </div>
+    
+    <!-- Daftar Pengeluaran Hari Ini -->
+    @if(isset($expenses) && $expenses->count() > 0)
+    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 class="font-black text-slate-800 flex items-center gap-2">
+                <span class="iconify text-rose-500" data-icon="mdi:cash-minus"></span>
+                Detail Pengeluaran Hari Ini
+            </h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Kategori</th>
+                        <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Deskripsi</th>
+                        <th class="text-right py-3 px-4 text-xs font-black text-slate-500 uppercase">Jumlah</th>
+                        <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Referensi</th>
+                    </table>
+                </thead>
+                <tbody>
+                    @foreach($expenses as $expense)
+                    <tr class="border-b border-slate-100">
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-1 bg-rose-50 text-rose-600 text-xs font-medium rounded-full">{{ $expense->category }}</span>
+                        </td>
+                        <td class="py-3 px-4 text-slate-600">{{ $expense->description }}</td>
+                        <td class="py-3 px-4 text-right font-mono font-semibold text-rose-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                        <td class="py-3 px-4 text-slate-500 text-sm">{{ $expense->reference ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot class="bg-slate-50">
+                    <tr>
+                        <td colspan="2" class="py-3 px-4 font-bold text-slate-800">Total Pengeluaran</td>
+                        <td class="py-3 px-4 text-right font-bold text-rose-600">Rp {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    @endif
 
 </div>
 
 @push('scripts')
-@if($topProducts->count() > 0)
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('turbo:load', function () {
+    // Branch filter
+    document.getElementById('branchFilter')?.addEventListener('change', function() {
+        const branchId = this.value;
+        const url = new URL(window.location.href);
+        if (branchId) {
+            url.searchParams.set('branch_id', branchId);
+        } else {
+            url.searchParams.delete('branch_id');
+        }
+        window.location.href = url.toString();
+    });
+    
+    @if($topProducts->count() > 0)
+    document.addEventListener('DOMContentLoaded', function () {
         const canvas = document.getElementById('dailyChart');
         if (!canvas) return;
         const existing = Chart.getChart(canvas);
@@ -204,7 +287,7 @@
             }
         });
     });
+    @endif
 </script>
-@endif
 @endpush
 @endsection

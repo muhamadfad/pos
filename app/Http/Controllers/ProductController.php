@@ -29,12 +29,7 @@ class ProductController extends Controller
         if ($request->sort === 'price') {
             $query->orderBy('selling_price', 'asc');
         }
-        // Hapus sort by stock karena kolom stock tidak ada
-        // elseif ($request->sort === 'stock') {
-        //     $query->orderBy('stock', 'asc');
-        // }
 
-        // Hapus orderBy stock karena kolom stock tidak ada
         $query->orderBy('name');
 
         $perPage = $request->per_page ?? 10;
@@ -67,9 +62,7 @@ class ProductController extends Controller
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
-            'purchase_price' => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            // Hapus validasi stock dan min_stock
         ]);
 
         Product::create([
@@ -77,9 +70,8 @@ class ProductController extends Controller
             'name'           => $request->name,
             'category_id'    => $request->category_id,
             'unit_id'        => $request->unit_id,
-            'purchase_price' => $request->purchase_price,
             'selling_price'  => $request->selling_price,
-            // Hapus stock dan min_stock
+            'purchase_price' => 0, // Set default 0 atau bisa null jika database mengizinkan
         ]);
 
         return redirect()->route('admin.products.index')
@@ -125,9 +117,7 @@ class ProductController extends Controller
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
-            'purchase_price' => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            // Hapus validasi stock dan min_stock
         ]);
 
         $product->update([
@@ -135,9 +125,8 @@ class ProductController extends Controller
             'name'           => $request->name,
             'category_id'    => $request->category_id,
             'unit_id'        => $request->unit_id,
-            'purchase_price' => $request->purchase_price,
             'selling_price'  => $request->selling_price,
-            // Hapus stock dan min_stock
+            // purchase_price dibiarkan tetap atau bisa diisi 0
         ]);
 
         return redirect()->route('admin.products.index')
@@ -164,10 +153,7 @@ class ProductController extends Controller
             'id'             => $product->id,
             'name'           => $product->name,
             'selling_price'  => $product->selling_price,
-            'purchase_price' => $product->purchase_price,
             'category_id'    => $product->category_id,
-            // Hapus 'stock' karena tidak ada
-            // 'stock'          => $product->stock,
         ]);
     }
 }
