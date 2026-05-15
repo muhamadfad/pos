@@ -83,7 +83,7 @@
             </div>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:package-variant"></span>
-                Modal Barang Terjual
+                Modal Bahan Baku
             </div>
         </div>
 

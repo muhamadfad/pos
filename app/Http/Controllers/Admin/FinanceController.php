@@ -7,13 +7,15 @@ use App\Models\Order;
 use App\Models\Expense;
 use App\Models\Purchase;
 use App\Models\Branch;
+use App\Models\Product;
+use App\Models\RecipeItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request; // <-- TAMBAHKAN INI
+use Illuminate\Http\Request;
 
 class FinanceController extends Controller
 {
-    public function index(Request $request) // <-- Sekarang Request dikenali
+    public function index(Request $request)
     {
         $user = auth()->user();
         $isSuperAdmin = $user->role === 'super_admin';
@@ -65,7 +67,7 @@ class FinanceController extends Controller
         ));
     }
 
-    public function cashflow(Request $request) // <-- Tambahkan Request
+    public function cashflow(Request $request)
     {
         $user = auth()->user();
         $isSuperAdmin = $user->role === 'super_admin';
@@ -144,72 +146,72 @@ class FinanceController extends Controller
         ));
     }
 
-   public function daily(Request $request)
-{
-    $user = auth()->user();
-    $isSuperAdmin = $user->role === 'super_admin';
-    $userBranchId = $user->branch_id;
-    
-    // Filter branch
-    $branchId = $request->get('branch_id');
-    if (!$isSuperAdmin) {
-        $branchId = $userBranchId;
-    }
-    
-    $todayObj = Carbon::today();
-    $todayStr = $todayObj->toDateString();
-    $finance = $this->calculateProfit($todayObj, null, $branchId);
+    public function daily(Request $request)
+    {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
+        // Filter branch
+        $branchId = $request->get('branch_id');
+        if (!$isSuperAdmin) {
+            $branchId = $userBranchId;
+        }
+        
+        $todayObj = Carbon::today();
+        $todayStr = $todayObj->toDateString();
+        $finance = $this->calculateProfit($todayObj, null, $branchId);
 
-    $topProductsQuery = DB::table('order_items')
-        ->join('orders', 'order_items.order_id', '=', 'orders.id')
-        ->join('products', 'order_items.product_id', '=', 'products.id')
-        ->whereDate('orders.date', $todayStr);
-    
-    if ($branchId) {
-        $topProductsQuery->where('orders.branch_id', $branchId);
-    }
-    
-    $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
-        ->groupBy('products.id', 'products.name')
-        ->orderByDesc('total_qty')
-        ->limit(10)
-        ->get()
-        ->map(function ($item) {
-            $item->total_qty = (float) $item->total_qty;
-            return $item;
-        });
+        $topProductsQuery = DB::table('order_items')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->whereDate('orders.date', $todayStr);
+        
+        if ($branchId) {
+            $topProductsQuery->where('orders.branch_id', $branchId);
+        }
+        
+        $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_qty')
+            ->limit(10)
+            ->get()
+            ->map(function ($item) {
+                $item->total_qty = (float) $item->total_qty;
+                return $item;
+            });
 
-    $expenseQuery = Expense::whereDate('date', $todayStr);
-    if ($branchId) {
-        $expenseQuery->where('branch_id', $branchId);
-    }
-    $expenses = $expenseQuery->get();
-    
-    // Get branches for filter
-    $branches = [];
-    if ($isSuperAdmin) {
-        $branches = Branch::where('is_active', true)->get();
-    }
-    
-    $currentBranchName = 'Semua Cabang';
-    if ($branchId) {
-        $branch = Branch::find($branchId);
-        $currentBranchName = $branch ? $branch->name : 'Cabang';
+        $expenseQuery = Expense::whereDate('date', $todayStr);
+        if ($branchId) {
+            $expenseQuery->where('branch_id', $branchId);
+        }
+        $expenses = $expenseQuery->get();
+        
+        // Get branches for filter
+        $branches = [];
+        if ($isSuperAdmin) {
+            $branches = Branch::where('is_active', true)->get();
+        }
+        
+        $currentBranchName = 'Semua Cabang';
+        if ($branchId) {
+            $branch = Branch::find($branchId);
+            $currentBranchName = $branch ? $branch->name : 'Cabang';
+        }
+
+        return view('admin.finance.daily', compact(
+            'finance', 
+            'todayObj',
+            'topProducts', 
+            'expenses',
+            'isSuperAdmin',
+            'branches',
+            'branchId',
+            'currentBranchName'
+        ));
     }
 
-    return view('admin.finance.daily', compact(
-        'finance', 
-        'todayObj',    // <-- PASTIKAN VARIABLE INI ADA
-        'topProducts', 
-        'expenses',
-        'isSuperAdmin',
-        'branches',
-        'branchId',
-        'currentBranchName'
-    ));
-}
-
-    public function weekly(Request $request) // <-- Tambahkan Request
+    public function weekly(Request $request)
     {
         $user = auth()->user();
         $isSuperAdmin = $user->role === 'super_admin';
@@ -259,7 +261,7 @@ class FinanceController extends Controller
         return view('admin.finance.weekly', compact('finance', 'start', 'end', 'topProducts', 'isSuperAdmin', 'branches', 'branchId', 'currentBranchName'));
     }
 
-    public function monthly(Request $request) // <-- Tambahkan Request
+    public function monthly(Request $request)
     {
         $user = auth()->user();
         $isSuperAdmin = $user->role === 'super_admin';
@@ -309,72 +311,134 @@ class FinanceController extends Controller
         return view('admin.finance.monthly', compact('finance', 'start', 'end', 'topProducts', 'isSuperAdmin', 'branches', 'branchId', 'currentBranchName'));
     }
 
+    /**
+     * Hitung HPP untuk satu produk berdasarkan resep (ingredients)
+     */
+    private function calculateProductHPP($productId)
+    {
+        $recipeItems = RecipeItem::where('product_id', $productId)
+            ->with('ingredient')
+            ->get();
+        
+        if ($recipeItems->isEmpty()) {
+            // Jika tidak ada resep, gunakan purchase_price dari product
+            $product = Product::find($productId);
+            return $product->purchase_price ?? 0;
+        }
+        
+        $totalCost = 0;
+        
+        foreach ($recipeItems as $item) {
+            if ($item->ingredient && $item->ingredient->unit_cost > 0) {
+                $totalCost += $item->ingredient->unit_cost * $item->quantity;
+            }
+        }
+        
+        return $totalCost;
+    }
+
+    /**
+     * Hitung total HPP untuk semua item dalam order
+     */
+    private function calculateOrderHPP($orderId)
+    {
+        $orderItems = DB::table('order_items')
+            ->where('order_id', $orderId)
+            ->get();
+        
+        $totalHPP = 0;
+        
+        foreach ($orderItems as $item) {
+            $hpp = $this->calculateProductHPP($item->product_id);
+            $totalHPP += $hpp * $item->quantity;
+        }
+        
+        return $totalHPP;
+    }
+
     // ================= HELPER =================
     private function calculateProfit($start = null, $end = null, $branchId = null)
     {
-        $query = DB::table('order_items')
-            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->select(
-                DB::raw('SUM(order_items.subtotal) as income'),
-                DB::raw('SUM(order_items.cost_price * order_items.quantity) as cost'),
-                DB::raw('SUM((order_items.selling_price - order_items.cost_price) * order_items.quantity) as profit')
-            );
-
+        // Query untuk mendapatkan semua order dalam periode
+        $orderQuery = Order::query();
+        
         if ($start && $end) {
-            $query->whereBetween('orders.date', [
+            $orderQuery->whereBetween('date', [
                 Carbon::parse($start)->startOfDay(),
                 Carbon::parse($end)->endOfDay()
             ]);
         } elseif ($start) {
-            $query->whereDate('orders.date', Carbon::parse($start));
+            $orderQuery->whereDate('date', Carbon::parse($start));
         }
         
         // Filter by branch
         if ($branchId) {
-            $query->where('orders.branch_id', $branchId);
+            $orderQuery->where('branch_id', $branchId);
         }
-
-        $result = $query->first();
-
-        $income = $result->income ?? 0;
-        $cost   = $result->cost ?? 0;
-        $profit = $result->profit ?? 0;
-
-        $expenseQuery  = Expense::query();
-        $purchaseQuery = Purchase::query();
-
+        
+        // Hanya order yang sudah lunas
+        $orderQuery->where('payment_status', 'paid');
+        
+        $orders = $orderQuery->get();
+        
+        $totalIncome = 0;
+        $totalHPP = 0;
+        
+        foreach ($orders as $order) {
+            $totalIncome += $order->total_amount;
+            
+            // Hitung HPP berdasarkan resep ingredients
+            $orderItems = DB::table('order_items')
+                ->where('order_id', $order->id)
+                ->get();
+            
+            foreach ($orderItems as $item) {
+                $hpp = $this->calculateProductHPP($item->product_id);
+                $totalHPP += $hpp * $item->quantity;
+            }
+        }
+        
+        $profit = $totalIncome - $totalHPP;
+        
+        // Hitung expenses (biaya operasional)
+        $expenseQuery = Expense::query();
         if ($start && $end) {
             $expenseQuery->whereBetween('date', [
                 Carbon::parse($start)->startOfDay(),
                 Carbon::parse($end)->endOfDay()
             ]);
+        } elseif ($start) {
+            $expenseQuery->whereDate('date', Carbon::parse($start));
+        }
+        if ($branchId) {
+            $expenseQuery->where('branch_id', $branchId);
+        }
+        $expenses = $expenseQuery->sum('amount') ?? 0;
+        
+        // Hitung pembayaran ke supplier
+        $purchaseQuery = Purchase::query();
+        if ($start && $end) {
             $purchaseQuery->whereBetween('date', [
                 Carbon::parse($start)->startOfDay(),
                 Carbon::parse($end)->endOfDay()
             ]);
         } elseif ($start) {
-            $expenseQuery->whereDate('date', Carbon::parse($start));
             $purchaseQuery->whereDate('date', Carbon::parse($start));
         }
-        
-        // Filter by branch
         if ($branchId) {
-            $expenseQuery->where('branch_id', $branchId);
             $purchaseQuery->where('branch_id', $branchId);
         }
-
-        $expenses     = $expenseQuery->sum('amount') ?? 0;
         $supplierPaid = $purchaseQuery->sum('total_paid') ?? 0;
-
-        $netCashflow = $income - $supplierPaid - $expenses;
-
-        return compact(
-            'income',
-            'cost',
-            'profit',
-            'expenses',
-            'supplierPaid',
-            'netCashflow'
-        );
+        
+        $netCashflow = $totalIncome - $supplierPaid - $expenses;
+        
+        return [
+            'income' => $totalIncome,
+            'cost' => $totalHPP,
+            'profit' => $profit,
+            'expenses' => $expenses,
+            'supplierPaid' => $supplierPaid,
+            'netCashflow' => $netCashflow,
+        ];
     }
 }
