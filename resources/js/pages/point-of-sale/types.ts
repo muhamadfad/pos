@@ -6,6 +6,7 @@ export interface Product {
     stock: number;
     category: string;
     category_id: number;
+    image?: string | null;
 }
 
 export interface Category {
@@ -27,6 +28,7 @@ export interface CartItem {
     price: number;
     qty: number;
     stock: number;
+    image?: string | null;
 }
 
 export interface CashierShift {
@@ -57,6 +59,10 @@ export interface CustomerDebt {
 
 export interface PageProps {
     [key: string]: unknown;
+    authUser: {
+        id: number;
+        branch_id: number;
+    };
     products: Product[];
     categories: Category[];
     customers: Customer[];

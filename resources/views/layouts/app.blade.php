@@ -19,13 +19,13 @@
             <nav class="flex-1 py-4 space-y-1">
                 <a href="{{ route('admin.dashboard') }}"
                     class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
-                    <span class="text-lg">📊</span>
+                    <span class="text-lg"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span></span>
                     <span class="ml-3">Dashboard</span>
                 </a>
 
                 <a href="{{ route('admin.products.index') }}"
                     class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
-                    <span class="text-lg">📦</span>
+                    <span class="text-lg"><span class="iconify inline-block" data-icon="mdi:package-variant"></span></span>
                     <span class="ml-3">Produk</span>
                 </a>
 

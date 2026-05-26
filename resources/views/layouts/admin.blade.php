@@ -44,8 +44,8 @@
                 <div class="flex items-center gap-3">
                     <span class="iconify text-2xl text-indigo-500" data-icon="mdi:storefront"></span>
                     <div x-show="!sidebarCollapsed" class="flex flex-col">
-                        <span class="font-bold text-white text-base tracking-tight leading-none">RM. Coto Makassar Selera Rakyat</span>
-                        <span class="text-[10px] text-slate-500 mt-1">Kendari</span>
+                        <span class="font-bold text-white text-base tracking-tight leading-none">AnoaPOS</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Admin Panel</span>
                     </div>
                 </div>
             </div>

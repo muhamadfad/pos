@@ -14,9 +14,9 @@ interface CustomerComboboxProps {
     label?: string;
     placeholder?: string;
     allowWalkIn?: boolean;
-    /** Pass a name to render a hidden <input> for form submission */
     inputName?: string;
     className?: string;
+    onCreateCustomer?: (name: string) => void;
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -48,6 +48,7 @@ export default function CustomerCombobox({
     allowWalkIn = true,
     inputName,
     className = "",
+    onCreateCustomer,
 }: CustomerComboboxProps) {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
@@ -276,6 +277,19 @@ export default function CustomerCombobox({
                         <div className="px-4 py-3 text-sm text-slate-400 text-center">
                             Tidak ditemukan —{" "}
                             <span className="font-medium">"{search}"</span>
+                            {onCreateCustomer && search.trim() && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onCreateCustomer(search.trim());
+                                        setSearch("");
+                                        setOpen(false);
+                                    }}
+                                    className="mt-2 w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-lg transition-colors"
+                                >
+                                    + Tambah "{search.trim()}"
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>

@@ -9,6 +9,7 @@ class Product extends Model
 {
     use SoftDeletes;
     protected $fillable = [
+        'image',
         'barcode',
         'name',
         'category_id',

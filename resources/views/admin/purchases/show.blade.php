@@ -269,8 +269,8 @@
                                         class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Metode</label>
                                     <select name="payment_method"
                                         class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold uppercase">
-                                        <option value="cash">💵 Tunai / Cash</option>
-                                        <option value="transfer">🏦 Transfer Bank</option>
+                                        <option value="cash"><span class="iconify inline-block" data-icon="mdi:cash"></span> Tunai / Cash</option>
+                                        <option value="transfer"><span class="iconify inline-block" data-icon="mdi:bank-outline"></span> Transfer Bank</option>
                                     </select>
                                 </div>
                             </div>

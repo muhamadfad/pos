@@ -334,7 +334,7 @@ class DashboardController extends Controller
                     'type' => 'stock',
                     'icon' => 'mdi:alert',
                     'color' => 'amber',
-                    'message' => "⚠️ Stok menipis: {$ingredientName}{$branchInfo} (sisa {$stock->quantity} {$unitName})",
+                    'message' => "Stok menipis: {$ingredientName}{$branchInfo} (sisa {$stock->quantity} {$unitName})",
                     'time' => 'Baru saja',
                     'sort_time' => $stock->id, // Gunakan id untuk sorting
                 ]);
@@ -363,7 +363,7 @@ class DashboardController extends Controller
                     'type' => 'payment',
                     'icon' => 'mdi:cash-clock',
                     'color' => 'purple',
-                    'message' => "💳 Pembayaran tertunda #{$payment->id}{$branchInfo} - Rp " . number_format($remainingAmount, 0, ',', '.'),
+                    'message' => "Pembayaran tertunda #{$payment->id}{$branchInfo} - Rp " . number_format($remainingAmount, 0, ',', '.'),
                     'time' => $payment->created_at->diffForHumans(),
                     'sort_time' => $payment->created_at->timestamp,
                 ]);

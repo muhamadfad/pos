@@ -26,7 +26,7 @@
                 <option value="">🌍 Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
-                    🏪 {{ $branch->name }}
+                    <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
                 </option>
                 @endforeach
             </select>
@@ -82,7 +82,7 @@
     <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
         <div class="flex items-center gap-2 mb-3">
             <span class="iconify text-amber-600 text-xl" data-icon="mdi:alert-octagon"></span>
-            <h3 class="font-bold text-amber-800 text-sm">⚠️ Produk dengan Margin Rendah (&lt; 20%)</h3>
+            <h3 class="font-bold text-amber-800 text-sm"><span class="iconify inline-block" data-icon="mdi:alert-outline"></span> Produk dengan Margin Rendah (&lt; 20%)</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             @foreach($lowMarginProducts as $product)
@@ -151,7 +151,7 @@
                     <tr>
                         <td colspan="6" class="px-6 py-20 text-center">
                             <div class="flex flex-col items-center">
-                                <span class="text-4xl opacity-20">📊</span>
+                                <span class="text-4xl opacity-20"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span></span>
                                 <p class="mt-4 text-slate-400 font-medium italic">Belum ada data penjualan tercatat.</p>
                             </div>
                         </td>

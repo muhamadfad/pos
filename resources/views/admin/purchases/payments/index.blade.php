@@ -7,7 +7,7 @@
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-black text-slate-800 tracking-tight">💳 Kontrol Hutang</h1>
+            <h1 class="text-2xl font-black text-slate-800 tracking-tight"><span class="iconify inline-block" data-icon="mdi:credit-card-outline"></span> Kontrol Hutang</h1>
             <p class="text-slate-500 font-medium">Monitoring kewajiban pembayaran ke supplier</p>
         </div>
     </div>

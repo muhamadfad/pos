@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
         // Hanya jalankan seeder untuk users dan branches
         $this->call([
             UsersAndBranchesSeeder::class,
+            PosDummySeeder::class,
         ]);
     }
 }

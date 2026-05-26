@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\PurchaseItem;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -63,7 +64,13 @@ class ProductController extends Controller
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
             'selling_price'  => 'required|numeric|min:0',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
 
         Product::create([
             'barcode'        => $request->barcode,
@@ -72,6 +79,7 @@ class ProductController extends Controller
             'unit_id'        => $request->unit_id,
             'selling_price'  => $request->selling_price,
             'purchase_price' => 0, // Set default 0 atau bisa null jika database mengizinkan
+            'image'          => $imagePath,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -118,16 +126,26 @@ class ProductController extends Controller
             'category_id'    => 'required|exists:categories,id',
             'unit_id'        => 'nullable|exists:units,id',
             'selling_price'  => 'required|numeric|min:0',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $product->update([
+        $data = [
             'barcode'        => $request->barcode,
             'name'           => $request->name,
             'category_id'    => $request->category_id,
             'unit_id'        => $request->unit_id,
             'selling_price'  => $request->selling_price,
-            // purchase_price dibiarkan tetap atau bisa diisi 0
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil diperbarui');

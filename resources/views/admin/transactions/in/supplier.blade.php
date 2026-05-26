@@ -7,7 +7,7 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-800">🏪 Pilih Supplier</h2>
+        <h2 class="text-xl font-semibold text-gray-800"><span class="iconify inline-block" data-icon="mdi:store-outline"></span> Pilih Supplier</h2>
     </div>
 
     <!-- Table -->

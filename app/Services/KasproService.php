@@ -449,7 +449,7 @@ class KasproService
         // Insight puncak penjualan
         if ($peakFactor > 1.2) {
             $peakIncome = $monthlyDataLastYear[$peakMonth]['income'] ?? 0;
-            $recommendations[] = "📊 Insight: Bulan {$monthNames[$peakMonth]} adalah puncak penjualan tahun lalu (Rp " . 
+            $recommendations[] = "Insight: Bulan {$monthNames[$peakMonth]} adalah puncak penjualan tahun lalu (Rp " . 
                                   number_format($peakIncome, 0, ',', '.') . ", {$peakFactor}x dari rata-rata).";
             
             // Cek apakah bulan puncak ada dalam prediksi
@@ -478,7 +478,7 @@ class KasproService
         $hasDeficit = false;
         foreach ($predictions as $pred) {
             if ($pred['predicted_net'] < 0) {
-                $recommendations[] = "⚠️ Bulan {$pred['month_name']} diprediksi defisit Rp " . 
+                $recommendations[] = "Bulan {$pred['month_name']} diprediksi defisit Rp " . 
                                       number_format(abs($pred['predicted_net']), 0, ',', '.') . 
                                       ". Mulai sisihkan dana dari sekarang.";
                 $hasDeficit = true;
@@ -492,7 +492,7 @@ class KasproService
             $maxExpense = max($expensePredictions);
             $minExpense = min($expensePredictions);
             if ($maxExpense > $minExpense * 1.5) {
-                $recommendations[] = '📊 Pengeluaran diprediksi fluktuatif. Buat anggaran bulanan yang lebih terencana.';
+                $recommendations[] = 'Pengeluaran diprediksi fluktuatif. Buat anggaran bulanan yang lebih terencana.';
             }
         }
         
@@ -578,13 +578,13 @@ class KasproService
             $trend['direction_text'] = '✅ Tren POSITIF: Pemasukan naik, pengeluaran turun';
         } elseif ($avgIncomeChange < 0 && $avgExpenseChange > 0) {
             $trend['direction'] = 'negative';
-            $trend['direction_text'] = '⚠️ Tren NEGATIF: Pemasukan turun, pengeluaran naik';
+            $trend['direction_text'] = 'Tren NEGATIF: Pemasukan turun, pengeluaran naik';
         } elseif ($avgIncomeChange > 0 && $avgExpenseChange > 0) {
             $trend['direction'] = 'mixed';
-            $trend['direction_text'] = '📊 Tren CAMPURAN: Pemasukan dan pengeluaran sama-sama naik';
+            $trend['direction_text'] = 'Tren CAMPURAN: Pemasukan dan pengeluaran sama-sama naik';
         } elseif ($avgIncomeChange < 0 && $avgExpenseChange < 0) {
             $trend['direction'] = 'mixed';
-            $trend['direction_text'] = '📊 Tren CAMPURAN: Pemasukan dan pengeluaran sama-sama turun';
+            $trend['direction_text'] = 'Tren CAMPURAN: Pemasukan dan pengeluaran sama-sama turun';
         } else {
             $trend['direction'] = 'stable';
             $trend['direction_text'] = '➡️ Tren STABIL: Tidak ada perubahan signifikan';
@@ -649,7 +649,7 @@ class KasproService
             $this->createAlert(
                 'low_cash',
                 $survival['days_to_survive'] <= 7 ? 'emergency' : 'critical',
-                '⚠️ Saldo Kas Menipis',
+                'Saldo Kas Menipis',
                 "Bisnis hanya bisa bertahan {$survival['days_to_survive']} hari tanpa pemasukan baru.",
                 null, null, $survival
             );
@@ -661,7 +661,7 @@ class KasproService
             $this->createAlert(
                 'high_expense',
                 'warning',
-                '📊 Pengeluaran Tinggi',
+                'Pengeluaran Tinggi',
                 "Pengeluaran bulan ini mencapai {$percentage}% dari pemasukan. Perhatikan efisiensi!",
                 null, null, $cashFlow
             );

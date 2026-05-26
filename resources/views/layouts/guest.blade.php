@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'RM. Coto Makassar') }} - Point of Sale</title>
+    <title>{{ config('app.name', 'AnoaPOS') }} - Point of Sale</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -32,8 +32,8 @@
                     <span class="iconify text-white text-3xl" data-icon="mdi:storefront"></span>
                 </div>
                 <div class="text-center">
-                    <h1 class="text-xl font-black text-slate-800 tracking-tight">RM. Coto Makassar</h1>
-                    <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-0.5">Selera Rakyat</p>
+                    <h1 class="text-xl font-black text-slate-800 tracking-tight">AnoaPOS</h1>
+                    <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-0.5">Point of Sale System</p>
                 </div>
             </a>
         </div>
@@ -43,7 +43,7 @@
         </div>
 
         <p class="relative z-10 mt-8 text-xs text-slate-400 font-medium">
-            &copy; {{ date('Y') }} {{ config('app.name', 'RM. Coto Makassar') }}
+            &copy; {{ date('Y') }} {{ config('app.name', 'AnoaPOS') }}
         </p>
     </div>
     

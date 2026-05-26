@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+    <rect width="512" height="512" rx="100" fill="#2563eb"/>
+    <path stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M384 240H128m128 128V112m0 256c-70.7 0-128-57.3-128-128 0-70.7 57.3-128 128-128s128 57.3 128 128c0 70.7-57.3 128-128 128z"/>
+    <text x="256" y="360" font-family="sans-serif" font-size="80" font-weight="bold" fill="#ffffff" text-anchor="middle">POS</text>
+</svg>

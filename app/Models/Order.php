@@ -10,6 +10,7 @@ class Order extends Model
     use SoftDeletes;
     
     protected $fillable = [ 
+        'client_uuid',
         'invoice_number',
         'customer_id',
         'cashier_shift_id',

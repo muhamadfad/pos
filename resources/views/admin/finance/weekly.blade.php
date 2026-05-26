@@ -24,7 +24,7 @@
                 <option value="">🌍 Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
-                    🏪 {{ $branch->name }}
+                    <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
                 </option>
                 @endforeach
             </select>

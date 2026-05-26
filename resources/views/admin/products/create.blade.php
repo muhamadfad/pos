@@ -37,7 +37,7 @@
     @endif
 
     <form action="{{ isset($isEdit) && $isEdit ? route('admin.products.update', $product->id) : route('admin.products.store') }}" 
-          method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         @csrf
         @if(isset($isEdit) && $isEdit) @method('PUT') @endif
 
@@ -78,6 +78,18 @@
                         <input type="text" id="name" name="name" required
                             class="w-full px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-800 placeholder:text-slate-400"
                             placeholder="Contoh: Coto, Telur, Es Teh" value="{{ old('name', $product->name ?? '') }}">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Gambar Menu <span class="text-slate-400 normal-case font-normal">(Opsional)</span></label>
+                        @if(isset($isEdit) && $isEdit && $product->image)
+                        <div class="mb-3">
+                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-xl border border-slate-200">
+                        </div>
+                        @endif
+                        <input type="file" id="image" name="image" accept="image/*"
+                            class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        <p class="text-[10px] text-slate-500">Maksimal 2MB. Format JPG, PNG, WEBP.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

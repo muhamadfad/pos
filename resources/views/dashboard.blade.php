@@ -85,12 +85,12 @@
                 </div>
             </div>
             <div class="flex-1 max-w-md">
-                <label class="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">🏪 Filter Cabang</label>
+                <label class="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2 flex items-center gap-1"><span class="iconify" data-icon="mdi:store-outline"></span> Filter Cabang</label>
                 <select id="branchFilter" class="w-full p-3 border-2 border-indigo-200 rounded-xl font-semibold bg-white focus:border-indigo-500 focus:outline-none transition-all">
-                    <option value="all" {{ $showAllBranches ? 'selected' : '' }}>📊 Semua Cabang (Gabungan)</option>
+                    <option value="all" {{ $showAllBranches ? 'selected' : '' }}>Semua Cabang (Gabungan)</option>
                     @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ (!$showAllBranches && $branchId == $branch->id) ? 'selected' : '' }}>
-                        🏪 {{ $branch->name }}
+                        {{ $branch->name }}
                     </option>
                     @endforeach
                 </select>
@@ -102,7 +102,7 @@
     <!-- Perbandingan Antar Cabang (Hanya Super Admin ketika melihat "Semua Cabang") -->
     @if($isSuperAdmin && $showAllBranches)
     <div>
-        <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">📊 Perbandingan Performa Cabang</h3>
+        <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2"><span class="iconify text-lg" data-icon="mdi:chart-bar"></span> Perbandingan Performa Cabang</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             @foreach($branches as $branch)
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group cursor-pointer" onclick="window.location.href='?branch_id={{ $branch->id }}'">
@@ -116,9 +116,9 @@
                     </div>
                 </div>
                 <div class="mt-4 flex justify-between text-xs font-bold">
-                    <span class="text-slate-500">📦 {{ $branchStats[$branch->id]['total_orders'] ?? 0 }} transaksi</span>
+                    <span class="text-slate-500 flex items-center gap-1"><span class="iconify" data-icon="mdi:package-variant"></span> {{ $branchStats[$branch->id]['total_orders'] ?? 0 }} transaksi</span>
                     <span class="{{ ($branchStats[$branch->id]['low_stock_count'] ?? 0) > 0 ? 'text-amber-500' : 'text-emerald-500' }}">
-                        ⚠️ {{ $branchStats[$branch->id]['low_stock_count'] ?? 0 }} stok menipis
+                        <span class="iconify" data-icon="mdi:alert-outline"></span> {{ $branchStats[$branch->id]['low_stock_count'] ?? 0 }} stok menipis
                     </span>
                 </div>
             </div>
@@ -252,7 +252,7 @@
             <!-- Activity Log (Full Width) -->
             <div class="card-modern overflow-hidden">
                 <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                    <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest">📋 Aktivitas Terakhir</h4>
+                    <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest flex items-center gap-2"><span class="iconify text-lg" data-icon="mdi:clipboard-text-outline"></span> Aktivitas Terakhir</h4>
                     <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
                 </div>
                 <div class="p-2 custom-scroll max-h-[320px] overflow-y-auto" id="activityLog">
@@ -303,7 +303,7 @@
                 ],
                 fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [20, 100] } },
                 colors: ['#4f46e5', '#f43f5e'],
-                stroke: { curve: 'smooth', width: 4, lineCap: 'round' },
+                stroke: { curve: 'monotoneCubic', width: 4, lineCap: 'round' },
                 grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
                 xaxis: { 
                     categories: dashboardData.months,
@@ -311,6 +311,7 @@
                     labels: { style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 600 } }
                 },
                 yaxis: { 
+                    min: 0,
                     labels: { 
                         style: { colors: '#94a3b8', fontWeight: 600, fontSize: '11px' },
                         formatter: val => val >= 1000000 ? (val/1000000).toFixed(1) + 'M' : (val/1000).toFixed(0) + 'K'
@@ -379,7 +380,7 @@
                     container.html(`
                         <div class="text-center py-10 text-slate-400">
                             <span class="iconify text-3xl mb-2" data-icon="mdi:inbox-outline"></span>
-                            <p class="text-sm">✨ Belum ada aktivitas transaksi</p>
+                            <p class="text-sm">Belum ada aktivitas transaksi</p>
                         </div>
                     `);
                 }
@@ -396,7 +397,7 @@
                 $('#activityLog').html(`
                     <div class="text-center py-10 text-rose-500">
                         <span class="iconify text-3xl mb-2" data-icon="mdi:alert-circle"></span>
-                        <p class="text-sm">⚠️ ${errorMessage}</p>
+                        <p class="text-sm">${errorMessage}</p>
                         <button onclick="loadActivities()" class="mt-3 text-indigo-600 text-xs font-semibold underline">Coba lagi</button>
                     </div>
                 `);

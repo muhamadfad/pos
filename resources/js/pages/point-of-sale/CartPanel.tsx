@@ -28,6 +28,7 @@ interface CartPanelProps {
         paymentType: "lunas" | "partial" | "kasbon",
         paymentMethod: "cash" | "transfer",
     ) => void;
+    onCreateCustomer?: (name: string) => void;
 }
 
 export default function CartPanel({
@@ -51,6 +52,7 @@ export default function CartPanel({
     onPaidChange,
     onCustomerChange,
     onCheckout,
+    onCreateCustomer,
 }: CartPanelProps) {
     // "cart" | "payment"
     const [step, setStep] = React.useState<"cart" | "payment">("cart");
@@ -179,11 +181,11 @@ export default function CartPanel({
                 )}
 
                 {/* ── HEADER ── */}
-                <div className="px-5 py-4 border-b border-blue-700/20 flex items-center justify-between shrink-0 bg-linear-to-r from-blue-600 to-blue-700">
+                <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                             <svg
-                                className="w-5 h-5 text-white"
+                                className="w-5 h-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -197,13 +199,13 @@ export default function CartPanel({
                             </svg>
                         </div>
                         <div>
-                            <h2 className="font-bold text-white text-base">
-                                {step === "cart" ? "Keranjang" : "Pembayaran"}
+                            <h2 className="font-extrabold text-gray-900 text-base tracking-tight">
+                                {step === "cart" ? "Pesanan Saat Ini" : "Pembayaran"}
                             </h2>
-                            <p className="text-xs text-blue-100">
+                            <p className="text-xs text-gray-400 font-medium mt-0.5">
                                 {step === "cart"
                                     ? `${totalItems} item · ${cart.length} produk`
-                                    : "Konfirmasi & Bayar"}
+                                    : "Selesaikan Transaksi"}
                             </p>
                         </div>
                     </div>
@@ -211,7 +213,7 @@ export default function CartPanel({
                     {step === "payment" ? (
                         <button
                             onClick={() => setStep("cart")}
-                            className="text-xs text-blue-100 hover:text-white font-medium bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                            className="text-xs text-gray-500 hover:text-gray-900 font-bold bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-gray-200"
                         >
                             <svg
                                 className="w-3.5 h-3.5"
@@ -231,7 +233,7 @@ export default function CartPanel({
                     ) : cart.length > 0 ? (
                         <button
                             onClick={onClear}
-                            className="text-xs text-blue-100 hover:text-white font-medium bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                            className="text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-red-100"
                         >
                             <svg
                                 className="w-3.5 h-3.5"
@@ -239,12 +241,7 @@ export default function CartPanel({
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                             Kosongkan
                         </button>
@@ -360,30 +357,30 @@ export default function CartPanel({
                         </div>
 
                         {/* Cart footer */}
-                        <div className="border-t border-gray-200 shrink-0">
-                            <div className="px-5 pt-4 pb-3 bg-gray-50/80 space-y-1.5">
-                                <div className="flex justify-between text-sm">
+                        <div className="border-t border-gray-100 shrink-0 bg-white">
+                            <div className="px-6 pt-5 pb-4 space-y-2">
+                                <div className="flex justify-between text-sm font-medium">
                                     <span className="text-gray-500">
-                                        Subtotal ({totalItems} item)
+                                        Subtotal <span className="text-gray-400">({totalItems} item)</span>
                                     </span>
-                                    <span className="font-medium text-gray-700">
+                                    <span className="text-gray-800">
                                         {formatRupiah(totalPrice)}
                                     </span>
                                 </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-base font-bold text-gray-800">
-                                        Total
+                                <div className="flex justify-between items-end pt-2 border-t border-dashed border-gray-200">
+                                    <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">
+                                        Total Bayar
                                     </span>
-                                    <span className="text-xl font-black text-blue-600">
+                                    <span className="text-3xl font-black text-gray-900 tracking-tighter">
                                         {formatRupiah(totalPrice)}
                                     </span>
                                 </div>
                             </div>
-                            <div className="px-5 py-4 bg-white">
+                            <div className="px-6 py-5 border-t border-gray-50">
                                 <button
                                     onClick={() => setStep("payment")}
                                     disabled={cart.length === 0}
-                                    className="w-full py-3.5 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
+                                    className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-gray-900/10 active:scale-[0.98] text-base"
                                 >
                                     <svg
                                         className="w-5 h-5"
@@ -471,6 +468,7 @@ export default function CartPanel({
                                     label="Customer"
                                     placeholder="Cari nama atau no. HP customer..."
                                     allowWalkIn={true}
+                                    onCreateCustomer={onCreateCustomer}
                                 />
 
                                 {/* Payment Type */}
@@ -493,9 +491,7 @@ export default function CartPanel({
                                                     : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
                                             }`}
                                         >
-                                            <span className="text-base">
-                                                ✅
-                                            </span>
+                                            <svg className="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                             Lunas
                                         </button>
                                         {/* Partial */}
@@ -520,9 +516,7 @@ export default function CartPanel({
                                                       : "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
                                             }`}
                                         >
-                                            <span className="text-base">
-                                                💰
-                                            </span>
+                                            <svg className="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                             Sebagian
                                         </button>
                                         {/* Kasbon */}
@@ -547,9 +541,7 @@ export default function CartPanel({
                                                       : "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
                                             }`}
                                         >
-                                            <span className="text-base">
-                                                📋
-                                            </span>
+                                            <svg className="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                                             Kasbon
                                         </button>
                                     </div>
@@ -596,8 +588,8 @@ export default function CartPanel({
                                                     }`}
                                                 >
                                                     {m === "cash"
-                                                        ? "💵 Tunai"
-                                                        : "🏦 Transfer"}
+                                                        ? <span className="flex items-center justify-center gap-1.5"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> Tunai</span>
+                                                        : <span className="flex items-center justify-center gap-1.5"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> Transfer</span>}
                                                 </button>
                                             ))}
                                         </div>
@@ -722,8 +714,8 @@ export default function CartPanel({
                                 {/* Kasbon info */}
                                 {paymentType === "kasbon" && (
                                     <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
-                                        <p className="text-sm font-bold text-orange-800 mb-1">
-                                            📋 Seluruh tagihan jadi kasbon
+                                        <p className="text-sm font-bold text-orange-800 mb-1 flex items-center gap-1.5">
+                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg> Seluruh tagihan jadi kasbon
                                         </p>
                                         <p className="text-xs text-orange-600">
                                             Total{" "}
@@ -811,7 +803,7 @@ export default function CartPanel({
                                           : false) /* kasbon: always enabled */ ||
                                     processing
                                 }
-                                className="w-full py-4 bg-linear-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base shadow-md hover:shadow-lg active:scale-[0.98]"
+                                className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 text-base shadow-xl shadow-gray-900/10 active:scale-[0.98]"
                             >
                                 {processing ? (
                                     <>

@@ -44,6 +44,7 @@ class PointOfSaleController extends Controller
                 'stock'       => null,
                 'category'    => $p->category?->name ?? '-',
                 'category_id' => $p->category_id,
+                'image'       => $p->image ? \Illuminate\Support\Facades\Storage::url($p->image) : null,
             ]);
 
         $categories = Category::orderBy('name')->get(['id', 'name']);
@@ -81,6 +82,10 @@ class PointOfSaleController extends Controller
             ]);
 
         return Inertia::render('point-of-sale/page', [
+            'authUser'      => [
+                'id'        => $user->id,
+                'branch_id' => $branchId,
+            ],
             'products'      => $products,
             'categories'    => $categories,
             'customers'     => $customers,

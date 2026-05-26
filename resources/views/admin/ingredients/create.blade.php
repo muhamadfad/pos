@@ -83,7 +83,7 @@
                             Stok Awal <span class="text-rose-500">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">📦</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"><span class="iconify inline-block" data-icon="mdi:package-variant"></span></span>
                             <input type="number" 
                                    step="0.01" 
                                    name="current_stock" 

@@ -82,7 +82,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                             Baru
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">⚠️ Saldo Kas Kritis!</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:alert-outline"></span> Saldo Kas Kritis!</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Saldo kas saat ini hanya Rp 1.250.000. Bisnis hanya bisa bertahan 5 hari tanpa pemasukan baru. Segera lakukan tindakan!</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">
@@ -117,7 +117,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                             Baru
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">⚠️ Pembayaran Gaji Mendekat!</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:alert-outline"></span> Pembayaran Gaji Mendekat!</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">7 hari lagi Anda harus membayar gaji Rp 5.000.000. Saldo saat ini Rp 1.250.000. Segera cari tambahan dana!</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">
@@ -184,7 +184,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
                             🟠 Kritis
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">⚠️ Saldo Kas Menipis</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:alert-outline"></span> Saldo Kas Menipis</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Saldo kas hanya Rp 5.200.000. Bisnis hanya bisa bertahan 12 hari. Hindari pembelian besar dan fokus pada penagihan piutang.</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">
@@ -219,7 +219,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
                             🟠 Kritis
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">📊 Pengeluaran Melebihi Target</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span> Pengeluaran Melebihi Target</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Pengeluaran bulan Maret mencapai Rp 18.096.043, melebihi anggaran 15%. Evaluasi ulang pengeluaran bulan depan.</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">
@@ -254,7 +254,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
                             🟡 Peringatan
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">📊 Pengeluaran Tinggi</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span> Pengeluaran Tinggi</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Pengeluaran bulan ini mencapai Rp 24.088.787, naik 35% dibanding bulan lalu. Periksa detail pengeluaran dan evaluasi efisiensi!</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">
@@ -324,7 +324,7 @@
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                             🔵 Info
                         </span>
-                        <span class="text-sm font-semibold text-gray-900">📊 Insight Pengeluaran</span>
+                        <span class="text-sm font-semibold text-gray-900"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span> Insight Pengeluaran</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Pengeluaran untuk kategori "Pembelian Stok" meningkat 15% dibanding bulan lalu. Cek apakah ada kenaikan harga dari supplier.</p>
                     <div class="flex items-center gap-4 text-xs text-gray-400">

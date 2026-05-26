@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">🏪 Manajemen Cabang</h1>
+            <h1 class="text-2xl font-bold text-slate-800"><span class="iconify inline-block" data-icon="mdi:store-outline"></span> Manajemen Cabang</h1>
             <p class="text-slate-500 mt-1">Kelola semua cabang restoran Anda</p>
         </div>
         <a href="{{ route('super.branches.create') }}" 

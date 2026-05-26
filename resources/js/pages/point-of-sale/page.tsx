@@ -5,20 +5,54 @@ import Header from "./Header";
 import ProductGrid from "./ProductGrid";
 import CartPanel from "./CartPanel";
 import DebtPaymentPanel from "./DebtPaymentPanel";
+import { v4 as uuidv4 } from "uuid";
+import { db } from "../../lib/db";
+import { usePosSync } from "../../hooks/usePosSync";
 
 export default function PointOfSalePage() {
     const {
+        authUser,
         products,
         categories,
-        customers,
+        customers: serverCustomers,
         customerDebts,
         activeShift,
         flash,
         errors,
     } = usePage<PageProps>().props;
 
+    const { isOnline, pendingCount, isSyncing } = usePosSync();
+
+    const [customers, setCustomers] = useState(serverCustomers);
+
+    // Load offline customers from IndexedDB
+    useEffect(() => {
+        const loadOfflineCustomers = async () => {
+            try {
+                const localCusts = await db.customers.toArray();
+                const mappedLocalCusts = localCusts.map(c => ({
+                    id: c.id,
+                    name: c.name,
+                    phone: c.phone,
+                    type: "retail",
+                }));
+                // Combine server customers and offline customers
+                // Ensure no duplicates if they happen to share IDs (though offline is negative)
+                setCustomers((prev) => {
+                    const existingIds = new Set(prev.map(p => p.id));
+                    const newCusts = mappedLocalCusts.filter(lc => !existingIds.has(lc.id));
+                    return [...prev, ...newCusts];
+                });
+            } catch (error) {
+                console.error("Failed to load offline customers", error);
+            }
+        };
+        loadOfflineCustomers();
+    }, []);
+
     // Mode: "pos" = transaksi baru, "debt" = bayar kasbon
     const [mode, setMode] = useState<"pos" | "debt">("pos");
+    const [showMobileCart, setShowMobileCart] = useState(false);
 
     const [cart, setCart] = useState<CartItem[]>([]);
     const [search, setSearch] = useState("");
@@ -125,6 +159,53 @@ function updateQty(productId: number, qty: number) {
         }
     }
 
+    async function handleCreateCustomer(name: string) {
+        try {
+            // Generate a negative ID for offline customers
+            const offlineId = -Date.now();
+            const clientUuid = uuidv4();
+            
+            const newCust = {
+                id: offlineId,
+                name: name,
+                phone: null,
+                is_synced: false,
+            };
+
+            // 1. Save to local customers store
+            await db.customers.put(newCust);
+            
+            // 2. Queue for sync
+            await db.sync_queue.put({
+                client_uuid: clientUuid,
+                type: "customer",
+                status: "pending",
+                retry_count: 0,
+                payload: {
+                    client_uuid: clientUuid,
+                    offline_id: offlineId,
+                    name: name,
+                    phone: null,
+                },
+            });
+
+            // 3. Update local state
+            setCustomers((prev) => [...prev, {
+                id: offlineId,
+                name: name,
+                type: "retail",
+                phone: null,
+            }]);
+
+            // 4. Select the new customer
+            setSelectedCustomerId(offlineId);
+
+        } catch (error) {
+            console.error("Failed to create offline customer", error);
+            alert("Gagal membuat pelanggan offline.");
+        }
+    }
+
     function handleCheckout(
         paymentType: "lunas" | "partial" | "kasbon",
         paymentMethod: "cash" | "transfer",
@@ -147,30 +228,52 @@ function updateQty(productId: number, qty: number) {
         // kasbon: paid = 0
         const actualPaid = paymentType === "kasbon" ? 0 : paidAmount;
 
-        setProcessing(true);
-        router.post(
-            "/pos/checkout",
-            {
-                items: cart.map((c) => ({
-                    product_id: c.product_id,
-                    qty: c.qty,
-                    price: c.price,
-                })),
-                paid: actualPaid,
-                customer_id: selectedCustomerId ?? undefined,
-                payment_method: paymentMethod,
-                payment_type: paymentType,
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setCart([]);
-                    setPaid("");
-                    searchRef.current?.focus();
-                },
-                onFinish: () => setProcessing(false),
-            },
-        );
+        const clientUuid = uuidv4();
+        const payload = {
+            client_uuid: clientUuid,
+            branch_id: authUser.branch_id,
+            cashier_shift_id: activeShift?.id,
+            user_id: authUser.id,
+            items: cart.map((c) => ({
+                product_id: c.product_id,
+                qty: c.qty,
+                price: c.price,
+            })),
+            paid: actualPaid,
+            customer_id: selectedCustomerId ?? undefined,
+            payment_method: paymentMethod,
+            payment_type: paymentType,
+        };
+
+        const processOfflineCheckout = async () => {
+            setProcessing(true);
+            try {
+                await db.sync_queue.put({
+                    client_uuid: clientUuid,
+                    type: "order",
+                    status: "pending",
+                    retry_count: 0,
+                    payload: payload,
+                });
+                
+                // Show success immediately (optimistic update)
+                setShowSuccess(true);
+                setCart([]);
+                setPaid("");
+                setSelectedCustomerId(null);
+                searchRef.current?.focus();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => setShowSuccess(false), 5000);
+            } catch (error) {
+                console.error("Failed to save order to indexedDB", error);
+                alert("Gagal menyimpan pesanan ke database lokal.");
+            } finally {
+                setProcessing(false);
+            }
+        };
+
+        processOfflineCheckout();
     }
 
     const formatRupiah = (num: number) =>
@@ -182,10 +285,10 @@ function updateQty(productId: number, qty: number) {
 
     return (
         <>
-            <div className="flex h-screen bg-gray-100 overflow-hidden">
+            <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative">
                 {/* LEFT: Product Grid — hanya tampil saat mode pos */}
                 {mode === "pos" && (
-                    <div className="flex-1 flex flex-col min-w-0">
+                    <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden lg:flex' : 'flex'}`}>
                         <Header
                             search={search}
                             onSearchChange={setSearch}
@@ -194,8 +297,11 @@ function updateQty(productId: number, qty: number) {
                             categoryFilter={categoryFilter}
                             onCategoryChange={setCategoryFilter}
                             categories={categories}
+                            isOnline={isOnline}
+                            pendingCount={pendingCount}
+                            isSyncing={isSyncing}
                         />
-                        <div className="flex-1 overflow-y-auto p-4 custom-scroll">
+                        <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid
                                 products={filteredProducts}
                                 cart={cart}
@@ -207,7 +313,7 @@ function updateQty(productId: number, qty: number) {
 
                 {/* Debt mode: full width left panel (placeholder) */}
                 {mode === "debt" && (
-                    <div className="flex-1 flex flex-col min-w-0 bg-gray-50">
+                    <div className={`flex-1 flex-col min-w-0 bg-gray-50 ${showMobileCart ? 'hidden lg:flex' : 'flex'}`}>
                         <div className="px-8 py-5 bg-white border-b border-gray-200">
                             <h2 className="text-lg font-bold text-gray-700">
                                 Pembayaran Kasbon
@@ -217,7 +323,7 @@ function updateQty(productId: number, qty: number) {
                                 hutang
                             </p>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-8 custom-scroll">
+                        <div className="flex-1 overflow-y-auto p-4 lg:p-8 custom-scroll">
                             <div className="max-w-xl mx-auto">
                                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
                                     <div className="flex items-start gap-3">
@@ -266,7 +372,29 @@ function updateQty(productId: number, qty: number) {
                 )}
 
                 {/* RIGHT: Panel (Cart atau Debt) */}
-                <div className="w-105 bg-white border-l border-gray-200 flex flex-col shrink-0 shadow-lg min-h-0 overflow-hidden">
+                {/* Backdrop for mobile */}
+                {showMobileCart && (
+                    <div 
+                        className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+                        onClick={() => setShowMobileCart(false)}
+                    />
+                )}
+                
+                <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 lg:relative lg:w-105 bg-white lg:border-l border-gray-200 flex-col shrink-0 shadow-2xl lg:shadow-lg min-h-0 overflow-hidden transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${showMobileCart ? 'translate-x-0 flex' : 'translate-x-full lg:flex hidden'}`}>
+                    
+                    {/* Mobile Cart Header & Close Button */}
+                    <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+                        <h2 className="text-lg font-bold text-gray-800">Keranjang Belanja</h2>
+                        <button 
+                            onClick={() => setShowMobileCart(false)}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
                     {/* Tab switcher */}
                     <div className="flex border-b border-gray-200 shrink-0">
                         <button
@@ -340,6 +468,7 @@ function updateQty(productId: number, qty: number) {
                             onPaidChange={setPaid}
                             onCustomerChange={setSelectedCustomerId}
                             onCheckout={handleCheckout}
+                            onCreateCustomer={handleCreateCustomer}
                         />
                     ) : (
                         <DebtPaymentPanel
@@ -349,6 +478,31 @@ function updateQty(productId: number, qty: number) {
                         />
                     )}
                 </div>
+
+                {/* Mobile Floating Cart Button */}
+                {!showMobileCart && cart.length > 0 && (
+                    <div className="fixed bottom-6 inset-x-0 mx-4 lg:hidden z-30">
+                        <button
+                            onClick={() => setShowMobileCart(true)}
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between font-bold active:scale-[0.98] transition-transform"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="bg-white/20 px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm backdrop-blur-sm">
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                                    </svg>
+                                    {totalItems} item
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg drop-shadow-sm">{formatRupiah(totalPrice)}</span>
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );
