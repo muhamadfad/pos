@@ -9,6 +9,9 @@ class BackupSeeder extends Seeder
 {
     public function run()
     {
+        // Disable foreign key checks before seeding
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         DB::table('branches')->insert(array (
   0 => 
   array (
@@ -362,6 +365,90 @@ class BackupSeeder extends Seeder
   ),
 ));
 
+        DB::table('units')->insert(array (
+  0 => 
+  array (
+    'id' => 1,
+    'name' => 'Porsi',
+    'abbreviation' => 'prs',
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  1 => 
+  array (
+    'id' => 2,
+    'name' => 'Gelas',
+    'abbreviation' => 'gls',
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  2 => 
+  array (
+    'id' => 3,
+    'name' => 'Pieces',
+    'abbreviation' => 'pcs',
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  3 => 
+  array (
+    'id' => 4,
+    'name' => 'Kg',
+    'abbreviation' => 'kg',
+    'created_at' => NULL,
+    'updated_at' => NULL,
+    'deleted_at' => NULL,
+  ),
+  4 => 
+  array (
+    'id' => 5,
+    'name' => 'Balok',
+    'abbreviation' => 'balok',
+    'created_at' => NULL,
+    'updated_at' => NULL,
+    'deleted_at' => NULL,
+  ),
+  5 => 
+  array (
+    'id' => 6,
+    'name' => 'Bungkus',
+    'abbreviation' => 'Bks',
+    'created_at' => '2026-06-14 19:05:04',
+    'updated_at' => '2026-06-14 19:05:04',
+    'deleted_at' => NULL,
+  ),
+  6 => 
+  array (
+    'id' => 7,
+    'name' => 'Ikat',
+    'abbreviation' => 'Ikat',
+    'created_at' => '2026-06-14 19:05:04',
+    'updated_at' => '2026-06-14 19:05:04',
+    'deleted_at' => NULL,
+  ),
+  7 => 
+  array (
+    'id' => 8,
+    'name' => 'Liter',
+    'abbreviation' => 'L',
+    'created_at' => '2026-06-14 19:05:04',
+    'updated_at' => '2026-06-14 19:05:04',
+    'deleted_at' => NULL,
+  ),
+  8 => 
+  array (
+    'id' => 9,
+    'name' => 'Kali',
+    'abbreviation' => 'Kali',
+    'created_at' => '2026-06-14 19:05:04',
+    'updated_at' => '2026-06-14 19:05:04',
+    'deleted_at' => NULL,
+  ),
+));
+
         DB::table('categories')->insert(array (
   0 => 
   array (
@@ -379,6 +466,65 @@ class BackupSeeder extends Seeder
     'description' => 'Minuman dingin dan panas',
     'created_at' => '2026-05-17 07:58:47',
     'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+));
+
+        DB::table('customers')->insert(array (
+  0 => 
+  array (
+    'id' => 1,
+    'name' => 'Bapak Budi',
+    'phone' => '081234567800',
+    'address' => 'Jl. Mawar No 1',
+    'type' => 'retail',
+    'email' => NULL,
+    'notes' => NULL,
+    'is_active' => 1,
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  1 => 
+  array (
+    'id' => 2,
+    'name' => 'Ibu Siti',
+    'phone' => '081234567811',
+    'address' => 'Jl. Melati No 2',
+    'type' => 'retail',
+    'email' => NULL,
+    'notes' => NULL,
+    'is_active' => 1,
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  2 => 
+  array (
+    'id' => 3,
+    'name' => 'Toko Maju Jaya',
+    'phone' => '081234567822',
+    'address' => 'Jl. Kamboja No 3',
+    'type' => 'store',
+    'email' => NULL,
+    'notes' => NULL,
+    'is_active' => 1,
+    'created_at' => '2026-05-17 07:58:47',
+    'updated_at' => '2026-05-17 07:58:47',
+    'deleted_at' => NULL,
+  ),
+  3 => 
+  array (
+    'id' => 4,
+    'name' => 'Walk-in Customer',
+    'phone' => NULL,
+    'address' => NULL,
+    'type' => 'retail',
+    'email' => NULL,
+    'notes' => NULL,
+    'is_active' => 1,
+    'created_at' => '2026-06-14 18:46:14',
+    'updated_at' => '2026-06-14 18:46:14',
     'deleted_at' => NULL,
   ),
 ));
@@ -980,5 +1126,7 @@ class BackupSeeder extends Seeder
   ),
 ));
 
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
