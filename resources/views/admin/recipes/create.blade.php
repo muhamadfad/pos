@@ -44,7 +44,7 @@
     @endif
 
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <form action="{{ route('admin.recipes.store') }}" method="POST" id="recipeForm">
+        <form action="{{ route('admin.recipes.store') }}" method="POST" id="recipeForm" novalidate>
             @csrf
             
             <div class="p-6 space-y-6">

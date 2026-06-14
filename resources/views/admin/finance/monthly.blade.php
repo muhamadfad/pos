@@ -199,7 +199,7 @@
     });
     
     @if($topProducts->count() > 0)
-    document.addEventListener('DOMContentLoaded', function () {
+    function renderWhenReady() {
         const canvas = document.getElementById('monthlyChart');
         if (!canvas) return;
         const existing = Chart.getChart(canvas);
@@ -243,7 +243,21 @@
                 }
             }
         });
-    });
+    }
+    window.checkLib = function() {
+        if(typeof Chart !== 'undefined') {
+            // Find canvas
+            const canvases = document.getElementsByTagName('canvas');
+            if (canvases.length > 0 && canvases[0].offsetWidth === 0) {
+                setTimeout(window.checkLib, 50);
+                return;
+            }
+            renderWhenReady(); 
+        } else { 
+            setTimeout(window.checkLib, 50); 
+        } 
+    };
+    window.checkLib();
     @endif
 </script>
 @endpush

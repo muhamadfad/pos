@@ -135,13 +135,21 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('historicalChart').getContext('2d');
+    function renderWhenReady() {
+        const canvas = document.getElementById('historicalChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
         
         // Cek jika data kosong
         if(window.historicalData.months.length === 0) return;
 
-        new Chart(ctx, {
+        // Destroy chart lama jika ada di canvas ini
+        if (window.predictionHistoricalChart) {
+            window.predictionHistoricalChart.destroy();
+        }
+
+        window.predictionHistoricalChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: window.historicalData.months,
@@ -205,7 +213,21 @@
                 }
             }
         });
-    });
+    }
+    window.checkLib = function() {
+        if(typeof Chart !== 'undefined') {
+            // Find canvas
+            const canvases = document.getElementsByTagName('canvas');
+            if (canvases.length > 0 && canvases[0].offsetWidth === 0) {
+                setTimeout(window.checkLib, 50);
+                return;
+            }
+            renderWhenReady(); 
+        } else { 
+            setTimeout(window.checkLib, 50); 
+        } 
+    };
+    window.checkLib();
 </script>
 @endpush
 @endsection

@@ -120,6 +120,8 @@ class CashierShiftController extends Controller
         }
 
         // Check if there's any open shift in this branch from other user (optional, prevent multiple shifts same branch)
+        // Dihapus sesuai permintaan user: "saya mau bisa beberapa kasir tapi tentunya beda laci per kasir lah"
+        /*
         $branchOpenShift = CashierShift::where('branch_id', $branchId)
             ->where('status', 'open')
             ->exists();
@@ -127,6 +129,7 @@ class CashierShiftController extends Controller
         if ($branchOpenShift && $user->role !== 'super_admin') {
             return back()->withErrors(['error' => 'Masih ada shift yang sedang berjalan di cabang ini dari kasir lain']);
         }
+        */
 
         CashierShift::create([
             'user_id' => Auth::id(),

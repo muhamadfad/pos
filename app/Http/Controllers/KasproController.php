@@ -47,11 +47,16 @@ class KasproController extends Controller
         return view('kaspro.prediction', compact('prediction', 'historicalData'));
     }
     
-    public function alerts()
+    public function alerts(Request $request)
     {
-        $alerts = KasproAlert::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query = KasproAlert::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc');
+            
+        if ($request->has('severity')) {
+            $query->where('severity', $request->severity);
+        }
+            
+        $alerts = $query->paginate(20)->appends($request->query());
         
         return view('kaspro.alerts', compact('alerts'));
     }

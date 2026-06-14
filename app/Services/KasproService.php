@@ -449,38 +449,39 @@ class KasproService
         // Insight puncak penjualan
         if ($peakFactor > 1.2) {
             $peakIncome = $monthlyDataLastYear[$peakMonth]['income'] ?? 0;
-            $recommendations[] = "Insight: Bulan {$monthNames[$peakMonth]} adalah puncak penjualan tahun lalu (Rp " . 
-                                  number_format($peakIncome, 0, ',', '.') . ", {$peakFactor}x dari rata-rata).";
+            $formattedFactor = number_format($peakFactor, 1);
+            $recommendations[] = "Insight: Bulan {$monthNames[$peakMonth]} tercatat sebagai puncak penjualan historis Anda (mencapai Rp " . 
+                                  number_format($peakIncome, 0, ',', '.') . ", atau melonjak {$formattedFactor}x lipat dari rata-rata bulanan).";
             
             // Cek apakah bulan puncak ada dalam prediksi
             foreach ($predictions as $pred) {
                 $predMonth = (int) substr($pred['month'], 5, 2);
                 if ($predMonth == $peakMonth && $pred['predicted_income'] > 0) {
-                    $recommendations[] = "📈 Persiapan: Bulan {$monthNames[$peakMonth]} {$pred['month']} diprediksi pemasukan Rp " . 
+                    $recommendations[] = "📈 Persiapan Ekstra: Pada {$monthNames[$peakMonth]} {$pred['month']}, sistem memproyeksikan lonjakan pemasukan hingga Rp " . 
                                           number_format($pred['predicted_income'], 0, ',', '.') . 
-                                          ". Siapkan stok 2-3 minggu sebelumnya!";
+                                          ". Sangat disarankan untuk mengamankan stok bahan baku 2-3 minggu sebelumnya!";
                 }
             }
         }
         
         // Insight pertumbuhan
         if ($growthRate > 1.05) {
-            $recommendations[] = "📈 Tren Pertumbuhan: Bisnis tumbuh " . round(($growthRate - 1) * 100) . 
-                                 "% dibanding tahun lalu. Pertahankan strategi yang berjalan!";
+            $recommendations[] = "📈 Momentum Positif: Algoritma kami mencatat bisnis Anda sedang tumbuh " . round(($growthRate - 1) * 100) . 
+                                 "% lebih pesat dibandingkan rekam jejak tahun lalu. Pertahankan strategi yang ada!";
         } elseif ($growthRate < 0.95) {
-            $recommendations[] = "📉 Tren Penurunan: Bisnis turun " . round((1 - $growthRate) * 100) . 
-                                 "% dibanding tahun lalu. Evaluasi strategi pemasaran!";
+            $recommendations[] = "📉 Peringatan Penurunan: Sistem mendeteksi pelemahan performa sebesar " . round((1 - $growthRate) * 100) . 
+                                 "% dari periode yang sama tahun lalu. Pertimbangkan untuk meluncurkan promo baru!";
         } else {
-            $recommendations[] = "➡️ Tren Stabil: Bisnis relatif stabil dibanding tahun lalu. Tetap konsisten.";
+            $recommendations[] = "➡️ Kestabilan Terjaga: Alur performa kas Anda saat ini sangat identik dengan tahun lalu (Stabil). Tetap konsisten dan fokus pada retensi pelanggan.";
         }
         
         // Deteksi defisit di prediksi
         $hasDeficit = false;
         foreach ($predictions as $pred) {
             if ($pred['predicted_net'] < 0) {
-                $recommendations[] = "Bulan {$pred['month_name']} diprediksi defisit Rp " . 
+                $recommendations[] = "⚠️ Peringatan Defisit: Pada bulan {$pred['month_name']}, sistem memprediksi arus kas negatif (tekor) sebesar Rp " . 
                                       number_format(abs($pred['predicted_net']), 0, ',', '.') . 
-                                      ". Mulai sisihkan dana dari sekarang.";
+                                      ". Mulailah menyisihkan dana cadangan dari bulan-bulan profit.";
                 $hasDeficit = true;
                 break;
             }
@@ -492,7 +493,7 @@ class KasproService
             $maxExpense = max($expensePredictions);
             $minExpense = min($expensePredictions);
             if ($maxExpense > $minExpense * 1.5) {
-                $recommendations[] = 'Pengeluaran diprediksi fluktuatif. Buat anggaran bulanan yang lebih terencana.';
+                $recommendations[] = '📊 Volatilitas Pengeluaran: Rekam jejak menunjukkan rentang pengeluaran Anda sangat fluktuatif antar bulannya. Disarankan untuk mulai membuat batasan anggaran (budgeting) bulanan yang ketat.';
             }
         }
         

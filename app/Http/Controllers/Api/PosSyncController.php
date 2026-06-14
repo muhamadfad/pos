@@ -49,7 +49,14 @@ class PosSyncController extends Controller
                 Log::warning('Offline Sync: Cashier shift not found or closed for offline order.', ['client_uuid' => $clientUuid]);
             }
 
-            $customerId = $payload['customer_id'];
+            $customerId = $payload['customer_id'] ?? null;
+            if (!$customerId) {
+                $walkIn = Customer::firstOrCreate(
+                    ['name' => 'Walk-in Customer'],
+                    ['type' => 'retail', 'phone' => null, 'address' => null]
+                );
+                $customerId = $walkIn->id;
+            }
             $paymentType = $payload['payment_type'] ?? 'lunas';
             $paymentMethod = $payload['payment_method'] ?? 'cash';
             

@@ -44,7 +44,7 @@ class BranchController extends Controller
                 'total_orders' => Order::where('branch_id', $branch->id)->count(),
                 'total_revenue' => Order::where('branch_id', $branch->id)->sum('total_amount') ?? 0,
                 'total_purchases' => Purchase::where('branch_id', $branch->id)->count(),
-                'total_products' => BranchStock::where('branch_id', $branch->id)->distinct('product_id')->count('product_id'),
+                'total_products' => BranchStock::where('branch_id', $branch->id)->distinct('ingredient_id')->count('ingredient_id'),
                 'low_stock_count' => BranchStock::where('branch_id', $branch->id)
                     ->whereColumn('quantity', '<=', 'min_stock')
                     ->where('quantity', '>', 0)

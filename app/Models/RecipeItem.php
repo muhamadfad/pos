@@ -13,6 +13,10 @@ class RecipeItem extends Model
     
     protected $fillable = ['product_id', 'ingredient_id', 'quantity', 'unit_id'];
 
+    protected $casts = [
+        'quantity' => 'decimal:6',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

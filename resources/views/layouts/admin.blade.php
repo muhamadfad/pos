@@ -172,6 +172,13 @@
                     </div>
                 </div>
 
+                @if($isSuperAdmin)
+                <a href="{{ route('super.branches.index') }}" class="{{ $navBase }} {{ request()->routeIs('super.branches.*') ? $active : $inactive }}">
+                    <span class="iconify text-xl" data-icon="mdi:store-cog-outline"></span>
+                    <span x-show="!sidebarCollapsed">Manajemen Cabang</span>
+                </a>
+                @endif
+
                 <a href="{{ route('admin.users.index') }}" class="{{ $navBase }} {{ request()->routeIs('admin.users.index') ? $active : $inactive }}">
                     <span class="iconify text-xl" data-icon="mdi:account-multiple-outline"></span>
                     <span x-show="!sidebarCollapsed">User</span>

@@ -245,17 +245,18 @@
         }
     }
 
-    // Gunakan turbo:load untuk integrasi dengan Laravel Turbo
-    document.addEventListener('turbo:load', function() {
-        // Beri delay 150ms agar animasi transisi halaman selesai dan container siap
-        setTimeout(initCashFlowChart, 150);
-    });
-
-    // Fallback jika halaman diakses via refresh manual
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCashFlowChart);
-    } else {
-        initCashFlowChart();
+    window.renderWhenReady = function() {
+        if (typeof ApexCharts !== 'undefined') {
+            const chartContainer = document.querySelector("#cashFlowChart");
+            if (chartContainer && chartContainer.offsetWidth === 0) {
+                setTimeout(window.renderWhenReady, 50);
+                return;
+            }
+            initCashFlowChart();
+        } else {
+            setTimeout(window.renderWhenReady, 50);
+        }
     }
+    window.renderWhenReady();
 </script>
 @endsection

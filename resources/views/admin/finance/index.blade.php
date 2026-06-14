@@ -211,6 +211,20 @@
             url.searchParams.delete('branch_id');
         }
         window.location.href = url.toString();
-    });
+    }
+    window.checkLib = function() {
+        if(typeof Chart !== 'undefined') {
+            // Find canvas
+            const canvases = document.getElementsByTagName('canvas');
+            if (canvases.length > 0 && canvases[0].offsetWidth === 0) {
+                setTimeout(window.checkLib, 50);
+                return;
+            }
+            renderWhenReady(); 
+        } else { 
+            setTimeout(window.checkLib, 50); 
+        } 
+    };
+    window.checkLib();
 </script>
 @endsection

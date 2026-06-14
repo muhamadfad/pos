@@ -273,10 +273,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    let revenueChart;
+    var revenueChart;
     
     // Dashboard Data dari Server
-    const dashboardData = {
+    var dashboardData = {
         months: @json($months ?? []),
         revenues: @json($revenues ?? []),
         expenses: @json($expenses ?? []),
@@ -444,19 +444,25 @@
         alert(`${type.toUpperCase()}: Rp ${new Intl.NumberFormat('id-ID').format(amount)}\n${branchText}`);
     }
 
-    // Initial Load
-    $(document).ready(function() {
-        renderCharts();
-        loadActivities();
-    });
+    // Execute using polling that checks if DOM is painted
+    window.initDashboard = function() {
+        if (typeof ApexCharts !== 'undefined' && typeof $ !== 'undefined') {
+            const revenueEl = document.querySelector("#mainRevenueChart");
+            
+            // Wait until the browser has fully painted the DOM and container has width
+            if (revenueEl && revenueEl.offsetWidth === 0) {
+                setTimeout(window.initDashboard, 50);
+                return;
+            }
 
-    // Turbo Drive / Livewire Support
-    document.addEventListener("turbo:load", function() {
-        if (window.Iconify) window.Iconify.scan();
-        setTimeout(() => { 
+            if (window.Iconify) window.Iconify.scan();
             renderCharts(); 
             loadActivities(); 
-        }, 100);
-    });
+        } else {
+            setTimeout(window.initDashboard, 50);
+        }
+    };
+
+    window.initDashboard();
 </script>
 @endsection

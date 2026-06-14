@@ -16,7 +16,6 @@ class Product extends Model
         'unit_id',
         'selling_price',
         'purchase_price',
-        'stock',
         'min_stock',
         'is_active',
     ];

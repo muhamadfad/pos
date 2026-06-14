@@ -98,10 +98,9 @@
                             <select name="role" required
                                 class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
                                 <option value="">Pilih Otoritas</option>
-                                <option value="admin" {{ old('role', $user->role ?? '') == 'admin' ? 'selected' : ''
-                                    }}>Administrator (Full Akses)</option>
-                                <option value="kasir" {{ old('role', $user->role ?? '') == 'kasir' ? 'selected' : ''
-                                    }}>Kasir (POS Only)</option>
+                                <option value="super_admin" {{ old('role', $user->role ?? '') == 'super_admin' ? 'selected' : '' }}>Super Admin (Owner / Pusat)</option>
+                                <option value="admin" {{ old('role', $user->role ?? '') == 'admin' ? 'selected' : '' }}>Administrator (Akses Cabang)</option>
+                                <option value="kasir" {{ old('role', $user->role ?? '') == 'kasir' ? 'selected' : '' }}>Kasir (POS Only)</option>
                             </select>
                         </div>
 

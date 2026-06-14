@@ -13,22 +13,19 @@ class KasproPrediction extends Model
 
     protected $fillable = [
         'branch_id',
-        'product_id',
-        'prediction_date',
-        'predicted_demand',
-        'confidence_level',
-        'actual_demand',
-        'accuracy_score',
-        'model_used',
-        'status'
+        'user_id',
+        'month',
+        'predicted_income',
+        'predicted_expense',
+        'predicted_net',
+        'details'
     ];
 
     protected $casts = [
-        'prediction_date' => 'date',
-        'predicted_demand' => 'integer',
-        'confidence_level' => 'decimal:2',
-        'actual_demand' => 'integer',
-        'accuracy_score' => 'decimal:2'
+        'predicted_income' => 'decimal:2',
+        'predicted_expense' => 'decimal:2',
+        'predicted_net' => 'decimal:2',
+        'details' => 'array'
     ];
 
     // Relasi ke Branch

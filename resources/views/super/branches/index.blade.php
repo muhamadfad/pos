@@ -3,137 +3,162 @@
 @section('title', 'Manajemen Cabang')
 
 @section('content')
-<div class="p-6">
+<div class="space-y-8">
+
     <!-- Header -->
-    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800"><span class="iconify inline-block" data-icon="mdi:store-outline"></span> Manajemen Cabang</h1>
-            <p class="text-slate-500 mt-1">Kelola semua cabang restoran Anda</p>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                <span class="p-2 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
+                    <span class="iconify" data-icon="mdi:store-outline"></span>
+                </span>
+                Manajemen Cabang
+            </h1>
+            <p class="text-slate-500 font-medium tracking-tight">Kelola semua cabang restoran Anda</p>
         </div>
-        <a href="{{ route('super.branches.create') }}" 
-           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
-            <span class="iconify" data-icon="mdi:plus-circle"></span>
-            Tambah Cabang
-        </a>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ route('super.branches.create') }}"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-95">
+                <span class="iconify text-lg" data-icon="mdi:plus-circle"></span>
+                Tambah Cabang
+            </a>
+        </div>
     </div>
 
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-2xl flex items-center gap-3">
+        <span class="iconify text-2xl" data-icon="mdi:check-circle"></span>
+        <span class="font-medium text-sm">{{ session('success') }}</span>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center gap-3">
+        <span class="iconify text-2xl" data-icon="mdi:alert-circle"></span>
+        <span class="font-medium text-sm">{{ session('error') }}</span>
+    </div>
+    @endif
+
     <!-- Filter & Search -->
-    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <form method="GET" action="{{ route('super.branches.index') }}" class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-                <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Cari nama, kode, atau telepon..." 
-                       class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-6">
+        <form method="GET" action="{{ route('super.branches.index') }}" class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="relative flex-1 group w-full">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-indigo-500">
+                    <span class="iconify text-xl" data-icon="mdi:magnify"></span>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}"
+                    placeholder="Cari nama, kode, atau telepon..."
+                    class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none">
             </div>
-            <div class="w-48">
-                <select name="status" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+            <div class="w-full md:w-48 relative">
+                <select name="status" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none appearance-none">
                     <option value="">Semua Status</option>
                     <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Aktif</option>
                     <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
+                <span class="iconify absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" data-icon="mdi:chevron-down"></span>
             </div>
-            <div class="flex gap-2">
-                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+            <div class="flex gap-2 w-full md:w-auto">
+                <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all w-full md:w-auto">
                     Filter
                 </button>
-                <a href="{{ route('super.branches.index') }}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+                <a href="{{ route('super.branches.index') }}" class="px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm hover:bg-slate-200 transition-all text-center w-full md:w-auto">
                     Reset
                 </a>
             </div>
         </form>
     </div>
 
-    <!-- Success/Error Messages -->
-    @if(session('success'))
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
-        {{ session('error') }}
-    </div>
-    @endif
-
     <!-- Branches Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         @forelse($branches as $branch)
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition">
-            <!-- Header Cabang -->
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4">
-                <div class="flex justify-between items-start">
+        <div class="relative bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group overflow-hidden flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-slate-100 relative overflow-hidden bg-slate-50/50">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+                
+                <div class="flex justify-between items-start relative z-10">
                     <div>
-                        <h3 class="text-white font-bold text-lg">{{ $branch->name }}</h3>
-                        <p class="text-indigo-100 text-sm">Kode: {{ $branch->code }}</p>
+                        <h3 class="text-xl font-black text-slate-800 tracking-tight mb-1">{{ $branch->name }}</h3>
+                        <p class="text-sm font-medium text-slate-500 flex items-center gap-1">
+                            <span class="iconify" data-icon="mdi:barcode-scan"></span> {{ $branch->code }}
+                        </p>
                     </div>
-                    <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $branch->is_active ? 'bg-green-500 text-white' : 'bg-gray-500 text-white' }}">
-                        {{ $branch->is_active ? 'AKTIF' : 'NONAKTIF' }}
+                    <span class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest {{ $branch->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600' }}">
+                        {{ $branch->is_active ? 'Aktif' : 'Nonaktif' }}
                     </span>
                 </div>
             </div>
             
-            <!-- Body Cabang -->
-            <div class="p-5">
-                <!-- Kontak -->
-                <div class="space-y-2 mb-4">
+            <!-- Body -->
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="space-y-3 mb-6">
                     @if($branch->phone)
-                    <div class="flex items-center gap-2 text-slate-600">
-                        <span class="iconify text-slate-400" data-icon="mdi:phone"></span>
-                        <span class="text-sm">{{ $branch->phone }}</span>
+                    <div class="flex items-center gap-3 text-slate-600 text-sm font-medium">
+                        <div class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+                            <span class="iconify" data-icon="mdi:phone"></span>
+                        </div>
+                        <span>{{ $branch->phone }}</span>
                     </div>
                     @endif
                     @if($branch->address)
-                    <div class="flex items-start gap-2 text-slate-600">
-                        <span class="iconify text-slate-400 mt-0.5" data-icon="mdi:map-marker"></span>
-                        <span class="text-sm">{{ Str::limit($branch->address, 60) }}</span>
+                    <div class="flex items-center gap-3 text-slate-600 text-sm font-medium">
+                        <div class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+                            <span class="iconify" data-icon="mdi:map-marker"></span>
+                        </div>
+                        <span class="truncate">{{ Str::limit($branch->address, 40) }}</span>
                     </div>
                     @endif
                 </div>
                 
                 <!-- Statistik -->
-                <div class="grid grid-cols-2 gap-3 mb-5">
-                    <div class="bg-slate-50 rounded-lg p-3 text-center">
-                        <p class="text-2xl font-bold text-indigo-600">{{ $branch->stats['total_users'] ?? 0 }}</p>
-                        <p class="text-xs text-slate-500">User</p>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total User</p>
+                        <p class="text-xl font-black text-indigo-600">{{ $branch->stats['total_users'] ?? 0 }}</p>
                     </div>
-                    <div class="bg-slate-50 rounded-lg p-3 text-center">
-                        <p class="text-2xl font-bold text-emerald-600">{{ number_format(($branch->stats['total_revenue'] ?? 0), 0, ',', '.') }}</p>
-                        <p class="text-xs text-slate-500">Revenue</p>
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Revenue</p>
+                        <p class="text-xl font-black text-emerald-600">{{ number_format(($branch->stats['total_revenue'] ?? 0), 0, ',', '.') }}</p>
                     </div>
-                    <div class="bg-slate-50 rounded-lg p-3 text-center">
-                        <p class="text-2xl font-bold text-blue-600">{{ $branch->stats['total_orders'] ?? 0 }}</p>
-                        <p class="text-xs text-slate-500">Transaksi</p>
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Transaksi</p>
+                        <p class="text-xl font-black text-blue-600">{{ $branch->stats['total_orders'] ?? 0 }}</p>
                     </div>
-                    <div class="bg-slate-50 rounded-lg p-3 text-center">
-                        <p class="text-2xl font-bold {{ ($branch->stats['low_stock_count'] ?? 0) > 0 ? 'text-amber-600' : 'text-green-600' }}">
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Stok Tipis</p>
+                        <p class="text-xl font-black {{ ($branch->stats['low_stock_count'] ?? 0) > 0 ? 'text-amber-500' : 'text-slate-800' }}">
                             {{ $branch->stats['low_stock_count'] ?? 0 }}
                         </p>
-                        <p class="text-xs text-slate-500">Stok Tipis</p>
                     </div>
                 </div>
                 
                 <!-- Actions -->
-                <div class="flex gap-2">
+                <div class="mt-auto flex gap-3 pt-4 border-t border-slate-100">
                     <a href="{{ route('super.branches.show', $branch->id) }}" 
-                       class="flex-1 bg-indigo-50 text-indigo-600 text-center px-3 py-2 rounded-lg hover:bg-indigo-100 transition text-sm font-medium">
+                       class="flex-1 bg-indigo-50 text-indigo-700 text-center px-4 py-2.5 rounded-xl hover:bg-indigo-100 transition-colors text-sm font-bold">
                         Detail
                     </a>
                     <a href="{{ route('super.branches.edit', $branch->id) }}" 
-                       class="flex-1 bg-amber-50 text-amber-600 text-center px-3 py-2 rounded-lg hover:bg-amber-100 transition text-sm font-medium">
+                       class="flex-1 bg-slate-50 text-slate-700 text-center px-4 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm font-bold">
                         Edit
                     </a>
                     <button onclick="toggleStatus({{ $branch->id }})" 
-                            class="px-3 py-2 rounded-lg text-sm font-medium {{ $branch->is_active ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100' }}">
-                        {{ $branch->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                            class="px-4 py-2.5 rounded-xl text-sm font-bold transition-colors {{ $branch->is_active ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' }}">
+                        {{ $branch->is_active ? 'Matikan' : 'Aktifkan' }}
                     </button>
                 </div>
             </div>
         </div>
         @empty
-        <div class="col-span-full text-center py-12 bg-white rounded-xl">
-            <span class="iconify text-6xl text-slate-300 mb-4" data-icon="mdi:store-off"></span>
-            <p class="text-slate-500">Belum ada cabang. Silakan tambah cabang pertama Anda.</p>
+        <div class="col-span-full text-center py-16 bg-white rounded-[2rem] border border-slate-200">
+            <div class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                <span class="iconify text-4xl text-slate-300" data-icon="mdi:store-off"></span>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 tracking-tight mb-2">Belum Ada Cabang</h3>
+            <p class="text-slate-500 font-medium">Anda belum menambahkan cabang pertama Anda.</p>
         </div>
         @endforelse
     </div>

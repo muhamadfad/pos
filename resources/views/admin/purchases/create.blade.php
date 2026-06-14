@@ -34,7 +34,7 @@
     </div>
     @endif
 
-    <form action="{{ route('admin.purchases.store', $supplier->id) }}" method="POST">
+    <form action="{{ route('admin.purchases.store', $supplier->id) }}" method="POST" @submit="handleFormSubmit" novalidate>
         @csrf
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -84,7 +84,7 @@
                                         <td class="px-4 py-3">
                                             <input type="number" :name="`items[${index}][quantity]`" min="1" step="any"
                                                 class="w-full bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                                x-model="item.quantity" required>
+                                                x-model="item.quantity">
                                         </td>
                                         <!-- Purchase Price -->
                                         <td class="px-4 py-3">
@@ -94,7 +94,7 @@
                                                     Rp</div>
                                                 <input type="number" :name="`items[${index}][purchase_price]`" min="0"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                                    x-model="item.price" required>
+                                                    x-model="item.price">
                                             </div>
                                         </td>
                                         <!-- Subtotal -->
@@ -175,8 +175,8 @@
 
                     <div class="pt-4 flex flex-col gap-3">
                         <button type="submit"
-                            class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2"
-                            :disabled="items.length === 0 || !items[0].product_id">
+                            class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 disabled:bg-slate-400 disabled:cursor-not-allowed"
+                            :disabled="!items.some(item => item.product_id && item.quantity > 0 && item.price > 0)">
                             <span class="iconify text-xl" data-icon="mdi:content-save-outline"></span>
                             Simpan Transaksi
                         </button>
@@ -222,6 +222,46 @@
 
         formatCurrency(val) {
             return 'Rp ' + new Number(val).toLocaleString('id-ID');
+        },
+
+        handleFormSubmit(e) {
+            // Filter hanya item yang memiliki product_id dan quantity > 0
+            const validItems = this.items.filter(item => item.product_id && item.quantity > 0 && item.price > 0);
+            
+            if (validItems.length === 0) {
+                e.preventDefault();
+                alert('Pilih minimal 1 barang dengan quantity dan harga yang valid!');
+                return;
+            }
+
+            // Validasi tanggal harus diisi
+            const dateInput = e.target.querySelector('input[name="date"]');
+            if (!dateInput.value) {
+                e.preventDefault();
+                alert('Tanggal transaksi harus diisi!');
+                dateInput.focus();
+                return;
+            }
+
+            // Update items array agar hanya yang valid yang dikirim
+            // Hapus input fields untuk item yang tidak valid
+            const form = e.target;
+            const inputs = form.querySelectorAll('input[name^="items"]');
+            
+            inputs.forEach((input, idx) => {
+                const itemMatch = input.name.match(/items\[(\d+)\]/);
+                if (itemMatch) {
+                    const itemIndex = parseInt(itemMatch[1]);
+                    const item = this.items[itemIndex];
+                    
+                    // Jika item tidak valid, disable input agar tidak terkirim
+                    if (!item || !item.product_id || item.quantity <= 0 || item.price <= 0) {
+                        input.disabled = true;
+                    }
+                }
+            });
+
+            // Form akan di-submit, input yang disabled tidak akan terkirim
         }
     }
 }

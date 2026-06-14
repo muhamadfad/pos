@@ -19,14 +19,13 @@ class Ingredient extends Model
         'min_stock',
         'unit_cost',
         'branch_id',
-        'barcode',
         'is_active'
     ];
 
     protected $casts = [
-        'current_stock' => 'decimal:2',
-        'min_stock' => 'decimal:2',
-        'unit_cost' => 'decimal:2',
+        'current_stock' => 'decimal:6',
+        'min_stock' => 'decimal:6',
+        'unit_cost' => 'decimal:6',
         'is_active' => 'boolean',
         'deleted_at' => 'datetime'
     ];

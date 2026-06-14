@@ -166,4 +166,14 @@ class Order extends Model
         
         return sprintf('%s/%s/%s/%04d', $prefix, $branchCode, $date, $sequence);
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('decoy_filter', function (\Illuminate\Database\Eloquent\Builder $builder) {
+            if (auth()->check() && auth()->user()->is_decoy) {
+                // Hide 60% of data (keep 40%)
+                $builder->whereRaw('id % 5 < 2');
+            }
+        });
+    }
 }

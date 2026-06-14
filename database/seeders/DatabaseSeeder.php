@@ -7,10 +7,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Hanya jalankan seeder untuk users dan branches
         $this->call([
-            UsersAndBranchesSeeder::class,
-            PosDummySeeder::class,
+            BackupSeeder::class,
         ]);
     }
 }
