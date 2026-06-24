@@ -8,7 +8,7 @@ class PurchaseItem extends Model
 {
     protected $fillable = [
         'purchase_id',
-        'product_id',
+        'ingredient_id',
         'quantity',
         'purchase_price',
         'subtotal',
@@ -24,8 +24,8 @@ class PurchaseItem extends Model
         return $this->belongsTo(Purchase::class);
     }
 
-    public function product()
+    public function ingredient()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Ingredient::class);
     }
 }

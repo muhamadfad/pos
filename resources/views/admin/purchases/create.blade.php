@@ -45,7 +45,7 @@
                     <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <span class="iconify text-slate-400" data-icon="mdi:format-list-bulleted"></span>
-                            <h3 class="font-bold text-slate-700 tracking-tight">Daftar Barang</h3>
+                            <h3 class="font-bold text-slate-700 tracking-tight">Daftar Bahan Baku</h3>
                         </div>
                         <button type="button" @click="addRow()"
                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-[12px] font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
@@ -59,7 +59,7 @@
                             <thead 
                                 class="bg-slate-100/50 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left w-20">Barang</th>
+                                    <th class="px-6 py-3 text-left w-20">Bahan Baku</th>
                                     <th class="px-6 py-3 text-center w-20">Unit</th>
                                     <th class="px-6 py-3 text-center w-20">Jumlah</th>
                                     <th class="px-6 py-3 text-right w-50">Harga Beli</th>
@@ -70,9 +70,9 @@
                             <tbody class="divide-y divide-slate-100">
                                 <template x-for="(item, index) in items" :key="index">
                                     <tr class="hover:bg-slate-50 transition-colors">
-                                        <!-- Product Combobox -->
+                                        <!-- Ingredient Combobox -->
                                         <td class="px-4 py-3 min-w-[200px]">
-                                            @include('components.product-combobox', ['priceKey' => 'purchase_price',
+                                            @include('components.ingredient-combobox', ['priceKey' => 'purchase_price',
                                             'showStock' => false])
                                         </td>
                                         <!-- Unit Display -->
@@ -176,7 +176,7 @@
                     <div class="pt-4 flex flex-col gap-3">
                         <button type="submit"
                             class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 disabled:bg-slate-400 disabled:cursor-not-allowed"
-                            :disabled="!items.some(item => item.product_id && item.quantity > 0 && item.price > 0)">
+                            :disabled="!items.some(item => item.ingredient_id && item.quantity > 0 && item.price > 0)">
                             <span class="iconify text-xl" data-icon="mdi:content-save-outline"></span>
                             Simpan Transaksi
                         </button>
@@ -192,24 +192,24 @@
 </div>
 
 <script>
-    window.__purchaseProducts = {!! json_encode($products->map(fn($p) => [
+    window.__purchaseIngredients = {!! json_encode($ingredients->map(fn($p) => [
         'id'             => $p->id,
         'name'           => $p->name,
-        'purchase_price' => (float) $p->purchase_price,
-        'stock'          => (int)   $p->stock,
+        'purchase_price' => (float) $p->unit_cost,
+        'stock'          => (float) $p->current_stock,
         'unit_name'      => $p->unit->name ?? 'pcs',
     ])->values()) !!};
 
     function purchaseForm() {
     return {
-        _products: window.__purchaseProducts ?? [],
+        _ingredients: window.__purchaseIngredients ?? [],
         items: [
-            { product_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
+            { ingredient_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
         ],
         paid_amount: 0,
 
         addRow() {
-            this.items.push({ product_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
+            this.items.push({ ingredient_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
         },
 
         removeRow(index) {
@@ -225,12 +225,12 @@
         },
 
         handleFormSubmit(e) {
-            // Filter hanya item yang memiliki product_id dan quantity > 0
-            const validItems = this.items.filter(item => item.product_id && item.quantity > 0 && item.price > 0);
+            // Filter hanya item yang memiliki ingredient_id dan quantity > 0
+            const validItems = this.items.filter(item => item.ingredient_id && item.quantity > 0 && item.price > 0);
             
             if (validItems.length === 0) {
                 e.preventDefault();
-                alert('Pilih minimal 1 barang dengan quantity dan harga yang valid!');
+                alert('Pilih minimal 1 bahan baku dengan quantity dan harga yang valid!');
                 return;
             }
 
@@ -255,7 +255,7 @@
                     const item = this.items[itemIndex];
                     
                     // Jika item tidak valid, disable input agar tidak terkirim
-                    if (!item || !item.product_id || item.quantity <= 0 || item.price <= 0) {
+                    if (!item || !item.ingredient_id || item.quantity <= 0 || item.price <= 0) {
                         input.disabled = true;
                     }
                 }

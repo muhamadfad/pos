@@ -23,7 +23,7 @@
                     </div>
                     <div class="flex flex-wrap gap-x-3 gap-y-1">
                         @foreach($row->items->take(2) as $item)
-                            <span class="text-[10px] font-bold text-slate-400 italic">{{ $item->product->name ?? '-' }} <span class="text-slate-900 font-black not-italic">x{{ $item->quantity }}</span></span>
+                            <span class="text-[10px] font-bold text-slate-400 italic">{{ $item->ingredient->name ?? '-' }} <span class="text-slate-900 font-black not-italic">x{{ $item->quantity }}</span></span>
                         @endforeach
                     </div>
                 </td>

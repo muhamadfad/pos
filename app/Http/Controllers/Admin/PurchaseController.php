@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\Supplier;
-use App\Models\Product;
+use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ class PurchaseController extends Controller
 {
     public function index()
     {
-        $purchases = Purchase::with(['supplier', 'items.product'])
+        $purchases = Purchase::with(['supplier', 'items.ingredient'])
             ->latest('date')
             ->paginate(15);
 
@@ -39,12 +39,12 @@ class PurchaseController extends Controller
     public function perSupplier(Request $request, Supplier $supplier)
     {
         $query = Purchase::where('supplier_id', $supplier->id)
-            ->with('items.product')
+            ->with('items.ingredient')
             ->orderBy('date', 'desc');
 
         if ($request->filled('search')) {
             $query->whereHas(
-                'items.product',
+                'items.ingredient',
                 fn($q) =>
                 $q->where('name', 'like', '%' . $request->search . '%')
             );
@@ -81,8 +81,8 @@ class PurchaseController extends Controller
 
     public function create(Supplier $supplier)
     {
-        $products = Product::with('unit')->orderBy('name')->get();
-        return view('admin.purchases.create', compact('supplier', 'products'));
+        $ingredients = Ingredient::with('unit')->orderBy('name')->get();
+        return view('admin.purchases.create', compact('supplier', 'ingredients'));
     }
 
     public function store(Request $request, Supplier $supplier, KasproService $kaspro)
@@ -94,7 +94,7 @@ class PurchaseController extends Controller
             'reference_number'        => 'nullable|string|max:100',
             'notes'                   => 'nullable|string',
             'items'                   => 'required|array|min:1',
-            'items.*.product_id'      => 'required|exists:products,id',
+            'items.*.ingredient_id'   => 'required|exists:ingredients,id',
             'items.*.quantity'        => 'required|integer|min:1',
             'items.*.purchase_price'  => 'required|numeric|min:0',
         ]);
@@ -120,16 +120,16 @@ class PurchaseController extends Controller
 
                 PurchaseItem::create([
                     'purchase_id'    => $purchase->id,
-                    'product_id'     => $item['product_id'],
+                    'ingredient_id'  => $item['ingredient_id'],
                     'quantity'       => $item['quantity'],
                     'purchase_price' => $item['purchase_price'],
                     'subtotal'       => $subtotal,
                 ]);
 
-                $product = Product::find($item['product_id']);
+                $ingredient = Ingredient::find($item['ingredient_id']);
 
-                $oldStock  = $product->stock;
-                $oldPrice  = $product->purchase_price ?? 0;
+                $oldStock  = $ingredient->current_stock;
+                $oldPrice  = $ingredient->unit_cost ?? 0;
 
                 $newQty    = $item['quantity'];
                 $newPrice  = $item['purchase_price'];
@@ -163,10 +163,10 @@ class PurchaseController extends Controller
                 // Cek alert
                 $kaspro->checkAndCreateAlerts();
 
-                // Update product
-                $product->update([
-                    'stock' => $totalQty,
-                    'purchase_price' => $averagePrice,
+                // Update ingredient
+                $ingredient->update([
+                    'current_stock' => $totalQty,
+                    'unit_cost' => $averagePrice,
                 ]);
             }
         });
@@ -177,14 +177,14 @@ class PurchaseController extends Controller
 
     public function show(Purchase $purchase)
     {
-        $purchase->load(['supplier', 'items.product', 'payments']);
+        $purchase->load(['supplier', 'items.ingredient', 'payments']);
         return view('admin.purchases.show', compact('purchase'));
     }
 
     public function downloadPdf(Request $request, Supplier $supplier)
     {
         $query = Purchase::where('supplier_id', $supplier->id)
-            ->with('items.product')
+            ->with('items.ingredient')
             ->orderBy('date', 'desc');
 
         if ($request->filled('start_date') && $request->filled('end_date')) {

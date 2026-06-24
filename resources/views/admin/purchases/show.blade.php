@@ -96,14 +96,14 @@
                         @foreach($purchase->items as $item)
                         <tr>
                             <td class="px-4 py-5">
-                                <div class="font-bold text-slate-800">{{ $item->product->name ?? 'Unknown Product' }}
+                                <div class="font-bold text-slate-800">{{ $item->ingredient->name ?? 'Unknown Product' }}
                                 </div>
-                                <div class="text-[11px] text-slate-400">SKU: #{{ str_pad($item->product_id, 4, '0',
+                                <div class="text-[11px] text-slate-400">SKU: #{{ str_pad($item->ingredient_id, 4, '0',
                                     STR_PAD_LEFT) }}</div>
                             </td>
                             <td class="px-4 py-5 text-center font-bold text-slate-600">
                                 {{ floatval($item->quantity) }} <span class="text-[10px] font-medium text-slate-400">{{
-                                    $item->product->unit->name ?? 'pcs' }}</span>
+                                    $item->ingredient->unit->name ?? 'pcs' }}</span>
                             </td>
                             <td class="px-4 py-5 text-right font-medium text-slate-600">
                                 Rp {{ number_format($item->purchase_price, 0, ',', '.') }}

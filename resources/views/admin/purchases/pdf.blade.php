@@ -119,7 +119,7 @@
                     <td>{{ \Carbon\Carbon::parse($purchase->date)->format('d M Y') }}</td>
                     <td class="items">
                         @foreach($purchase->items as $item)
-                        • {{ $item->product->name ?? '-' }} ({{ $item->quantity }})<br>
+                        • {{ $item->ingredient->name ?? '-' }} ({{ $item->quantity }})<br>
                         @endforeach
                     </td>
                     <td class="right">Rp {{ number_format($purchase->total_amount, 0, ',', '.') }}</td>
