@@ -33,7 +33,7 @@ export default function Header({
     return (
         <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 shrink-0 sticky top-0 z-40 shadow-sm">
             <div className="flex items-center gap-4 w-full md:w-auto">
-                <Link
+                <a
                     href="/dashboard"
                     className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-900 border border-gray-200 transition-all hover:shadow-sm"
                     title="Kembali ke Admin"
@@ -51,7 +51,7 @@ export default function Header({
                             d="M10 19l-7-7m0 0l7-7m-7 7h18"
                         />
                     </svg>
-                </Link>
+                </a>
 
                 {isInstallable && (
                     <button

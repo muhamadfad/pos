@@ -267,11 +267,6 @@
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     var revenueChart;
     

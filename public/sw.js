@@ -1,5 +1,5 @@
-const CACHE_NAME = 'resto-coto-pos-cache-v1';
-const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v1';
+const CACHE_NAME = 'resto-coto-pos-cache-v4';
+const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v4';
 
 // Aset yang akan di-cache secara default saat instalasi
 const ASSETS_TO_CACHE = [
@@ -43,13 +43,12 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request).then((cachedResponse) => {
             // Jika ada di cache, gunakan itu (dengan Stale-While-Revalidate untuk resource dinamis)
             const fetchPromise = fetch(event.request).then((networkResponse) => {
-                // Update cache secara dinamis
-                caches.open(DYNAMIC_CACHE).then((cache) => {
-                    // Jangan cache jika request gagal atau jika itu adalah halaman login / dll
-                    if (networkResponse.ok && event.request.url.startsWith('http')) {
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                });
+                if (networkResponse.ok && event.request.url.startsWith('http')) {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(DYNAMIC_CACHE).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
                 return networkResponse;
             }).catch(() => {
                 // Jika offline dan network gagal

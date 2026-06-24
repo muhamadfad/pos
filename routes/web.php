@@ -18,13 +18,10 @@ use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\PointOfSaleController;
 use App\Http\Controllers\CashierShiftController;
 use App\Http\Controllers\BranchController;
-use App\Http\Controllers\StockController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\KasproController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\BranchStockController;
-use App\Http\Controllers\SuperDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,18 +130,6 @@ Route::middleware(['auth', 'admin'])
         Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
 
         // =======================
-        // STOCK MANAGEMENT
-        // =======================
-        Route::prefix('stock')->name('stock.')->group(function () {
-            Route::get('/', [StockController::class, 'index'])->name('index');
-            Route::get('/product/{product}', [StockController::class, 'productStock'])->name('product');
-            Route::post('/adjust', [StockController::class, 'adjust'])->name('adjust');
-            Route::post('/transfer', [StockController::class, 'transfer'])->name('transfer');
-            Route::get('/movement', [StockController::class, 'movement'])->name('movement');
-            Route::get('/export', [StockController::class, 'export'])->name('export');
-            Route::get('/low-stock', [StockController::class, 'lowStock'])->name('low-stock');
-        });
-
         // =======================
         // PURCHASES (Barang Masuk dari Supplier)
         // =======================
@@ -217,17 +202,6 @@ Route::middleware(['auth', 'admin'])
         // =======================
         // REPORTS
         // =======================
-        Route::prefix('reports')->name('reports.')->group(function () {
-            Route::get('/', [ReportController::class, 'index'])->name('index');
-            Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
-            Route::get('/purchases', [ReportController::class, 'purchases'])->name('purchases');
-            Route::get('/stock', [ReportController::class, 'stock'])->name('stock');
-            Route::get('/profit', [ReportController::class, 'profit'])->name('profit');
-            Route::get('/tax', [ReportController::class, 'tax'])->name('tax');
-            Route::post('/generate', [ReportController::class, 'generate'])->name('generate');
-            Route::get('/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
-            Route::get('/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
-        });
 
         // =======================
         // BRANCH STOCK MANAGEMENT (Stok Bahan Baku per Cabang)
@@ -284,44 +258,18 @@ Route::middleware(['auth', 'super_admin'])
         // =======================
         // SYSTEM MONITORING
         // =======================
-        Route::prefix('monitoring')->name('monitoring.')->group(function () {
-            Route::get('/', [SuperDashboardController::class, 'monitoring'])->name('index');
-            Route::get('/performance', [SuperDashboardController::class, 'performance'])->name('performance');
-            Route::get('/comparison', [SuperDashboardController::class, 'branchComparison'])->name('comparison');
-            Route::get('/activities', [SuperDashboardController::class, 'activities'])->name('activities');
-            Route::get('/logs', [SuperDashboardController::class, 'systemLogs'])->name('logs');
-        });
         
         // =======================
         // SYSTEM SETTINGS
         // =======================
-        Route::prefix('settings')->name('settings.')->group(function () {
-            Route::get('/', [SystemSettingController::class, 'index'])->name('index');
-            Route::post('/', [SystemSettingController::class, 'update'])->name('update');
-            Route::get('/backup', [SystemSettingController::class, 'backup'])->name('backup');
-            Route::post('/restore', [SystemSettingController::class, 'restore'])->name('restore');
-            Route::get('/cache/clear', [SystemSettingController::class, 'clearCache'])->name('clear-cache');
-        });
         
         // =======================
         // GLOBAL REPORTS (ALL BRANCHES)
         // =======================
-        Route::prefix('reports')->name('reports.')->group(function () {
-            Route::get('/global', [ReportController::class, 'global'])->name('global');
-            Route::get('/branch-comparison', [ReportController::class, 'branchComparison'])->name('branch-comparison');
-            Route::get('/consolidated', [ReportController::class, 'consolidated'])->name('consolidated');
-            Route::get('/export/excel', [ReportController::class, 'exportGlobalExcel'])->name('export.excel');
-            Route::get('/export/pdf', [ReportController::class, 'exportGlobalPdf'])->name('export.pdf');
-        });
         
         // =======================
         // DATABASE MANAGEMENT
         // =======================
-        Route::prefix('database')->name('database.')->group(function () {
-            Route::get('/backup', [DatabaseController::class, 'backup'])->name('backup');
-            Route::post('/restore', [DatabaseController::class, 'restore'])->name('restore');
-            Route::get('/optimize', [DatabaseController::class, 'optimize'])->name('optimize');
-        });
     });
 
 // =======================
@@ -363,13 +311,23 @@ Route::middleware(['auth', 'kasir'])
         Route::post('/customers/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('customers.pay-debt');
         
         // Daily Report
-        Route::get('/report/daily', [ReportController::class, 'kasirDaily'])->name('report.daily');
     });
 
 // =======================
 // AUTHENTICATION ROUTES
 // =======================
 require __DIR__ . '/auth.php';
+
+// =======================
+// SERVE STORAGE FILES (Fallback for Windows PHP built-in server)
+// =======================
+Route::get('/pos-images/{path}', function ($path) {
+    $fullPath = storage_path('app/public/products/' . $path);
+    if (!file_exists($fullPath)) {
+        abort(404);
+    }
+    return response()->file($fullPath);
+})->where('path', '.*');
 
 // =======================
 // FALLBACK ROUTE (404)

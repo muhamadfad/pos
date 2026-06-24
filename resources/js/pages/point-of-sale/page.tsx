@@ -88,7 +88,7 @@ export default function PointOfSalePage() {
             const matchSearch =
                 search === "" ||
                 p.name.toLowerCase().includes(search.toLowerCase()) ||
-                p.barcode.toLowerCase().includes(search.toLowerCase());
+                (p.barcode && p.barcode.toLowerCase().includes(search.toLowerCase()));
             const matchCategory =
                 categoryFilter === null || p.category_id === categoryFilter;
             return matchSearch && matchCategory;
@@ -150,7 +150,7 @@ function updateQty(productId: number, qty: number) {
     function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === "Enter" && search.trim()) {
             const product = products.find(
-                (p) => p.barcode.toLowerCase() === search.trim().toLowerCase(),
+                (p) => p.barcode && p.barcode.toLowerCase() === search.trim().toLowerCase(),
             );
             if (product) {
                 addToCart(product);

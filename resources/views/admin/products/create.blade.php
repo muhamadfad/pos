@@ -84,7 +84,7 @@
                         <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Gambar Menu <span class="text-slate-400 normal-case font-normal">(Opsional)</span></label>
                         @if(isset($isEdit) && $isEdit && $product->image)
                         <div class="mb-3">
-                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-xl border border-slate-200">
+                            <img src="{{ asset('pos-images/' . basename($product->image)) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-xl border border-slate-200">
                         </div>
                         @endif
                         <input type="file" id="image" name="image" accept="image/*"

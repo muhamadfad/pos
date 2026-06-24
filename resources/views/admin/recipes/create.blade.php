@@ -43,6 +43,26 @@
     </div>
     @endif
 
+    @if (session('error'))
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl flex gap-3">
+        <span class="iconify text-rose-500 text-xl shrink-0" data-icon="lucide:alert-circle"></span>
+        <div class="text-sm">
+            <h4 class="font-bold text-rose-800">Gagal:</h4>
+            <p class="text-rose-700/80 mt-1">{{ session('error') }}</p>
+        </div>
+    </div>
+    @endif
+
+    @if (session('success'))
+    <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex gap-3">
+        <span class="iconify text-emerald-500 text-xl shrink-0" data-icon="lucide:check-circle"></span>
+        <div class="text-sm">
+            <h4 class="font-bold text-emerald-800">Berhasil:</h4>
+            <p class="text-emerald-700/80 mt-1">{{ session('success') }}</p>
+        </div>
+    </div>
+    @endif
+
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <form action="{{ route('admin.recipes.store') }}" method="POST" id="recipeForm" novalidate>
             @csrf

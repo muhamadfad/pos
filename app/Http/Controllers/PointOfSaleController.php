@@ -44,7 +44,7 @@ class PointOfSaleController extends Controller
                 'stock'       => null,
                 'category'    => $p->category?->name ?? '-',
                 'category_id' => $p->category_id,
-                'image'       => $p->image ? \Illuminate\Support\Facades\Storage::url($p->image) : null,
+                'image'       => $p->image ? asset('pos-images/' . basename($p->image)) : null,
             ]);
 
         $categories = Category::orderBy('name')->get(['id', 'name']);

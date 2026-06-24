@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="card-premium p-8">
+    <div class="card-premium p-8 min-w-0 overflow-hidden">
         <div class="flex justify-between items-center mb-8">
             <h3 class="text-lg font-bold text-slate-900 italic">Historical Flow (12 Months)</h3>
             <div class="flex gap-4">
@@ -97,7 +97,7 @@
                 </div>
             </div>
         </div>
-        <div id="cashFlowChart" style="height: 350px;"></div>
+        <div id="cashFlowChart" class="w-full" style="min-height: 350px;"></div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -209,6 +209,7 @@
                 chart: { 
                     type: 'area', 
                     height: 350, 
+                    width: '100%',
                     toolbar: { show: false }, 
                     fontFamily: 'Inter, sans-serif',
                     animations: { enabled: true }

@@ -61,22 +61,8 @@
             </div>
         </div>
         
-        <div class="p-2"> <div class="overflow-x-auto">
-                <table class="w-full border-separate border-spacing-y-1">
-                    <thead>
-                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                            <th class="px-6 py-4 text-left font-black">Date & Ref</th>
-                            <th class="px-6 py-4 text-left font-black">Supplier Entity</th>
-                            <th class="px-6 py-4 text-right font-black">Total Valuation</th>
-                            <th class="px-6 py-4 text-center font-black">Settlement</th>
-                            <th class="px-6 py-4 text-center font-black">Control</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        @include('admin.purchases.partials.table')
-                    </tbody>
-                </table>
-            </div>
+        <div class="p-0">
+            @include('admin.purchases.partials.table')
         </div>
     </div>
 </div>

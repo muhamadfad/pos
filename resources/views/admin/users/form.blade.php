@@ -58,7 +58,7 @@
                     <!-- Email -->
                     <div class="space-y-2">
                         <label class="text-sm font-black text-slate-700 tracking-tight">Alamat Email</label>
-                        <input type="email" name="email" placeholder="staff@depobangun.com"
+                        <input type="email" name="email" placeholder="staff@cotoselerarakyat.com"
                             value="{{ old('email', $user->email ?? '') }}" required
                             class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
                     </div>

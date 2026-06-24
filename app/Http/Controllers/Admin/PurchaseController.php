@@ -64,13 +64,19 @@ class PurchaseController extends Controller
 
         $purchases = $query->paginate(10)->withQueryString();
 
+        $stats = [
+            'total' => Purchase::where('supplier_id', $supplier->id)->count(),
+            'paid'  => Purchase::where('supplier_id', $supplier->id)->where('payment_status', 'paid')->count(),
+            'debt'  => Purchase::where('supplier_id', $supplier->id)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
+        ];
+
         if ($request->ajax()) {
-            return view('admin.purchases.partials.table', compact('purchases'))->render();
+            return view('admin.purchases.partials.table', compact('purchases', 'stats'))->render();
         }
 
-        $total = Purchase::where('supplier_id', $supplier->id)->count();
+        $total = $stats['total'];
 
-        return view('admin.purchases.per-supplier', compact('supplier', 'purchases', 'total'));
+        return view('admin.purchases.per-supplier', compact('supplier', 'purchases', 'total', 'stats'));
     }
 
     public function create(Supplier $supplier)

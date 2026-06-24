@@ -199,7 +199,7 @@
     });
     
     @if($topProducts->count() > 0)
-    function renderWhenReady() {
+    window.renderWhenReady = function() {
         const canvas = document.getElementById('weeklyChart');
         if (!canvas) return;
         const existing = Chart.getChart(canvas);
@@ -252,7 +252,7 @@
                 setTimeout(window.checkLib, 50);
                 return;
             }
-            renderWhenReady(); 
+            window.renderWhenReady(); 
         } else { 
             setTimeout(window.checkLib, 50); 
         } 

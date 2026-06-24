@@ -135,7 +135,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    function renderWhenReady() {
+    window.renderWhenReady = function() {
         const canvas = document.getElementById('historicalChart');
         if (!canvas) return;
         
@@ -222,7 +222,7 @@
                 setTimeout(window.checkLib, 50);
                 return;
             }
-            renderWhenReady(); 
+            window.renderWhenReady(); 
         } else { 
             setTimeout(window.checkLib, 50); 
         } 

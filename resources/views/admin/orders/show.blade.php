@@ -36,7 +36,7 @@
         <!-- Banner Branding -->
         <div class="bg-slate-900 px-8 py-3 flex justify-between items-center">
             <span class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase">Official Invoice</span>
-            <span class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase">Depo Bangun</span>
+            <span class="text-[10px] font-black tracking-[0.2em] text-slate-400 uppercase">Coto Selera Rakyat</span>
         </div>
 
         <div class="p-8 border-b border-slate-100 flex flex-col md:flex-row justify-between gap-8">
@@ -127,7 +127,7 @@
                 <div>
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Note Transaksi</p>
                     <p class="text-xs text-slate-500 leading-relaxed italic">Terima kasih atas kepercayaan Anda
-                        berbelanja di Depo Bangun. Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan tanpa
+                        berbelanja di Coto Selera Rakyat. Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan tanpa
                         nota ini.</p>
                 </div>
                 <!-- Signature Area (Hidden on screen, maybe for print) -->

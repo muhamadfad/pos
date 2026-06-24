@@ -9,6 +9,9 @@ import Chart from "chart.js/auto";
 window.Chart = Chart;
 
 import Alpine from "alpinejs";
+import collapse from "@alpinejs/collapse";
+
+Alpine.plugin(collapse);
 window.Alpine = Alpine;
 
 // Fungsi untuk inisialisasi chart
@@ -97,8 +100,13 @@ document.addEventListener("turbo:load", () => {
         window.Iconify.scan();
     }
     
-    // Inisialisasi chart
+    // Inisialisasi chart (kaspro)
     initCharts();
+
+    // Panggil initDashboard jika ada (untuk halaman dashboard)
+    if (typeof window.initDashboard === 'function') {
+        window.initDashboard();
+    }
 });
 
 // Inisialisasi juga saat DOMContentLoaded (untuk halaman non-Turbo)

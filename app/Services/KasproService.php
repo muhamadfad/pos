@@ -728,4 +728,20 @@ class KasproService
         
         return false;
     }
+
+    public function categorize($description) {
+        return [
+            'category' => 'other',
+            'confidence' => 50,
+            'needs_review' => true
+        ];
+    }
+
+    public function detectAnomaly($expense, $type) {
+        return [
+            'is_anomaly' => false,
+            'risk_score' => 0,
+            'flags' => []
+        ];
+    }
 }
