@@ -90,19 +90,13 @@ class ProductController extends Controller
     {
         $product->load(['category', 'unit']);
 
-        $incoming = PurchaseItem::with(['purchase.supplier'])
-            ->where('product_id', $product->id)
-            ->latest()
-            ->limit(15)
-            ->get();
-
         $outgoing = OrderItem::with(['order.customer'])
             ->where('product_id', $product->id)
             ->latest()
             ->limit(15)
             ->get();
 
-        return view('admin.products.show', compact('product', 'incoming', 'outgoing'));
+        return view('admin.products.show', compact('product', 'outgoing'));
     }
 
     public function edit(Product $product)

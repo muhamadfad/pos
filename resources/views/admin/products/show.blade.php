@@ -71,11 +71,7 @@
                         class="px-4 py-4 text-sm font-semibold transition-all">
                         Riwayat Penjualan
                     </button>
-                    <button @click="tab = 'incoming'" 
-                        :class="tab === 'incoming' ? 'border-b-2 border-slate-900 text-slate-900' : 'text-slate-400 hover:text-slate-600'" 
-                        class="px-4 py-4 text-sm font-semibold transition-all">
-                        Riwayat Menu Masuk
-                    </button>
+
                 </div>
 
                 <div class="p-0">
@@ -121,47 +117,7 @@
                         </table>
                     </div>
 
-                    <div x-show="tab === 'incoming'" x-transition.opacity>
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50/50 text-[11px] font-bold text-slate-400 uppercase border-b border-slate-100">
-                                <tr>
-                                    <th class="px-6 py-3">Tanggal</th>
-                                    <th class="px-6 py-3">Ref/Supplier</th>
-                                    <th class="px-6 py-3 text-center">Quantity</th>
-                                    <th class="px-6 py-3 text-right">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50 text-sm">
-                                @forelse($incoming as $item)
-                                <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4 text-slate-500 font-medium">
-                                        {{ optional($item->purchase->date ?? $item->purchase->created_at)->format('d M Y') }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="font-semibold text-slate-700">{{ $item->purchase->supplier->name ?? 'Unknown' }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <span class="inline-flex items-center text-emerald-600 font-bold">
-                                            +{{ $item->quantity }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right font-semibold text-slate-900">
-                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="px-6 py-20 text-center">
-                                        <div class="flex flex-col items-center gap-2 opacity-30">
-                                            <span class="iconify text-4xl" data-icon="lucide:truck"></span>
-                                            <p class="text-sm font-medium">Belum ada riwayat menu masuk</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+
                 </div>
             </div>
         </div>

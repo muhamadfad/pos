@@ -27,7 +27,7 @@
         </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
             <div class="relative z-10">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Koleksi</p>
@@ -35,28 +35,6 @@
                 <p class="text-[11px] text-slate-400 mt-1 font-medium">Produk terdaftar</p>
             </div>
             <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-indigo-50/50 transition-colors" data-icon="lucide:package"></span>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
-            <div class="relative z-10">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Stok Kosong</p>
-                <p class="text-3xl font-bold text-rose-500 tracking-tight">
-                    {{ $category->products()->where('stock', 0)->count() }}
-                </p>
-                <p class="text-[11px] text-rose-400 mt-1 font-medium">Perlu restock segera</p>
-            </div>
-            <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-rose-50/50 transition-colors" data-icon="lucide:alert-octagon"></span>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden group">
-            <div class="relative z-10">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Stok Menipis</p>
-                <p class="text-3xl font-bold text-amber-500 tracking-tight">
-                    {{ $category->products()->where('stock', '>', 0)->where('stock', '<=', 5)->count() }}
-                </p>
-                <p class="text-[11px] text-amber-500/70 mt-1 font-medium">Stok di bawah 5 unit</p>
-            </div>
-            <span class="iconify absolute -right-2 -bottom-2 text-6xl text-slate-50 group-hover:text-amber-50/50 transition-colors" data-icon="lucide:alert-triangle"></span>
         </div>
     </div>
 
@@ -91,13 +69,13 @@
                         <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-16 text-center">#</th>
                         <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Detail Produk</th>
                         <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Harga Jual</th>
-                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Stok</th>
+                        <!-- removed stok column header -->
                         <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @foreach($products as $product)
-                    <tr class="group hover:bg-slate-50/50 transition-colors {{ $product->stock == 0 ? 'bg-rose-50/20' : '' }}">
+                    <tr class="group hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-4 text-center text-xs text-slate-400 font-mono">
                             {{ $products->firstItem() + $loop->index }}
                         </td>
@@ -110,16 +88,6 @@
                         <td class="px-6 py-4 text-right">
                             <span class="text-sm font-bold text-slate-700">
                                 Rp {{ number_format($product->selling_price, 0, ',', '.') }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            @php
-                                $statusClass = $product->stock == 0 
-                                    ? 'bg-rose-50 text-rose-600 border-rose-100' 
-                                    : ($product->stock <= 5 ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100');
-                            @endphp
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold border shadow-sm {{ $statusClass }}">
-                                {{ $product->stock == 0 ? 'HABIS' : $product->stock . ' UNIT' }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
