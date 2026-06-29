@@ -1,5 +1,6 @@
 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-    <table class="min-w-full text-sm">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
         <thead>
             <tr class="border-b border-slate-100 bg-slate-50">
                 <th class="px-5 py-3.5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-12">#
@@ -116,6 +117,7 @@
             @endforelse
         </tbody>
      </table>
+    </div>
 
     @if($customers->hasPages())
     <div class="px-5 py-4 border-t border-slate-100 bg-slate-50/50">

@@ -30,7 +30,7 @@
 
     <div x-data="{
         sidebarOpen: false,
-        sidebarCollapsed: window.innerWidth < 1024
+        sidebarCollapsed: false
     }" class="h-screen flex overflow-hidden">
 
         <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false" 
@@ -38,7 +38,7 @@
 
         <aside x-cloak :class="[
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'
+            sidebarCollapsed ? 'w-64 lg:w-20' : 'w-64'
         ]" class="fixed inset-y-0 left-0 z-50 bg-[#0f172a] text-slate-400 border-r border-slate-800 shadow-2xl sidebar-transition flex flex-col lg:translate-x-0">
 
             <div class="h-20 flex items-center px-6 border-b border-slate-800/50 shrink-0">
