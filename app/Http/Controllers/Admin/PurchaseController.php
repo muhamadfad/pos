@@ -99,7 +99,7 @@ class PurchaseController extends Controller
             'items.*.purchase_price'  => 'required|numeric|min:0',
         ]);
 
-        DB::transaction(function () use ($request, $supplier) {
+        DB::transaction(function () use ($request, $supplier, $kaspro) {
             $total = collect($request->items)->sum(fn($i) => $i['quantity'] * $i['purchase_price']);
             $paid  = $request->paid ?? 0;
 
