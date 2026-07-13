@@ -46,10 +46,9 @@ export function printWithRawBT(t: TransactionDetails) {
     str += "   dapat ditukar/dikembalikan   \n";
     str += "\n\n\n";
 
-    // Encode text to Base64 to avoid URI character issues in intent
-    // Actually RawBT supports plain text intent
-    const encoded = encodeURI(str);
+    // Encode text to Base64
+    const base64Data = btoa(str);
     
-    // Gunakan intent RawBT
-    window.location.href = `intent:${encoded}#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;`;
+    // Gunakan scheme rawbt:base64 untuk print latar belakang (silent print)
+    window.location.href = `rawbt:base64,${base64Data}`;
 }
