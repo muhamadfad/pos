@@ -8,6 +8,8 @@ import DebtPaymentPanel from "./DebtPaymentPanel";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../lib/db";
 import { usePosSync } from "../../hooks/usePosSync";
+import ReceiptPrint, { TransactionDetails } from "./ReceiptPrint";
+import TransactionHistoryModal from "./TransactionHistoryModal";
 
 export default function PointOfSalePage() {
     const {
@@ -63,6 +65,8 @@ export default function PointOfSalePage() {
     );
     const [showSuccess, setShowSuccess] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [lastTransaction, setLastTransaction] = useState<TransactionDetails | null>(null);
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
 
     const searchRef = useRef<HTMLInputElement>(null);
     const paidRef = useRef<HTMLInputElement>(null);
@@ -256,12 +260,28 @@ function updateQty(productId: number, qty: number) {
                     payload: payload,
                 });
                 
+                const custName = customers.find((c) => c.id === selectedCustomerId)?.name || "Walk-in";
+                setLastTransaction({
+                    cart: [...cart],
+                    totalPrice,
+                    paidAmount: actualPaid,
+                    change: actualPaid - totalPrice,
+                    paymentType,
+                    date: new Date().toLocaleString("id-ID"),
+                    customerName: custName,
+                });
+                
                 // Show success immediately (optimistic update)
                 setShowSuccess(true);
                 setCart([]);
                 setPaid("");
                 setSelectedCustomerId(null);
                 searchRef.current?.focus();
+                
+                // Auto-print receipt after a short delay to allow React to render it
+                setTimeout(() => {
+                    window.print();
+                }, 500);
                 
                 // Hide success message after 5 seconds
                 setTimeout(() => setShowSuccess(false), 5000);
@@ -285,7 +305,16 @@ function updateQty(productId: number, qty: number) {
 
     return (
         <>
-            <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative">
+            <ReceiptPrint transaction={lastTransaction} />
+            <TransactionHistoryModal 
+                isOpen={showHistoryModal} 
+                onClose={() => setShowHistoryModal(false)} 
+                onReprint={(trx) => {
+                    setLastTransaction(trx);
+                    setTimeout(() => window.print(), 200);
+                }} 
+            />
+            <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
                 {/* LEFT: Product Grid — hanya tampil saat mode pos */}
                 {mode === "pos" && (
                     <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden lg:flex' : 'flex'}`}>
@@ -300,6 +329,7 @@ function updateQty(productId: number, qty: number) {
                             isOnline={isOnline}
                             pendingCount={pendingCount}
                             isSyncing={isSyncing}
+                            onOpenHistory={() => setShowHistoryModal(true)}
                         />
                         <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid

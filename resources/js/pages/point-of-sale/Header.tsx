@@ -14,6 +14,7 @@ interface HeaderProps {
     isOnline?: boolean;
     pendingCount?: number;
     isSyncing?: boolean;
+    onOpenHistory: () => void;
 }
 
 export default function Header({
@@ -27,6 +28,7 @@ export default function Header({
     isOnline = true,
     pendingCount = 0,
     isSyncing = false,
+    onOpenHistory,
 }: HeaderProps) {
     const { isInstallable, installPwa } = usePwaInstall();
 
@@ -65,6 +67,17 @@ export default function Header({
                         <span className="hidden sm:inline">Install App</span>
                     </button>
                 )}
+                
+                <button
+                    onClick={onOpenHistory}
+                    className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
+                    title="Riwayat Transaksi"
+                >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="hidden sm:inline">Riwayat</span>
+                </button>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">

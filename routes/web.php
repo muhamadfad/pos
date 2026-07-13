@@ -296,6 +296,7 @@ Route::middleware(['auth', 'kasir'])
         Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('print');
         Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('customer-debt');
         Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pay-debt');
+        Route::get('/pos/transactions', [PointOfSaleController::class, 'transactions'])->name('pos.transactions');
         
         // Cashier Shift (halaman utama kasir)
         Route::get('/shift', [CashierShiftController::class, 'index'])->name('shift.index');

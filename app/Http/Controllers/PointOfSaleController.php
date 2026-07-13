@@ -367,4 +367,45 @@ class PointOfSaleController extends Controller
             
         return view('pos.receipt', compact('order'));
     }
+
+    public function transactions()
+    {
+        $branchId = auth()->user()->branch_id;
+        
+        $activeShift = CashierShift::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)
+            ->where('status', 'open')
+            ->latest()
+            ->first();
+
+        if (!$activeShift) {
+            return response()->json([]);
+        }
+
+        $orders = Order::with(['customer', 'items.product'])
+            ->where('cashier_shift_id', $activeShift->id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function($order) {
+                return [
+                    'id' => $order->id,
+                    'invoice_number' => $order->invoice_number,
+                    'date' => \Carbon\Carbon::parse($order->date)->format('d/m/Y H:i'),
+                    'customerName' => $order->customer ? $order->customer->name : 'Walk-in Customer',
+                    'totalPrice' => $order->total_amount,
+                    'paidAmount' => $order->total_paid,
+                    'change' => $order->total_paid - $order->total_amount,
+                    'paymentType' => $order->payment_type,
+                    'cart' => $order->items->map(function($item) {
+                        return [
+                            'name' => $item->product ? $item->product->name : 'Unknown',
+                            'qty' => $item->quantity,
+                            'price' => $item->selling_price,
+                        ];
+                    })
+                ];
+            });
+
+        return response()->json($orders);
+    }
 }
