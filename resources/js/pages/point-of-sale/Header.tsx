@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "@inertiajs/react";
 import type { Category } from "./types";
 import { usePwaInstall } from "../../hooks/usePwaInstall";
+import { useWebBluetoothPrinter } from "../../hooks/useWebBluetoothPrinter";
 
 interface HeaderProps {
     search: string;
@@ -31,6 +32,7 @@ export default function Header({
     onOpenHistory,
 }: HeaderProps) {
     const { isInstallable, installPwa } = usePwaInstall();
+    const { isSupported, isConnected, isConnecting, printerName, connect, disconnect } = useWebBluetoothPrinter();
 
     return (
         <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 shrink-0 sticky top-0 z-40 shadow-sm">
@@ -65,6 +67,32 @@ export default function Header({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                         <span className="hidden sm:inline">Install App</span>
+                    </button>
+                )}
+
+                {isSupported && (
+                    <button
+                        onClick={isConnected ? disconnect : connect}
+                        disabled={isConnecting}
+                        className={`flex items-center justify-center gap-2 h-10 px-4 rounded-xl text-white font-bold text-xs sm:text-sm border shadow-sm transition-all whitespace-nowrap active:scale-95 ${
+                            isConnected 
+                                ? "bg-slate-700 hover:bg-slate-800 border-slate-600" 
+                                : "bg-blue-600 hover:bg-blue-700 border-blue-500"
+                        } ${isConnecting ? "opacity-75 cursor-not-allowed" : "hover:shadow-md hover:-translate-y-0.5"}`}
+                        title={printerName || "Koneksi Printer Web Bluetooth"}
+                    >
+                        {isConnecting ? (
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        ) : (
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                        )}
+                        <span className="hidden sm:inline">
+                            {isConnecting ? "Menyambung..." : isConnected ? "Printer Aktif" : "Printer"}
+                        </span>
                     </button>
                 )}
                 

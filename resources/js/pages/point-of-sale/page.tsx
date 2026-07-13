@@ -8,6 +8,7 @@ import DebtPaymentPanel from "./DebtPaymentPanel";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../lib/db";
 import { usePosSync } from "../../hooks/usePosSync";
+import { useWebBluetoothPrinter } from "../../hooks/useWebBluetoothPrinter";
 import ReceiptPrint, { TransactionDetails } from "./ReceiptPrint";
 import TransactionHistoryModal from "./TransactionHistoryModal";
 import { printWithRawBT } from "./printHelper";
@@ -24,7 +25,7 @@ export default function PointOfSalePage() {
         errors,
     } = usePage<PageProps>().props;
 
-    const { isOnline, pendingCount, isSyncing } = usePosSync();
+    const { isOnline, pendingCount, isSyncing, processOfflineCheckout } = usePosSync();
 
     const [customers, setCustomers] = useState(serverCustomers);
 
@@ -57,9 +58,12 @@ export default function PointOfSalePage() {
     const [mode, setMode] = useState<"pos" | "debt">("pos");
     const [showMobileCart, setShowMobileCart] = useState(false);
 
+    
+    const { isConnected: isBluetoothConnected, printReceipt: printBluetooth } = useWebBluetoothPrinter();
+
+    const [categoryFilter, setCategoryFilter] = useState<number | null>(null);
     const [cart, setCart] = useState<CartItem[]>([]);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState<number | null>(null);
     const [paid, setPaid] = useState<string>("");
     const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(
         null,
@@ -283,7 +287,9 @@ function updateQty(productId: number, qty: number) {
                 
                 // Auto-print receipt after a short delay
                 setTimeout(() => {
-                    if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                    if (isBluetoothConnected) {
+                        printBluetooth(transactionData);
+                    } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
                         printWithRawBT(transactionData);
                     } else {
                         window.print();
@@ -319,7 +325,9 @@ function updateQty(productId: number, qty: number) {
                 onReprint={(trx) => {
                     setLastTransaction(trx);
                     setTimeout(() => {
-                        if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                        if (isBluetoothConnected) {
+                            printBluetooth(trx);
+                        } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
                             printWithRawBT(trx);
                         } else {
                             window.print();
