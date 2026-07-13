@@ -10,6 +10,7 @@ import { db } from "../../lib/db";
 import { usePosSync } from "../../hooks/usePosSync";
 import ReceiptPrint, { TransactionDetails } from "./ReceiptPrint";
 import TransactionHistoryModal from "./TransactionHistoryModal";
+import { printWithRawBT } from "./printHelper";
 
 export default function PointOfSalePage() {
     const {
@@ -260,16 +261,18 @@ function updateQty(productId: number, qty: number) {
                     payload: payload,
                 });
                 
-                const custName = customers.find((c) => c.id === selectedCustomerId)?.name || "Walk-in";
-                setLastTransaction({
+                const customerName = customers.find((c) => c.id === selectedCustomerId)?.name || "Walk-in";
+                const transactionData = {
                     cart: [...cart],
                     totalPrice,
                     paidAmount: actualPaid,
                     change: actualPaid - totalPrice,
                     paymentType,
                     date: new Date().toLocaleString("id-ID"),
-                    customerName: custName,
-                });
+                    customerName: customerName,
+                };
+                
+                setLastTransaction(transactionData);
                 
                 // Show success immediately (optimistic update)
                 setShowSuccess(true);
@@ -278,9 +281,13 @@ function updateQty(productId: number, qty: number) {
                 setSelectedCustomerId(null);
                 searchRef.current?.focus();
                 
-                // Auto-print receipt after a short delay to allow React to render it
+                // Auto-print receipt after a short delay
                 setTimeout(() => {
-                    window.print();
+                    if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                        printWithRawBT(transactionData);
+                    } else {
+                        window.print();
+                    }
                 }, 500);
                 
                 // Hide success message after 5 seconds
@@ -311,7 +318,13 @@ function updateQty(productId: number, qty: number) {
                 onClose={() => setShowHistoryModal(false)} 
                 onReprint={(trx) => {
                     setLastTransaction(trx);
-                    setTimeout(() => window.print(), 200);
+                    setTimeout(() => {
+                        if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                            printWithRawBT(trx);
+                        } else {
+                            window.print();
+                        }
+                    }, 200);
                 }} 
             />
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">

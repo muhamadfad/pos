@@ -9,6 +9,7 @@ export interface TransactionDetails {
     paymentType: string;
     date: string;
     customerName: string;
+    invoiceNumber?: string;
 }
 
 interface ReceiptPrintProps {
