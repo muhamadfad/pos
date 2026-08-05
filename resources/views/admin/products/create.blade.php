@@ -49,31 +49,6 @@
                 
                 <div class="p-6 space-y-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Barcode / SKU</label>
-                        <div class="flex gap-2">
-                            <div class="relative flex-1 group">
-                                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="lucide:barcode"></span>
-                                <input type="text" id="barcode" name="barcode" required
-                                    class="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 placeholder:text-slate-400 font-mono"
-                                    placeholder="Scan atau ketik barcode..." value="{{ old('barcode', $product->barcode ?? '') }}">
-                            </div>
-                            <button type="button" onclick="openScanner()"
-                                class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition shadow-sm active:scale-95">
-                                <span class="iconify text-base" data-icon="lucide:camera"></span>
-                                Scan
-                            </button>
-                        </div>
-                        
-                        <div id="scanner-container" class="hidden mt-4 rounded-xl overflow-hidden border border-slate-200 bg-black relative shadow-lg">
-                            <video id="scanner" class="w-full h-48 object-cover"></video>
-                            <button type="button" onclick="closeScanner()"
-                                class="absolute top-2 right-2 p-1.5 bg-white/20 hover:bg-white/40 text-white backdrop-blur rounded-md transition">
-                                <span class="iconify" data-icon="lucide:x"></span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
                         <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Menu</label>
                         <input type="text" id="name" name="name" required
                             class="w-full px-4 py-2.5 text-sm font-medium bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-800 placeholder:text-slate-400"
@@ -156,29 +131,4 @@
         </div>
     </form>
 </div>
-
-<script src="https://unpkg.com/@zxing/library@latest"></script>
-<script>
-    let codeReader;
-    let scanning = false;
-
-    function openScanner() {
-        const container = document.getElementById('scanner-container');
-        container.classList.remove('hidden');
-        codeReader = new ZXing.BrowserMultiFormatReader();
-        scanning = true;
-        codeReader.decodeFromVideoDevice(null, 'scanner', (result, err) => {
-            if (result && scanning) {
-                scanning = false;
-                document.getElementById('barcode').value = result.text;
-                closeScanner();
-            }
-        }).catch(() => closeScanner());
-    }
-
-    function closeScanner() {
-        document.getElementById('scanner-container').classList.add('hidden');
-        if (codeReader) codeReader.reset();
-    }
-</script>
 @endsection
