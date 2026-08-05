@@ -23,12 +23,13 @@ export interface Customer {
 
 export interface CartItem {
     product_id: number;
-    barcode: string;
+    barcode?: string | null;
     name: string;
     price: number;
     qty: number;
-    stock: number;
+    stock?: number;
     image?: string | null;
+    is_custom?: boolean;
 }
 
 export interface CashierShift {

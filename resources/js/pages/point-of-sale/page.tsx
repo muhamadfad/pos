@@ -72,9 +72,15 @@ export default function PointOfSalePage() {
     const [processing, setProcessing] = useState(false);
     const [lastTransaction, setLastTransaction] = useState<TransactionDetails | null>(null);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
+    
+    // Custom item state
+    const [showCustomItemModal, setShowCustomItemModal] = useState(false);
+    const [customItemName, setCustomItemName] = useState("");
+    const [customItemPrice, setCustomItemPrice] = useState("");
 
     const searchRef = useRef<HTMLInputElement>(null);
     const paidRef = useRef<HTMLInputElement>(null);
+    const customNameRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         searchRef.current?.focus();
@@ -131,6 +137,31 @@ export default function PointOfSalePage() {
             },
         ];
     });
+}
+
+function addCustomItem() {
+    if (!customItemName.trim()) {
+        alert("Nama item tidak boleh kosong");
+        customNameRef.current?.focus();
+        return;
+    }
+    const price = parseInt(customItemPrice) || 0;
+    
+    setCart((prev) => [
+        ...prev,
+        {
+            product_id: -Date.now(), // Fake ID for UI logic
+            barcode: null,
+            name: customItemName.trim(),
+            price: price,
+            qty: 1,
+            is_custom: true, // Marker for backend
+        },
+    ]);
+    
+    setShowCustomItemModal(false);
+    setCustomItemName("");
+    setCustomItemPrice("");
 }
 
 function updateQty(productId: number, qty: number) {
@@ -247,6 +278,8 @@ function updateQty(productId: number, qty: number) {
                 product_id: c.product_id,
                 qty: c.qty,
                 price: c.price,
+                is_custom: c.is_custom,
+                custom_name: c.is_custom ? c.name : undefined,
             })),
             paid: actualPaid,
             customer_id: selectedCustomerId ?? undefined,
@@ -352,6 +385,7 @@ function updateQty(productId: number, qty: number) {
                             pendingCount={pendingCount}
                             isSyncing={isSyncing}
                             onOpenHistory={() => setShowHistoryModal(true)}
+                            onAddManualItem={() => setShowCustomItemModal(true)}
                         />
                         <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid
@@ -556,6 +590,72 @@ function updateQty(productId: number, qty: number) {
                     </div>
                 )}
             </div>
+
+            {/* Custom Item Modal */}
+            {showCustomItemModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/50 backdrop-blur-sm p-4 print:hidden">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                            <h3 className="text-lg font-bold text-gray-800">
+                                Tambah Item Manual
+                            </h3>
+                            <button
+                                onClick={() => setShowCustomItemModal(false)}
+                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                    Nama Item <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    ref={customNameRef}
+                                    type="text"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    placeholder="Contoh: Tambahan Daging"
+                                    value={customItemName}
+                                    onChange={(e) => setCustomItemName(e.target.value)}
+                                    autoFocus
+                                    onKeyDown={(e) => e.key === "Enter" && addCustomItem()}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                    Harga (Rp)
+                                </label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    placeholder="Contoh: 15000"
+                                    value={customItemPrice}
+                                    onChange={(e) => setCustomItemPrice(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && addCustomItem()}
+                                />
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3 rounded-b-2xl">
+                            <button
+                                onClick={() => setShowCustomItemModal(false)}
+                                className="px-4 py-2 text-sm font-bold text-gray-600 hover:bg-gray-200 bg-gray-100 rounded-xl transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={addCustomItem}
+                                className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
+                            >
+                                Tambahkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

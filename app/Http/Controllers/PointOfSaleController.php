@@ -147,13 +147,33 @@ class PointOfSaleController extends Controller
             $itemsData = [];
 
             foreach ($request->items as $item) {
-                $product = Product::findOrFail($item['product_id']);
+                if (isset($item['is_custom']) && $item['is_custom']) {
+                    $defaultCategory = \App\Models\Category::firstOrCreate(
+                        ['name' => 'Lain-lain'],
+                        ['description' => 'Kategori Lain-lain']
+                    );
+                    $product = Product::firstOrCreate(
+                        ['name' => 'Item Tambahan Manual'],
+                        [
+                            'category_id' => $defaultCategory->id,
+                            'selling_price' => 0,
+                            'purchase_price' => 0,
+                            'min_stock' => 0,
+                            'is_active' => true,
+                        ]
+                    );
+                    $customName = $item['custom_name'] ?? 'Item Tambahan Manual';
+                } else {
+                    $product = Product::findOrFail($item['product_id']);
+                    $customName = null;
+                }
 
                 $lineTotal = $item['price'] * $item['qty'];
                 $subtotal += $lineTotal;
 
                 $itemsData[] = [
-                    'product_id'    => $item['product_id'],
+                    'product_id'    => $product->id,
+                    'custom_name'   => $customName,
                     'quantity'      => $item['qty'],
                     'selling_price' => $item['price'],
                     'cost_price'    => $product->purchase_price ?? 0,
@@ -399,11 +419,11 @@ class PointOfSaleController extends Controller
                     'cashierName' => $order->user ? $order->user->name : 'Kasir',
                     'cart' => $order->items->map(function($item) {
                         return [
-                            'name' => $item->product ? $item->product->name : 'Unknown',
+                            'name' => $item->custom_name ?: ($item->product ? $item->product->name : 'Unknown'),
                             'qty' => $item->quantity,
                             'price' => $item->selling_price,
                         ];
-                    })
+                    })->toArray(),
                 ];
             });
 
