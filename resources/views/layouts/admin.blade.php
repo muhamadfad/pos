@@ -128,6 +128,23 @@
                     </div>
                 </div>
 
+                @if($isSuperAdmin)
+                <div x-data="{ open: {{ request()->routeIs('central-purchases.*', 'central-stocks.*', 'stock-transfers.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between text-emerald-400 hover:bg-emerald-900/30">
+                        <div class="flex items-center gap-3">
+                            <span class="iconify text-xl" data-icon="mdi:warehouse"></span>
+                            <span x-show="!sidebarCollapsed">Logistik Pusat</span>
+                        </div>
+                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-emerald-800/50 ml-6">
+                        <a href="{{ route('central-purchases.index') }}" class="block py-2 hover:text-white transition">Pembelian Pusat</a>
+                        <a href="{{ route('central-stocks.index') }}" class="block py-2 hover:text-white transition">Stok Gudang Pusat</a>
+                        <a href="{{ route('stock-transfers.index') }}" class="block py-2 hover:text-white transition">Distribusi Cabang</a>
+                    </div>
+                </div>
+                @endif
+
                 <div x-data="{ open: {{ request()->routeIs('admin.finance.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
                         <div class="flex items-center gap-3">

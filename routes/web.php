@@ -146,6 +146,25 @@ Route::middleware(['auth', 'admin'])
         });
 
         // =======================
+        // LOGISTIK PUSAT
+        // =======================
+        Route::prefix('central-purchases')->name('central-purchases.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'store'])->name('store');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'show'])->name('show');
+        });
+        
+        Route::get('/central-stocks', [\App\Http\Controllers\Admin\CentralStockController::class, 'index'])->name('central-stocks.index');
+
+        Route::prefix('stock-transfers')->name('stock-transfers.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\StockTransferController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\StockTransferController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\StockTransferController::class, 'store'])->name('store');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\StockTransferController::class, 'show'])->name('show');
+        });
+
+        // =======================
         // PURCHASE PAYMENTS (Hutang ke Supplier)
         // =======================
         Route::prefix('purchase-payments')->name('purchase-payments.')->group(function () {
