@@ -29,6 +29,7 @@ interface CartPanelProps {
         paymentMethod: "cash" | "transfer",
     ) => void;
     onCreateCustomer?: (name: string) => void;
+    onAddManualItem?: () => void;
 }
 
 export default function CartPanel({
@@ -53,6 +54,7 @@ export default function CartPanel({
     onCustomerChange,
     onCheckout,
     onCreateCustomer,
+    onAddManualItem,
 }: CartPanelProps) {
     // "cart" | "payment"
     const [step, setStep] = React.useState<"cart" | "payment">("cart");
@@ -209,43 +211,57 @@ export default function CartPanel({
                             </p>
                         </div>
                     </div>
-                    {/* Step back / clear */}
-                    {step === "payment" ? (
-                        <button
-                            onClick={() => setStep("cart")}
-                            className="text-xs text-gray-500 hover:text-gray-900 font-bold bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-gray-200"
-                        >
-                            <svg
-                                className="w-3.5 h-3.5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                    {/* Step back / clear / manual */}
+                    <div className="flex items-center gap-2">
+                        {step === "cart" && onAddManualItem && (
+                            <button
+                                onClick={onAddManualItem}
+                                className="text-xs text-orange-600 hover:text-orange-700 font-bold bg-orange-50 hover:bg-orange-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-orange-100"
+                                title="Tambah Item Manual"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M15 19l-7-7 7-7"
-                                />
-                            </svg>
-                            Kembali
-                        </button>
-                    ) : cart.length > 0 ? (
-                        <button
-                            onClick={onClear}
-                            className="text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-red-100"
-                        >
-                            <svg
-                                className="w-3.5 h-3.5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Manual
+                            </button>
+                        )}
+                        {step === "payment" ? (
+                            <button
+                                onClick={() => setStep("cart")}
+                                className="text-xs text-gray-500 hover:text-gray-900 font-bold bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-gray-200"
                             >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            Kosongkan
-                        </button>
-                    ) : null}
+                                <svg
+                                    className="w-3.5 h-3.5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15 19l-7-7 7-7"
+                                    />
+                                </svg>
+                                Kembali
+                            </button>
+                        ) : cart.length > 0 ? (
+                            <button
+                                onClick={onClear}
+                                className="text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-red-100"
+                            >
+                                <svg
+                                    className="w-3.5 h-3.5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Kosongkan
+                            </button>
+                        ) : null}
+                    </div>
                 </div>
 
                 {/* ── SHIFT BANNER ── */}

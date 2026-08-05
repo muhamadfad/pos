@@ -385,7 +385,6 @@ function updateQty(productId: number, qty: number) {
                             pendingCount={pendingCount}
                             isSyncing={isSyncing}
                             onOpenHistory={() => setShowHistoryModal(true)}
-                            onAddManualItem={() => setShowCustomItemModal(true)}
                         />
                         <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid
@@ -555,6 +554,7 @@ function updateQty(productId: number, qty: number) {
                             onCustomerChange={setSelectedCustomerId}
                             onCheckout={handleCheckout}
                             onCreateCustomer={handleCreateCustomer}
+                            onAddManualItem={() => setShowCustomItemModal(true)}
                         />
                     ) : (
                         <DebtPaymentPanel

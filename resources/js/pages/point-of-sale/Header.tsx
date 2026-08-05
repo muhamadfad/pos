@@ -16,7 +16,6 @@ interface HeaderProps {
     pendingCount?: number;
     isSyncing?: boolean;
     onOpenHistory: () => void;
-    onAddManualItem: () => void;
 }
 
 export default function Header({
@@ -31,7 +30,6 @@ export default function Header({
     pendingCount = 0,
     isSyncing = false,
     onOpenHistory,
-    onAddManualItem,
 }: HeaderProps) {
     const { isInstallable, installPwa } = usePwaInstall();
     const { isSupported, isConnected, isConnecting, printerName, connect, disconnect } = useWebBluetoothPrinter();
@@ -210,18 +208,6 @@ export default function Header({
                         </svg>
                     </div>
                 </div>
-                
-                {/* Manual Item Button */}
-                <button
-                    onClick={onAddManualItem}
-                    className="shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 font-bold text-sm border border-orange-200 transition-all hover:shadow-sm"
-                    title="Tambah Item Manual"
-                >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span className="hidden sm:inline">Manual</span>
-                </button>
             </div>
         </div>
     );
