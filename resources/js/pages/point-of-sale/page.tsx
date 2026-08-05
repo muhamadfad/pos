@@ -274,6 +274,7 @@ function updateQty(productId: number, qty: number) {
                     paymentType,
                     date: new Date().toLocaleString("id-ID"),
                     customerName: customerName,
+                    cashierName: authUser.name,
                 };
                 
                 setLastTransaction(transactionData);

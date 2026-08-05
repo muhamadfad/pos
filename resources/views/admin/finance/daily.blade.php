@@ -196,9 +196,10 @@
                     <tr>
                         <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Kategori</th>
                         <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Deskripsi</th>
+                        <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Dicatat Oleh</th>
                         <th class="text-right py-3 px-4 text-xs font-black text-slate-500 uppercase">Jumlah</th>
                         <th class="text-left py-3 px-4 text-xs font-black text-slate-500 uppercase">Referensi</th>
-                    </table>
+                    </tr>
                 </thead>
                 <tbody>
                     @foreach($expenses as $expense)
@@ -207,6 +208,7 @@
                             <span class="px-2 py-1 bg-rose-50 text-rose-600 text-xs font-medium rounded-full">{{ $expense->category }}</span>
                         </td>
                         <td class="py-3 px-4 text-slate-600">{{ $expense->description }}</td>
+                        <td class="py-3 px-4 text-slate-600 font-semibold">{{ $expense->user->name ?? '-' }}</td>
                         <td class="py-3 px-4 text-right font-mono font-semibold text-rose-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         <td class="py-3 px-4 text-slate-500 text-sm">{{ $expense->reference ?? '-' }}</td>
                     </tr>
@@ -214,7 +216,7 @@
                 </tbody>
                 <tfoot class="bg-slate-50">
                     <tr>
-                        <td colspan="2" class="py-3 px-4 font-bold text-slate-800">Total Pengeluaran</td>
+                        <td colspan="3" class="py-3 px-4 font-bold text-slate-800">Total Pengeluaran</td>
                         <td class="py-3 px-4 text-right font-bold text-rose-600">Rp {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</td>
                         <td></td>
                     </tr>

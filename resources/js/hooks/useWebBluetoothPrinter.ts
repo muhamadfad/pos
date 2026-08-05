@@ -100,6 +100,9 @@ function generateEscPosBuffer(t: TransactionDetails): Uint8Array {
     }
     buffers.push(encodeText(`Tgl: ${t.date}\n`));
     buffers.push(encodeText(`Plg: ${t.customerName}\n`));
+    if (t.cashierName) {
+        buffers.push(encodeText(`Ksr: ${t.cashierName}\n`));
+    }
     buffers.push(encodeText("--------------------------------\n"));
     
     t.cart.forEach(item => {

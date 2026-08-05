@@ -15,6 +15,9 @@ export function printWithRawBT(t: TransactionDetails) {
     }
     str += `Tgl: ${t.date}\n`;
     str += `Plg: ${t.customerName}\n`;
+    if (t.cashierName) {
+        str += `Ksr: ${t.cashierName}\n`;
+    }
     str += "--------------------------------\n";
     
     t.cart.forEach(item => {

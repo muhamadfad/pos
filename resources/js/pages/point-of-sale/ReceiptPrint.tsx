@@ -10,6 +10,7 @@ export interface TransactionDetails {
     date: string;
     customerName: string;
     invoiceNumber?: string;
+    cashierName?: string;
 }
 
 interface ReceiptPrintProps {
@@ -59,6 +60,12 @@ export default function ReceiptPrint({ transaction }: ReceiptPrintProps) {
                     <span>Tipe Bayar:</span>
                     <span className="uppercase">{transaction.paymentType}</span>
                 </div>
+                {transaction.cashierName && (
+                    <div className="flex justify-between">
+                        <span>Kasir:</span>
+                        <span>{transaction.cashierName}</span>
+                    </div>
+                )}
             </div>
 
             <div className="mb-3 border-b border-dashed border-gray-400 pb-3">

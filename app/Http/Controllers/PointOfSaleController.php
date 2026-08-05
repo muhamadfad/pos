@@ -382,7 +382,7 @@ class PointOfSaleController extends Controller
             return response()->json([]);
         }
 
-        $orders = Order::with(['customer', 'items.product'])
+        $orders = Order::with(['customer', 'items.product', 'user'])
             ->where('cashier_shift_id', $activeShift->id)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -396,6 +396,7 @@ class PointOfSaleController extends Controller
                     'paidAmount' => $order->total_paid,
                     'change' => $order->total_paid - $order->total_amount,
                     'paymentType' => $order->payment_type,
+                    'cashierName' => $order->user ? $order->user->name : 'Kasir',
                     'cart' => $order->items->map(function($item) {
                         return [
                             'name' => $item->product ? $item->product->name : 'Unknown',
