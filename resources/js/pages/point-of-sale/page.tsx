@@ -391,6 +391,7 @@ function updateQty(productId: number, qty: number) {
                                 products={filteredProducts}
                                 cart={cart}
                                 onAddToCart={addToCart}
+                                onAddManualItem={() => setShowCustomItemModal(true)}
                             />
                         </div>
                     </div>
@@ -554,7 +555,6 @@ function updateQty(productId: number, qty: number) {
                             onCustomerChange={setSelectedCustomerId}
                             onCheckout={handleCheckout}
                             onCreateCustomer={handleCreateCustomer}
-                            onAddManualItem={() => setShowCustomItemModal(true)}
                         />
                     ) : (
                         <DebtPaymentPanel

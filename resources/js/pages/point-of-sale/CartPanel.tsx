@@ -29,7 +29,6 @@ interface CartPanelProps {
         paymentMethod: "cash" | "transfer",
     ) => void;
     onCreateCustomer?: (name: string) => void;
-    onAddManualItem?: () => void;
 }
 
 export default function CartPanel({
@@ -54,7 +53,6 @@ export default function CartPanel({
     onCustomerChange,
     onCheckout,
     onCreateCustomer,
-    onAddManualItem,
 }: CartPanelProps) {
     // "cart" | "payment"
     const [step, setStep] = React.useState<"cart" | "payment">("cart");
@@ -211,20 +209,8 @@ export default function CartPanel({
                             </p>
                         </div>
                     </div>
-                    {/* Step back / clear / manual */}
+                    {/* Step back / clear */}
                     <div className="flex items-center gap-2">
-                        {step === "cart" && onAddManualItem && (
-                            <button
-                                onClick={onAddManualItem}
-                                className="text-xs text-orange-600 hover:text-orange-700 font-bold bg-orange-50 hover:bg-orange-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-orange-100"
-                                title="Tambah Item Manual"
-                            >
-                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                                </svg>
-                                Manual
-                            </button>
-                        )}
                         {step === "payment" ? (
                             <button
                                 onClick={() => setStep("cart")}
