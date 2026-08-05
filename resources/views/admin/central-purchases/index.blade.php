@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-bold text-slate-800">Pembelian Pusat</h1>
         <p class="text-slate-500 text-sm mt-1">Catat belanja barang yang masuk ke Gudang Pusat.</p>
     </div>
-    <a href="{{ route('central-purchases.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
+    <a href="{{ route('admin.central-purchases.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
         <span class="iconify text-lg" data-icon="mdi:plus"></span>
         Tambah Belanja Pusat
     </a>
@@ -96,7 +96,7 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('central-purchases.show', $purchase->id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Detail">
+                            <a href="{{ route('admin.central-purchases.show', $purchase->id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Detail">
                                 <span class="iconify text-lg" data-icon="mdi:eye-outline"></span>
                             </a>
                         </div>

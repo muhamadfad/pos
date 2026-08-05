@@ -12,7 +12,7 @@
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-        <form action="{{ route('central-stocks.index') }}" method="GET" class="flex gap-4">
+        <form action="{{ route('admin.central-stocks.index') }}" method="GET" class="flex gap-4">
             <div class="relative flex-1 max-w-md">
                 <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="mdi:magnify"></span>
                 <input type="text" name="search" value="{{ request('search') }}" 

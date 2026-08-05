@@ -11,14 +11,14 @@
             <h1 class="text-2xl font-bold text-slate-800">Tambah Pembelian Pusat</h1>
             <p class="text-sm text-slate-500 mt-1">Pembelian barang khusus untuk masuk ke Gudang Pusat.</p>
         </div>
-        <a href="{{ route('central-purchases.index') }}"
+        <a href="{{ route('admin.central-purchases.index') }}"
             class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
             <span class="iconify" data-icon="mdi:arrow-left"></span>
             Kembali
         </a>
     </div>
 
-    <form action="{{ route('central-purchases.store') }}" method="POST" @submit="handleFormSubmit" novalidate>
+    <form action="{{ route('admin.central-purchases.store') }}" method="POST" @submit="handleFormSubmit" novalidate>
         @csrf
 
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
@@ -194,7 +194,7 @@
                             <span class="iconify text-xl" data-icon="mdi:content-save-outline"></span>
                             Simpan Transaksi
                         </button>
-                        <a href="{{ route('central-purchases.index') }}"
+                        <a href="{{ route('admin.central-purchases.index') }}"
                             class="text-center text-slate-400 text-sm font-semibold hover:text-slate-600 py-2 transition-colors">
                             Batalkan
                         </a>

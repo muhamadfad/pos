@@ -8,7 +8,7 @@
     <!-- Actions Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
-            <a href="{{ route('central-purchases.index') }}"
+            <a href="{{ route('admin.central-purchases.index') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
                 <span class="iconify" data-icon="mdi:arrow-left"></span>
                 Kembali

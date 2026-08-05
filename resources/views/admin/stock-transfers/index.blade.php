@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-bold text-slate-800">Distribusi Cabang</h1>
         <p class="text-slate-500 text-sm mt-1">Kelola pengiriman stok dari Gudang Pusat ke Cabang.</p>
     </div>
-    <a href="{{ route('stock-transfers.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
+    <a href="{{ route('admin.stock-transfers.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
         <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
         Distribusi Baru
     </a>
@@ -44,7 +44,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <a href="{{ route('stock-transfers.show', $transfer->id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors inline-block" title="Detail">
+                        <a href="{{ route('admin.stock-transfers.show', $transfer->id) }}" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors inline-block" title="Detail">
                             <span class="iconify text-lg" data-icon="mdi:eye-outline"></span>
                         </a>
                     </td>

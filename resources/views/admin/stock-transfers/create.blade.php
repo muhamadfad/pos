@@ -11,7 +11,7 @@
             <h1 class="text-2xl font-bold text-slate-800">Distribusi Stok Baru</h1>
             <p class="text-sm text-slate-500 mt-1">Kirim bahan baku dari Gudang Pusat ke Cabang.</p>
         </div>
-        <a href="{{ route('stock-transfers.index') }}"
+        <a href="{{ route('admin.stock-transfers.index') }}"
             class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
             <span class="iconify" data-icon="mdi:arrow-left"></span>
             Kembali
@@ -30,7 +30,7 @@
     </div>
     @endif
 
-    <form action="{{ route('stock-transfers.store') }}" method="POST" @submit="handleFormSubmit" novalidate>
+    <form action="{{ route('admin.stock-transfers.store') }}" method="POST" @submit="handleFormSubmit" novalidate>
         @csrf
 
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
@@ -110,7 +110,7 @@
         </div>
 
         <div class="flex justify-end gap-3">
-            <a href="{{ route('stock-transfers.index') }}"
+            <a href="{{ route('admin.stock-transfers.index') }}"
                 class="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold hover:bg-slate-50 transition-all">
                 Batalkan
             </a>
