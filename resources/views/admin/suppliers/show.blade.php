@@ -172,7 +172,7 @@
                                 @foreach($purchase->items as $item) {{-- Variabel sudah diperbaiki dari $entry ke $purchase --}}
                                 <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-xl shadow-sm">
                                     <span class="iconify text-indigo-500 text-sm" data-icon="lucide:package"></span>
-                                    <span class="text-xs font-bold text-slate-700">{{ $item->product->name ?? 'Produk dihapus' }}</span>
+                                    <span class="text-xs font-bold text-slate-700">{{ $item->ingredient->name ?? 'Bahan baku dihapus' }}</span>
                                     <span class="w-1 h-1 rounded-full bg-slate-300"></span>
                                     <span class="text-xs font-black text-indigo-600 tracking-tighter">{{ $item->quantity }}x</span>
                                 </div>

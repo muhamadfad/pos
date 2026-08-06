@@ -32,7 +32,7 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::findOrFail($id);
         $purchases = $supplier->purchases()
-            ->with('items.product')
+            ->with('items.ingredient')
             ->latest()
             ->paginate(15);
         $totalTransaksi  = $supplier->purchases()->count();
