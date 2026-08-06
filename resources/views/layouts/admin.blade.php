@@ -121,7 +121,9 @@
                         <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
                     </button>
                     <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-slate-800 ml-6">
+                        @if(!$isSuperAdmin)
                         <a href="{{ route('admin.purchases.index') }}" class="block py-2 hover:text-white transition">Pembelian</a>
+                        @endif
                         <a href="{{ route('admin.orders.index') }}" class="block py-2 hover:text-white transition">Penjualan</a>
                         <a href="{{ route('admin.purchase-payments.index') }}" class="block py-2 hover:text-white transition">Hutang</a>
                         <a href="{{ route('admin.order-payments.index') }}" class="block py-2 hover:text-white transition">Piutang</a>
