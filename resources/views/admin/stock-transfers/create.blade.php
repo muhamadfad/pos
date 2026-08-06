@@ -85,16 +85,16 @@
                                     @include('components.ingredient-combobox', ['priceKey' => 'dummy', 'showStock' => true])
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <span class="font-medium text-slate-600" x-text="item.stock + ' ' + (item.unit_name || '')"></span>
+                                    <span class="font-medium text-slate-600" x-text="item.stock_available + ' ' + (item.unit_name || '')"></span>
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex items-center justify-center gap-2">
                                         <input type="number" :name="`items[${index}][quantity]`" min="0.1" step="any"
                                             class="w-32 bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                            x-model="item.quantity" :max="item.stock">
+                                            x-model="item.quantity" :max="item.stock_available">
                                         <span class="text-xs text-slate-400" x-text="item.unit_name || ''"></span>
                                     </div>
-                                    <p x-show="item.quantity > item.stock" class="text-xs text-red-500 text-center mt-1">Melebihi stok!</p>
+                                    <p x-show="item.quantity > item.stock_available" class="text-xs text-red-500 text-center mt-1">Melebihi stok!</p>
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     <button type="button" @click="removeRow(index)"
@@ -137,11 +137,11 @@
         return {
             _ingredients: window.__purchaseIngredients ?? [],
             items: [
-                { ingredient_id: '', quantity: 1, stock: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
+                { ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
             ],
 
             addRow() {
-                this.items.push({ ingredient_id: '', quantity: 1, stock: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
+                this.items.push({ ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
             },
 
             removeRow(index) {
@@ -149,12 +149,12 @@
             },
 
             isValid() {
-                const validItems = this.items.filter(item => item.ingredient_id && item.quantity > 0 && item.quantity <= item.stock);
+                const validItems = this.items.filter(item => item.ingredient_id && item.quantity > 0 && item.quantity <= item.stock_available);
                 return validItems.length > 0;
             },
 
             handleFormSubmit(e) {
-                const validItems = this.items.filter(item => item.ingredient_id && item.quantity > 0 && item.quantity <= item.stock);
+                const validItems = this.items.filter(item => item.ingredient_id && item.quantity > 0 && item.quantity <= item.stock_available);
                 
                 if (validItems.length === 0) {
                     e.preventDefault();
@@ -171,7 +171,7 @@
                         const itemIndex = parseInt(itemMatch[1]);
                         const item = this.items[itemIndex];
                         
-                        if (!item || !item.ingredient_id || item.quantity <= 0 || item.quantity > item.stock) {
+                        if (!item || !item.ingredient_id || item.quantity <= 0 || item.quantity > item.stock_available) {
                             input.disabled = true;
                         }
                     }
