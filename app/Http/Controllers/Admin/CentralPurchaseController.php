@@ -62,7 +62,11 @@ class CentralPurchaseController extends Controller
     {
         $pusat = $this->getPusatBranch();
         $suppliers = Supplier::orderBy('name')->get();
-        $ingredients = Ingredient::with('unit')->where('branch_id', $pusat->id)->orderBy('name')->get();
+        
+        // Ambil semua bahan baku dari semua cabang untuk referensi (unique by name)
+        // Jika belum ada di Pusat, akan di-copy otomatis saat disimpan
+        $allIngredients = Ingredient::with('unit')->where('is_active', true)->orderBy('name')->get();
+        $ingredients = $allIngredients->unique('name')->values();
 
         return view('admin.central-purchases.create', compact('suppliers', 'ingredients'));
     }
@@ -105,17 +109,30 @@ class CentralPurchaseController extends Controller
             foreach ($request->items as $item) {
                 $subtotal = $item['quantity'] * $item['purchase_price'];
 
+                $templateIngredient = Ingredient::findOrFail($item['ingredient_id']);
+                
+                // Cari atau buat bahan baku di Gudang Pusat
+                $ingredient = Ingredient::firstOrCreate(
+                    [
+                        'name'      => $templateIngredient->name,
+                        'branch_id' => $pusat->id,
+                    ],
+                    [
+                        'unit_id'       => $templateIngredient->unit_id,
+                        'current_stock' => 0,
+                        'min_stock'     => $templateIngredient->min_stock,
+                        'unit_cost'     => $templateIngredient->unit_cost ?? 0,
+                        'is_active'     => true,
+                    ]
+                );
+
                 PurchaseItem::create([
                     'purchase_id'    => $purchase->id,
-                    'ingredient_id'  => $item['ingredient_id'],
+                    'ingredient_id'  => $ingredient->id,
                     'quantity'       => $item['quantity'],
                     'purchase_price' => $item['purchase_price'],
                     'subtotal'       => $subtotal,
                 ]);
-
-                $ingredient = Ingredient::where('id', $item['ingredient_id'])
-                                        ->where('branch_id', $pusat->id)
-                                        ->firstOrFail();
 
                 $oldStock  = $ingredient->current_stock;
                 $oldPrice  = $ingredient->unit_cost ?? 0;
