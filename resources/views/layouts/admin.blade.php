@@ -132,7 +132,6 @@
 
                 @if($isSuperAdmin)
                 <!-- Logistik Pusat -->
-                @if(Auth::user()->role === 'super_admin')
                 <div x-data="{ open: false }">
                     <button @click="open = !open" 
                         class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-emerald-800 transition group"
