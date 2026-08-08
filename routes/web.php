@@ -206,11 +206,7 @@ Route::middleware(['auth', 'admin'])
             Route::get('/{payment}/receipt', [OrderPaymentController::class, 'receipt'])->name('receipt');
         });
 
-        // =======================
-        // EXPENSES (Pengeluaran)
-        // =======================
-        Route::resource('expenses', ExpenseController::class);
-        Route::get('/expenses/category/{category}', [ExpenseController::class, 'byCategory'])->name('expenses.by-category');
+
 
         // =======================
         // FINANCE & REPORTING
@@ -249,6 +245,14 @@ Route::middleware(['auth', 'admin'])
         // HPP Report
         Route::get('/hpp-report', [RecipeController::class, 'hppReport'])->name('hpp-report');
     });
+
+// =======================
+// EXPENSES (Pengeluaran - Bisa diakses Admin & Kasir)
+// =======================
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('expenses', ExpenseController::class);
+    Route::get('/expenses/category/{category}', [ExpenseController::class, 'byCategory'])->name('expenses.by-category');
+});
 
 // =======================
 // ROUTES KHUSUS SUPER ADMIN

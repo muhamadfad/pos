@@ -14,6 +14,10 @@ class ExpenseController extends Controller
     {
         $query = Expense::with('user')->latest();
 
+        if (auth()->user()->role === 'kasir') {
+            $query->where('branch_id', auth()->user()->branch_id);
+        }
+
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('description', 'like', '%' . $request->search . '%')
