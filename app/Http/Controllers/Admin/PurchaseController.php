@@ -10,21 +10,45 @@ use App\Models\Supplier;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Branch;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseController extends Controller
 {
+    private function applyBranchFilter($query)
+    {
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $user->branch_id) {
+            $query->where('branch_id', $user->branch_id);
+        } elseif ($user->isSuperAdmin()) {
+            $pusat = Branch::where('code', 'PUSAT')->first();
+            if ($pusat) {
+                $query->where(function ($q) use ($pusat) {
+                    $q->where('branch_id', '!=', $pusat->id)
+                      ->orWhereNull('branch_id');
+                });
+            }
+        }
+        return $query;
+    }
+
     public function index()
     {
-        $purchases = Purchase::with(['supplier', 'items.ingredient'])
-            ->latest('date')
-            ->paginate(15);
+        $query = Purchase::with(['supplier', 'items.ingredient'])
+            ->latest('date');
+            
+        $query = $this->applyBranchFilter($query);
+        $purchases = $query->paginate(15);
+
+        $statsQuery = Purchase::query();
+        $statsQuery = $this->applyBranchFilter($statsQuery);
 
         $stats = [
-            'total' => Purchase::count(),
-            'paid'  => Purchase::where('payment_status', 'paid')->count(),
-            'debt'  => Purchase::whereIn('payment_status', ['unpaid', 'partial'])->count(),
+            'total' => (clone $statsQuery)->count(),
+            'paid'  => (clone $statsQuery)->where('payment_status', 'paid')->count(),
+            'debt'  => (clone $statsQuery)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
         ];
 
         return view('admin.purchases.index', compact('purchases', 'stats'));
@@ -41,6 +65,8 @@ class PurchaseController extends Controller
         $query = Purchase::where('supplier_id', $supplier->id)
             ->with('items.ingredient')
             ->orderBy('date', 'desc');
+
+        $query = $this->applyBranchFilter($query);
 
         if ($request->filled('search')) {
             $query->whereHas(
@@ -64,10 +90,13 @@ class PurchaseController extends Controller
 
         $purchases = $query->paginate(10)->withQueryString();
 
+        $statsQuery = Purchase::where('supplier_id', $supplier->id);
+        $statsQuery = $this->applyBranchFilter($statsQuery);
+
         $stats = [
-            'total' => Purchase::where('supplier_id', $supplier->id)->count(),
-            'paid'  => Purchase::where('supplier_id', $supplier->id)->where('payment_status', 'paid')->count(),
-            'debt'  => Purchase::where('supplier_id', $supplier->id)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
+            'total' => (clone $statsQuery)->count(),
+            'paid'  => (clone $statsQuery)->where('payment_status', 'paid')->count(),
+            'debt'  => (clone $statsQuery)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
         ];
 
         if ($request->ajax()) {

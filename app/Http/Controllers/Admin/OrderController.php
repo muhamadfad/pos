@@ -12,20 +12,43 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Branch;
 use Carbon\Carbon;
 
 class OrderController extends Controller
 {
+    private function applyBranchFilter($query)
+    {
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $user->branch_id) {
+            $query->where('branch_id', $user->branch_id);
+        } elseif ($user->isSuperAdmin()) {
+            $pusat = Branch::where('code', 'PUSAT')->first();
+            if ($pusat) {
+                $query->where(function ($q) use ($pusat) {
+                    $q->where('branch_id', '!=', $pusat->id)
+                      ->orWhereNull('branch_id');
+                });
+            }
+        }
+        return $query;
+    }
+
     public function index()
     {
-        $orders = Order::with(['customer', 'items.product'])
-            ->latest('date')
-            ->paginate(20);
+        $query = Order::with(['customer', 'items.product'])
+            ->latest('date');
+            
+        $query = $this->applyBranchFilter($query);
+        $orders = $query->paginate(20);
+
+        $statsQuery = Order::query();
+        $statsQuery = $this->applyBranchFilter($statsQuery);
 
         $stats = [
-            'total'      => Order::count(),
-            'paid'       => Order::where('payment_status', 'paid')->count(),
-            'receivable' => Order::whereIn('payment_status', ['unpaid', 'partial'])->count(),
+            'total'      => (clone $statsQuery)->count(),
+            'paid'       => (clone $statsQuery)->where('payment_status', 'paid')->count(),
+            'receivable' => (clone $statsQuery)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
         ];
 
         return view('admin.orders.index', compact('orders', 'stats'));
@@ -42,6 +65,8 @@ class OrderController extends Controller
         $query = Order::where('customer_id', $customer->id)
             ->with('items.product')
             ->orderBy('date', 'desc');
+
+        $query = $this->applyBranchFilter($query);
 
         if ($request->filled('search')) {
             $query->whereHas(
@@ -69,7 +94,9 @@ class OrderController extends Controller
             return view('admin.orders.partials.table', compact('orders'))->render();
         }
 
-        $total = Order::where('customer_id', $customer->id)->count();
+        $statsQuery = Order::where('customer_id', $customer->id);
+        $statsQuery = $this->applyBranchFilter($statsQuery);
+        $total = (clone $statsQuery)->count();
 
         return view('admin.orders.per-customer', compact('customer', 'orders', 'total'));
     }
