@@ -85,7 +85,7 @@
                                         </td>
                                         <!-- Quantity -->
                                         <td class="px-4 py-3">
-                                            <input type="number" :name="`items[${index}][quantity]`" min="1" step="any"
+                                            <input type="number" :name="'items[' + index + '][quantity]'" min="1" step="any"
                                                 class="w-full bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
                                                 :class="item.quantity > item.stock_available ? 'text-red-600 border-red-200' : ''"
                                                 x-model="item.quantity" required>
@@ -96,7 +96,7 @@
                                                 <div
                                                     class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400 text-xs">
                                                     Rp</div>
-                                                <input type="number" :name="`items[${index}][selling_price]`" min="0"
+                                                <input type="number" :name="'items[' + index + '][selling_price]'" min="0"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-emerald-600"
                                                     x-model="item.price" required>
                                             </div>

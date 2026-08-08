@@ -22,7 +22,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
             @scroll.window="item._open = false" @resize.window="item._open = false" x-ref="comboWrap">
 
             {{-- Hidden input untuk form POST (ingredient_id) --}}
-            <input type="hidden" :name="`items[${index}][ingredient_id]`" :value="item.ingredient_id" />
+            <input type="hidden" :name="'items[' + index + '][ingredient_id]'" :value="item.ingredient_id" />
 
             {{-- ── Badge Bahan Baku terpilih ── --}}
             <div x-show="item.ingredient_id"
@@ -72,7 +72,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
                 x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
-                :style="`position:fixed; z-index:9999; top:${(item._dropPos ?? {top:0}).top}px; left:${(item._dropPos ?? {left:0}).left}px; width:${(item._dropPos ?? {width:280}).width}px; min-width:280px; max-height:220px; overflow-y:auto;`"
+                :style="'position:fixed; z-index:9999; top:' + ((item._dropPos || {}).top || 0) + 'px; left:' + ((item._dropPos || {}).left || 0) + 'px; width:' + ((item._dropPos || {}).width || 280) + 'px; min-width:280px; max-height:220px; overflow-y:auto;'"
                 class="bg-white border border-slate-200 rounded-xl shadow-2xl">
                 <template x-for="ingredient in _ingredients.filter(p => {
             const q = (item._search ?? '').toLowerCase().trim();

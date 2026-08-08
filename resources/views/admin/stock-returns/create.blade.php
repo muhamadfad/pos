@@ -89,7 +89,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex items-center justify-center gap-2">
-                                        <input type="number" :name="`items[${index}][quantity]`" min="0.1" step="any"
+                                        <input type="number" :name="'items[' + index + '][quantity]'" min="0.1" step="any"
                                             class="w-32 bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
                                             x-model="item.quantity" :max="item.stock_available">
                                         <span class="text-xs text-slate-400" x-text="item.unit_name || ''"></span>
