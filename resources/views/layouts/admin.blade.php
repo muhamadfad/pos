@@ -74,7 +74,7 @@
                     $isSuperAdmin = Auth::user()->role === 'super_admin';
                 @endphp
 
-                <div x-data="{ open: {{ request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.ingredients.*', 'admin.recipes.*', 'admin.branch-stock.*') ? 'true' : 'false' }} }">
+                <div x-data="{ open: {{ request()->routeIs('admin.products.*', 'admin.categories.*', 'admin.ingredients.*', 'admin.recipes.*', 'admin.branch-stock.*', 'admin.stock-returns.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between">
                         <div class="flex items-center gap-3">
                             <span class="iconify text-xl" data-icon="mdi:package-variant"></span>
@@ -93,6 +93,7 @@
                         
                         <!-- Menu untuk semua user (termasuk Super Admin) -->
                         <a href="{{ route('admin.ingredients.index') }}" class="block py-2 hover:text-white transition">Bahan Baku</a>
+                        <a href="{{ route('admin.stock-returns.index') }}" class="block py-2 hover:text-white transition">Return Stok</a>
                         
                     </div>
                 </div>

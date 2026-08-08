@@ -30,12 +30,18 @@ class StockReturnController extends Controller
     public function index()
     {
         $pusat = $this->getPusatBranch();
+        $user = Auth::user();
         
-        $returns = StockTransfer::with(['fromBranch', 'user'])
+        $query = StockTransfer::with(['fromBranch', 'user'])
             ->where('to_branch_id', $pusat->id) // returns are bound for pusat
             ->orderBy('transfer_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->paginate(15);
+            ->orderBy('id', 'desc');
+
+        if ($user->role !== 'super_admin' && $user->branch_id !== $pusat->id) {
+            $query->where('from_branch_id', $user->branch_id);
+        }
+
+        $returns = $query->paginate(15);
 
         return view('admin.stock-returns.index', compact('returns'));
     }
@@ -43,13 +49,17 @@ class StockReturnController extends Controller
     public function create()
     {
         $pusat = $this->getPusatBranch();
+        $user = Auth::user();
         
-        // Hanya cabang selain pusat
-        $branches = Branch::where('id', '!=', $pusat->id)->where('is_active', true)->orderBy('name')->get();
-        
-        // Ambil SEMUA bahan dari SEMUA cabang agar form bisa mencari
-        // Nanti difilter menggunakan Alpine/JS di form.
-        $ingredients = Ingredient::with('unit')->where('branch_id', '!=', $pusat->id)->orderBy('name')->get();
+        // Jika user adalah admin pusat / super admin
+        if ($user->role === 'super_admin' || $user->branch_id === $pusat->id) {
+            $branches = Branch::where('id', '!=', $pusat->id)->where('is_active', true)->orderBy('name')->get();
+            $ingredients = Ingredient::with('unit')->where('branch_id', '!=', $pusat->id)->orderBy('name')->get();
+        } else {
+            // Jika user adalah admin cabang, kunci ke cabangnya sendiri
+            $branches = Branch::where('id', $user->branch_id)->get();
+            $ingredients = Ingredient::with('unit')->where('branch_id', $user->branch_id)->orderBy('name')->get();
+        }
 
         return view('admin.stock-returns.create', compact('branches', 'ingredients', 'pusat'));
     }
