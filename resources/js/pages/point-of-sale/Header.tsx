@@ -57,55 +57,68 @@ export default function Header({
                     </svg>
                 </a>
 
-                {isInstallable && (
-                    <button
-                        onClick={installPwa}
-                        className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm border border-emerald-400/50 shadow-sm shadow-emerald-500/20 transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
-                        title="Install / Download Aplikasi POS"
-                    >
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        <span className="hidden sm:inline">Install App</span>
-                    </button>
-                )}
-
-                {isSupported && (
-                    <button
-                        onClick={isConnected ? disconnect : connect}
-                        disabled={isConnecting}
-                        className={`flex items-center justify-center gap-2 h-10 px-4 rounded-xl text-white font-bold text-xs sm:text-sm border shadow-sm transition-all whitespace-nowrap active:scale-95 ${
-                            isConnected 
-                                ? "bg-slate-700 hover:bg-slate-800 border-slate-600" 
-                                : "bg-blue-600 hover:bg-blue-700 border-blue-500"
-                        } ${isConnecting ? "opacity-75 cursor-not-allowed" : "hover:shadow-md hover:-translate-y-0.5"}`}
-                        title={printerName || "Koneksi Printer Web Bluetooth"}
-                    >
-                        {isConnecting ? (
-                            <svg className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                        ) : (
+                {/* Tools/Actions Mobile First */}
+                <div className="flex items-center gap-2 md:order-last">
+                    {/* Install App Button */}
+                    {isInstallable && (
+                        <button
+                            onClick={installPrompt}
+                            className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs sm:text-sm border border-blue-100 shadow-sm transition-all hover:bg-blue-100 hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
+                        >
                             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
-                        )}
-                        <span className="hidden sm:inline">
-                            {isConnecting ? "Menyambung..." : isConnected ? "Printer Aktif" : "Printer"}
-                        </span>
+                            <span className="hidden sm:inline">Install App</span>
+                        </button>
+                    )}
+                    
+                    {/* Bluetooth Printer Web API Button */}
+                    {(window.navigator as any).bluetooth && (
+                        <button
+                            onClick={connect}
+                            disabled={isConnecting}
+                            className={`flex items-center justify-center gap-2 h-10 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all whitespace-nowrap active:scale-95 ${
+                                isConnected 
+                                    ? "bg-emerald-50 text-emerald-600 border border-emerald-200" 
+                                    : "bg-white text-slate-600 border border-slate-200"
+                            } ${isConnecting ? "opacity-75 cursor-not-allowed" : "hover:shadow-md hover:-translate-y-0.5"}`}
+                            title={printerName || "Koneksi Printer Web Bluetooth"}
+                        >
+                            {isConnecting ? (
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            ) : (
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                            )}
+                            <span className="hidden sm:inline">
+                                {isConnecting ? "Menyambung..." : isConnected ? "Printer Aktif" : "Printer"}
+                            </span>
+                        </button>
+                    )}
+                    
+                    <button
+                        onClick={onOpenExpense}
+                        className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
+                        title="Catat Pengeluaran"
+                    >
+                        <span className="iconify text-rose-500 text-lg" data-icon="mdi:cash-minus"></span>
+                        <span className="hidden sm:inline">Pengeluaran</span>
                     </button>
-                )}
-                
-                <button
-                    onClick={onOpenHistory}
-                    className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
-                    title="Riwayat Transaksi"
-                >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="hidden sm:inline">Riwayat</span>
-                </button>
+
+                    <button
+                        onClick={onOpenHistory}
+                        className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
+                        title="Riwayat Transaksi"
+                    >
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="hidden sm:inline">Riwayat</span>
+                    </button>
+                </div>
 
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">

@@ -67,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('pos.customer-debt');
     Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pos.pay-debt');
     Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('pos.print');
+    Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('pos.expenses.store');
 
     // Cashier Shift Management
     Route::prefix('pos/shift')->name('pos.shift.')->group(function () {
@@ -162,6 +163,13 @@ Route::middleware(['auth', 'admin'])
             Route::get('/create', [\App\Http\Controllers\Admin\StockTransferController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\StockTransferController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\StockTransferController::class, 'show'])->name('show');
+        });
+
+        Route::prefix('stock-returns')->name('stock-returns.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\StockReturnController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'store'])->name('store');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\StockReturnController::class, 'show'])->name('show');
         });
 
         // =======================
@@ -315,6 +323,7 @@ Route::middleware(['auth', 'kasir'])
         Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('print');
         Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('customer-debt');
         Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pay-debt');
+        Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('expenses.store');
         Route::get('/pos/transactions', [PointOfSaleController::class, 'transactions'])->name('pos.transactions');
         
         // Cashier Shift (halaman utama kasir)

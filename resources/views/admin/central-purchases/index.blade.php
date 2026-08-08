@@ -58,6 +58,7 @@
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                     <th class="px-6 py-4 font-medium border-b border-slate-200">No. Ref & Tanggal</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200">Supplier</th>
+                    <th class="px-6 py-4 font-medium border-b border-slate-200">Item Dibeli</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200 text-right">Total Transaksi</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200 text-center">Status</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200 text-center">Aksi</th>
@@ -74,6 +75,22 @@
                         <div class="flex items-center gap-2">
                             <span class="iconify text-slate-400" data-icon="mdi:truck-outline"></span>
                             <span class="font-medium text-slate-700">{{ $purchase->supplier->name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-slate-600 text-xs">
+                            @php
+                                $itemsToDisplay = $purchase->items->take(3);
+                                $remainingCount = $purchase->items->count() - 3;
+                            @endphp
+                            <ul class="list-disc list-inside">
+                            @foreach($itemsToDisplay as $item)
+                                <li>{{ $item->ingredient->name ?? 'Unknown' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? 'pcs' }})</li>
+                            @endforeach
+                            @if($remainingCount > 0)
+                                <li class="text-slate-400 text-[10px] mt-1 italic">+ {{ $remainingCount }} item lainnya</li>
+                            @endif
+                            </ul>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-right">
@@ -104,7 +121,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
                         Belum ada data pembelian pusat.
                     </td>
                 </tr>

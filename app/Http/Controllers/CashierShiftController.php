@@ -99,6 +99,8 @@ class CashierShiftController extends Controller
         $request->validate([
             'opening_balance' => 'required|numeric|min:0',
             'branch_id' => 'required_if:role,super_admin|exists:branches,id', // Validasi untuk super admin
+            'cashier_name' => 'required|string|max:255',
+            'shift_time' => 'required|string|max:255',
         ]);
 
         $user = auth()->user();
@@ -133,6 +135,8 @@ class CashierShiftController extends Controller
 
         CashierShift::create([
             'user_id' => Auth::id(),
+            'cashier_name' => $request->cashier_name,
+            'shift_time' => $request->shift_time,
             'branch_id' => $branchId,
             'opened_at' => now(),
             'opening_balance' => $request->opening_balance,

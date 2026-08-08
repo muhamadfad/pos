@@ -11,6 +11,7 @@ import { usePosSync } from "../../hooks/usePosSync";
 import { useWebBluetoothPrinter } from "../../hooks/useWebBluetoothPrinter";
 import ReceiptPrint, { TransactionDetails } from "./ReceiptPrint";
 import TransactionHistoryModal from "./TransactionHistoryModal";
+import ExpenseModal from "./ExpenseModal";
 import { printWithRawBT } from "./printHelper";
 
 export default function PointOfSalePage() {
@@ -72,6 +73,7 @@ export default function PointOfSalePage() {
     const [processing, setProcessing] = useState(false);
     const [lastTransaction, setLastTransaction] = useState<TransactionDetails | null>(null);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [showExpenseModal, setShowExpenseModal] = useState(false);
     
     // Custom item state
     const [showCustomItemModal, setShowCustomItemModal] = useState(false);
@@ -369,6 +371,10 @@ function updateQty(productId: number, qty: number) {
                     }, 200);
                 }} 
             />
+            <ExpenseModal 
+                isOpen={showExpenseModal}
+                onClose={() => setShowExpenseModal(false)}
+            />
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
                 {/* LEFT: Product Grid — hanya tampil saat mode pos */}
                 {mode === "pos" && (
@@ -385,6 +391,7 @@ function updateQty(productId: number, qty: number) {
                             pendingCount={pendingCount}
                             isSyncing={isSyncing}
                             onOpenHistory={() => setShowHistoryModal(true)}
+                            onOpenExpense={() => setShowExpenseModal(true)}
                         />
                         <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid

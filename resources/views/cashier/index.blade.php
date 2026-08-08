@@ -29,14 +29,36 @@
             <div class="p-6">
 
                 <!-- Shift Summary Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                         <div class="flex items-center gap-2 mb-2">
                             <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                                <span class="iconify text-blue-600" data-icon="mdi:clock-outline"
+                                <span class="iconify text-blue-600" data-icon="mdi:account"
                                     data-width="16"></span>
                             </div>
-                            <div class="text-xs text-slate-400 uppercase tracking-wide">Dibuka</div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wide">Kasir</div>
+                        </div>
+                        <div class="font-semibold text-slate-800">{{ $activeShift->cashier_name ?? $activeShift->user->name ?? 'Kasir' }}</div>
+                        <div class="text-sm text-slate-500">Shift Aktif</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center">
+                                <span class="iconify text-orange-600" data-icon="mdi:calendar-clock"
+                                    data-width="16"></span>
+                            </div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wide">Jadwal Shift</div>
+                        </div>
+                        <div class="font-semibold text-slate-800">{{ $activeShift->shift_time ?? '-' }}</div>
+                        <div class="text-sm text-slate-500">Waktu Kerja</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
+                                <span class="iconify text-emerald-600" data-icon="mdi:clock-outline"
+                                    data-width="16"></span>
+                            </div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wide">Waktu Buka</div>
                         </div>
                         <div class="font-semibold text-slate-800">{{ $activeShift->opened_at->format('d M Y') }}</div>
                         <div class="text-sm text-slate-500">{{ $activeShift->opened_at->format('H:i') }}</div>
@@ -405,6 +427,33 @@
                             <input type="number" name="opening_balance" id="opening_balance"
                                 class="w-full pl-12 pr-4 py-3 text-lg font-medium border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800"
                                 placeholder="0" required min="0" step="1000" autofocus>
+                        </div>
+                    </div>
+
+                    <!-- Nama Kasir Input -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Nama Kasir</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 iconify text-slate-400" data-icon="mdi:account-outline" data-width="20"></span>
+                            <input type="text" name="cashier_name" id="cashier_name"
+                                class="w-full pl-12 pr-4 py-3 text-lg font-medium border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800"
+                                placeholder="Masukkan nama kasir" required>
+                        </div>
+                    </div>
+
+                    <!-- Jam Shift Input -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Jam Shift</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 iconify text-slate-400" data-icon="mdi:clock-outline" data-width="20"></span>
+                            <select name="shift_time" id="shift_time"
+                                class="w-full pl-12 pr-4 py-3 text-lg font-medium border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 appearance-none bg-white"
+                                required>
+                                <option value="" disabled selected>Pilih Jam Shift</option>
+                                <option value="Pagi (08:00 - 15:00)">Pagi (08:00 - 15:00)</option>
+                                <option value="Sore (15:00 - 22:00)">Sore (15:00 - 22:00)</option>
+                            </select>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 iconify text-slate-400 pointer-events-none" data-icon="mdi:chevron-down" data-width="20"></span>
                         </div>
                     </div>
 

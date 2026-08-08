@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderPayment;
 use App\Models\CashierShift;
+use App\Models\Expense;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -428,5 +429,28 @@ class PointOfSaleController extends Controller
             });
 
         return response()->json($orders);
+    }
+
+    public function storeExpense(Request $request)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'description' => 'required|string|max:255',
+            'category' => 'nullable|string|max:100',
+        ]);
+
+        $user = auth()->user();
+
+        Expense::create([
+            'branch_id' => $user->branch_id,
+            'user_id' => $user->id,
+            'amount' => $validated['amount'],
+            'description' => $validated['description'],
+            'category' => $validated['category'] ?? 'Operasional',
+            'date' => now()->toDateString(),
+            'reference' => 'POS-' . time(),
+        ]);
+
+        return redirect()->back()->with('success', 'Pengeluaran berhasil dicatat!');
     }
 }

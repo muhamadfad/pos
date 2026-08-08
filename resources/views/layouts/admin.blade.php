@@ -131,18 +131,23 @@
                 </div>
 
                 @if($isSuperAdmin)
-                <div x-data="{ open: {{ request()->routeIs('admin.central-purchases.*', 'admin.central-stocks.*', 'admin.stock-transfers.*') ? 'true' : 'false' }} }">
-                    <button @click="open = !open" class="w-full {{ $navBase }} {{ $inactive }} justify-between text-emerald-400 hover:bg-emerald-900/30">
-                        <div class="flex items-center gap-3">
+                <!-- Logistik Pusat -->
+                @if(Auth::user()->role === 'super_admin')
+                <div x-data="{ open: false }">
+                    <button @click="open = !open" 
+                        class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-emerald-800 transition group"
+                        title="Logistik Pusat">
+                        <div class="flex items-center gap-3 text-emerald-100 group-hover:text-white">
                             <span class="iconify text-xl" data-icon="mdi:warehouse"></span>
-                            <span x-show="!sidebarCollapsed">Logistik Pusat</span>
+                            <span x-show="!sidebarCollapsed" class="font-medium whitespace-nowrap">Logistik Pusat</span>
                         </div>
-                        <span x-show="!sidebarCollapsed" class="iconify transition-transform" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
+                        <span x-show="!sidebarCollapsed" class="iconify text-emerald-400" :class="open ? 'rotate-180' : ''" data-icon="mdi:chevron-down"></span>
                     </button>
                     <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-emerald-800/50 ml-6">
                         <a href="{{ route('admin.central-purchases.index') }}" class="block py-2 hover:text-white transition">Pembelian Pusat</a>
                         <a href="{{ route('admin.central-stocks.index') }}" class="block py-2 hover:text-white transition">Stok Gudang Pusat</a>
                         <a href="{{ route('admin.stock-transfers.index') }}" class="block py-2 hover:text-white transition">Distribusi Cabang</a>
+                        <a href="{{ route('admin.stock-returns.index') }}" class="block py-2 hover:text-white transition">Return Cabang</a>
                     </div>
                 </div>
                 @endif
