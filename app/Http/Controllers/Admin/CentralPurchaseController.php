@@ -74,7 +74,7 @@ class CentralPurchaseController extends Controller
     public function store(Request $request, KasproService $kaspro)
     {
         $request->validate([
-            'supplier_id'             => 'required|exists:suppliers,id',
+            'supplier_id'             => 'nullable|exists:suppliers,id',
             'date'                    => 'required|date',
             'paid'                    => 'nullable|numeric|min:0',
             'payment_method'          => 'nullable|string',
@@ -87,16 +87,16 @@ class CentralPurchaseController extends Controller
         ]);
 
         $pusat = $this->getPusatBranch();
-        $supplier = Supplier::findOrFail($request->supplier_id);
+        $supplier = $request->supplier_id ? Supplier::findOrFail($request->supplier_id) : null;
 
         DB::transaction(function () use ($request, $supplier, $pusat, $kaspro) {
             $total = collect($request->items)->sum(fn($i) => $i['quantity'] * $i['purchase_price']);
             $paid  = $request->paid ?? 0;
 
             $purchase = Purchase::create([
+                'branch_id'        => $pusat->id,
                 'reference_number' => $request->reference_number,
-                'supplier_id'      => $supplier->id,
-                'branch_id'        => $pusat->id, // Mark as central purchase
+                'supplier_id'      => $supplier ? $supplier->id : null,
                 'date'             => $request->date,
                 'total_amount'     => $total,
                 'total_paid'       => $paid,

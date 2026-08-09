@@ -74,7 +74,7 @@
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
                             <span class="iconify text-slate-400" data-icon="mdi:truck-outline"></span>
-                            <span class="font-medium text-slate-700">{{ $purchase->supplier->name }}</span>
+                            <span class="font-medium text-slate-700">{{ $purchase->supplier->name ?? 'Tanpa Supplier' }}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4">

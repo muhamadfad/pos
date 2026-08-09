@@ -108,13 +108,13 @@ class PurchaseController extends Controller
         return view('admin.purchases.per-supplier', compact('supplier', 'purchases', 'total', 'stats'));
     }
 
-    public function create(Supplier $supplier)
+    public function create(?Supplier $supplier = null)
     {
         $ingredients = Ingredient::with('unit')->orderBy('name')->get();
         return view('admin.purchases.create', compact('supplier', 'ingredients'));
     }
 
-    public function store(Request $request, Supplier $supplier, KasproService $kaspro)
+    public function store(Request $request, ?Supplier $supplier = null, KasproService $kaspro)
     {
         $request->validate([
             'date'                    => 'required|date',
@@ -134,11 +134,11 @@ class PurchaseController extends Controller
 
             $purchase = Purchase::create([
                 'reference_number' => $request->reference_number,
-                'supplier_id'      => $supplier->id,
+                'supplier_id'      => $supplier ? $supplier->id : null,
                 'date'             => $request->date,
                 'total_amount'     => $total,
                 'total_paid'       => $paid,
-                'remaining_debt'   => $total - $paid,
+                'remaining_debt'   => max(0, $total - $paid),
                 'payment_status'   => $paid >= $total ? 'paid' : ($paid > 0 ? 'partial' : 'unpaid'),
                 'payment_method'   => $request->payment_method ?? 'cash',
                 'notes'            => $request->notes,

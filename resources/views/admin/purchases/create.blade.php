@@ -10,12 +10,11 @@
         <div>
             <h1 class="text-2xl font-bold text-slate-800">Tambah Pembelian</h1>
             <div class="flex items-center gap-2 mt-1">
-                <span
-                    class="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[12px] font-bold border border-indigo-100">SUPPLIER</span>
-                <p class="text-sm font-bold text-slate-600">{{ $supplier->name }}</p>
+                <p class="text-[11px] uppercase tracking-widest font-black text-slate-400">Supplier</p>
+                <p class="text-sm font-bold text-slate-600">{{ $supplier ? $supplier->name : 'Tanpa Supplier' }}</p>
             </div>
         </div>
-        <a href="{{ route('admin.purchases.per-supplier', $supplier->id) }}"
+        <a href="{{ $supplier ? route('admin.purchases.per-supplier', $supplier->id) : route('admin.purchases.select-supplier') }}"
             class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
             <span class="iconify" data-icon="mdi:arrow-left"></span>
             Kembali
@@ -34,7 +33,7 @@
     </div>
     @endif
 
-    <form action="{{ route('admin.purchases.store', $supplier->id) }}" method="POST" @submit="handleFormSubmit" novalidate>
+    <form action="{{ $supplier ? route('admin.purchases.store', $supplier->id) : route('admin.purchases.store-no-supplier') }}" method="POST" @submit="handleFormSubmit" novalidate>
         @csrf
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

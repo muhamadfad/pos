@@ -15,11 +15,18 @@
             <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tentukan mitra untuk entri pembelian baru</p>
         </div>
         
-        <a href="{{ route('admin.purchases.index') }}"
-            class="h-10 px-5 flex items-center gap-3 bg-white border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
-            <span class="iconify text-lg" data-icon="lucide:arrow-left"></span>
-            Back to Registry
-        </a>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.purchases.create-no-supplier') }}"
+                class="h-10 px-5 flex items-center gap-3 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all active:scale-95 shadow-sm">
+                <span class="iconify text-lg" data-icon="lucide:arrow-right"></span>
+                Lanjutkan Tanpa Supplier
+            </a>
+            <a href="{{ route('admin.purchases.index') }}"
+                class="h-10 px-5 flex items-center gap-3 bg-white border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                <span class="iconify text-lg" data-icon="lucide:arrow-left"></span>
+                Back to Registry
+            </a>
+        </div>
     </div>
 
     <div class="mb-8 relative group">

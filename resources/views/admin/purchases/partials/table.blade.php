@@ -19,7 +19,7 @@
                 <td class="px-8 py-6">
                     <div class="text-[11px] font-black text-slate-700 uppercase tracking-tight mb-2 flex items-center gap-2">
                         <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                        {{ $row->supplier->name ?? 'N/A' }}
+                        {{ $row->supplier->name ?? 'Tanpa Supplier' }}
                     </div>
                     <div class="flex flex-wrap gap-x-3 gap-y-1">
                         @foreach($row->items->take(2) as $item)

@@ -139,6 +139,8 @@ Route::middleware(['auth', 'admin'])
             Route::get('/select-supplier', [PurchaseController::class, 'selectSupplier'])->name('select-supplier');
             Route::get('/supplier/{supplier}', [PurchaseController::class, 'perSupplier'])->name('per-supplier');
             Route::get('/supplier/{supplier}/download', [PurchaseController::class, 'downloadPdf'])->name('download');
+            Route::get('/create', [PurchaseController::class, 'create'])->name('create-no-supplier');
+            Route::post('/', [PurchaseController::class, 'store'])->name('store-no-supplier');
             Route::get('/supplier/{supplier}/create', [PurchaseController::class, 'create'])->name('create');
             Route::post('/supplier/{supplier}', [PurchaseController::class, 'store'])->name('store');
             Route::get('/{purchase}', [PurchaseController::class, 'show'])->name('show');
