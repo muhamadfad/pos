@@ -10,13 +10,27 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
+    private function applyBranchFilter($query)
+    {
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && $user->branch_id) {
+            $query->where('branch_id', $user->branch_id);
+        } elseif ($user->isSuperAdmin()) {
+            $pusat = \App\Models\Branch::where('code', 'PUSAT')->first();
+            if ($pusat) {
+                $query->where(function ($q) use ($pusat) {
+                    $q->where('branch_id', '!=', $pusat->id)
+                      ->orWhereNull('branch_id');
+                });
+            }
+        }
+        return $query;
+    }
+
     public function index(Request $request)
     {
         $query = Expense::with('user')->latest();
-
-        if (auth()->user()->role === 'kasir') {
-            $query->where('branch_id', auth()->user()->branch_id);
-        }
+        $query = $this->applyBranchFilter($query);
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
@@ -39,11 +53,15 @@ class ExpenseController extends Controller
         }
 
         $expenses  = $query->paginate(15)->withQueryString();
-        $totalAll  = Expense::sum('amount');
-        $totalMonth = Expense::whereMonth('date', now()->month)
+        
+        $totalAll = $this->applyBranchFilter(Expense::query())->sum('amount');
+        $totalMonth = $this->applyBranchFilter(Expense::query())
+            ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->sum('amount');
-        $totalToday = Expense::whereDate('date', today())->sum('amount');
+        $totalToday = $this->applyBranchFilter(Expense::query())
+            ->whereDate('date', today())
+            ->sum('amount');
 
         $categories = ['operational', 'salary', 'utility', 'transport', 'other'];
 
@@ -78,6 +96,7 @@ class ExpenseController extends Controller
         ]);
 
         $validated['user_id'] = Auth::id();
+        $validated['branch_id'] = Auth::user()->branch_id;
         $expense = Expense::create($validated);
         
 
