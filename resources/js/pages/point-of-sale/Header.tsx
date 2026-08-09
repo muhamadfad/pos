@@ -16,6 +16,7 @@ interface HeaderProps {
     pendingCount?: number;
     isSyncing?: boolean;
     onOpenHistory: () => void;
+    onOpenExpense?: () => void;
 }
 
 export default function Header({
@@ -30,6 +31,7 @@ export default function Header({
     pendingCount = 0,
     isSyncing = false,
     onOpenHistory,
+    onOpenExpense,
 }: HeaderProps) {
     const { isInstallable, installPwa } = usePwaInstall();
     const { isSupported, isConnected, isConnecting, printerName, connect, disconnect } = useWebBluetoothPrinter();
