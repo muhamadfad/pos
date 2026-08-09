@@ -5,6 +5,7 @@
             <tr>
                 <th class="px-6 py-4">Nomor Invoice / Tgl</th>
                 <th class="px-6 py-4">Customer</th>
+                <th class="px-6 py-4">Cabang & Kasir</th>
                 <th class="px-6 py-4">Barang</th>
                 <th class="px-6 py-4 text-right">Total Akhir</th>
                 <th class="px-6 py-4 text-center">Status Bayar</th>
@@ -52,6 +53,17 @@
                         </span>
                     </div>
                     @endif
+                </td>
+
+                <!-- Branch & Cashier -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="font-bold text-slate-700 mb-0.5 text-[13px]">
+                        {{ $row->branch->name ?? 'Pusat' }}
+                    </div>
+                    <div class="text-[12px] text-slate-500 flex items-center gap-1.5">
+                        <span class="iconify" data-icon="mdi:account-outline"></span>
+                        {{ $row->user->name ?? 'Unknown' }}
+                    </div>
                 </td>
 
                 <!-- Items -->

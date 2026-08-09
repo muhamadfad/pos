@@ -36,7 +36,7 @@ class OrderController extends Controller
 
     public function index()
     {
-        $query = Order::with(['customer', 'items.product'])
+        $query = Order::with(['customer', 'items.product', 'branch', 'user'])
             ->latest('date');
             
         $query = $this->applyBranchFilter($query);
@@ -63,7 +63,7 @@ class OrderController extends Controller
     public function perCustomer(Request $request, Customer $customer)
     {
         $query = Order::where('customer_id', $customer->id)
-            ->with('items.product')
+            ->with(['items.product', 'branch', 'user'])
             ->orderBy('date', 'desc');
 
         $query = $this->applyBranchFilter($query);
