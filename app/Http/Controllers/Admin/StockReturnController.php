@@ -51,10 +51,9 @@ class StockReturnController extends Controller
         $pusat = $this->getPusatBranch();
         $user = Auth::user();
         
-        // Jika user adalah admin pusat / super admin
+        // Pusat Admin / Super Admin cannot create returns, only branches can.
         if ($user->role === 'super_admin' || $user->branch_id === $pusat->id) {
-            $branches = Branch::where('id', '!=', $pusat->id)->where('is_active', true)->orderBy('name')->get();
-            $ingredients = Ingredient::with('unit')->where('branch_id', '!=', $pusat->id)->orderBy('name')->get();
+            return redirect()->route('admin.stock-returns.index')->with('error', 'Pusat/Super Admin hanya dapat menerima barang, bukan melakukan return.');
         } else {
             // Jika user adalah admin cabang, kunci ke cabangnya sendiri
             $branches = Branch::where('id', $user->branch_id)->get();
@@ -66,6 +65,13 @@ class StockReturnController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $pusat = $this->getPusatBranch();
+
+        // Pusat Admin / Super Admin cannot create returns, only branches can.
+        if ($user->role === 'super_admin' || $user->branch_id === $pusat->id) {
+            return redirect()->route('admin.stock-returns.index')->with('error', 'Pusat/Super Admin hanya dapat menerima barang, bukan melakukan return.');
+        }
         $request->validate([
             'from_branch_id' => 'required|exists:branches,id',
             'transfer_date' => 'required|date',
