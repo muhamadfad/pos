@@ -8,15 +8,10 @@
         <h1 class="text-2xl font-bold text-slate-800">Return Cabang</h1>
         <p class="text-slate-500 text-sm mt-1">Kelola pengiriman stok dari cabang ke Gudang Pusat.</p>
     </div>
-    @php
-        $isPusatOrSuperAdmin = auth()->user()->role === 'super_admin' || (auth()->user()->branch && auth()->user()->branch->code === 'PUSAT');
-    @endphp
-    @if(!$isPusatOrSuperAdmin)
     <a href="{{ route('admin.stock-returns.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
         <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
         Return Baru
     </a>
-    @endif
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">

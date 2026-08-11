@@ -1,13 +1,11 @@
-const CACHE_NAME = 'resto-coto-pos-cache-v4';
-const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v4';
+const CACHE_NAME = 'resto-coto-pos-cache-v5';
+const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v5';
 
 // Aset yang akan di-cache secara default saat instalasi
 const ASSETS_TO_CACHE = [
     '/pos', // Halaman utama POS
     '/manifest.json',
     '/favicon.ico',
-    // Idealnya, di Laravel Vite, kita perlu meng-cache aset build Vite.
-    // Tapi karena nama filenya dinamis, kita akan rely on dynamic caching.
 ];
 
 self.addEventListener('install', (event) => {
@@ -33,15 +31,28 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Kita hanya intercept request GET
     if (event.request.method !== 'GET') return;
-
-    // Abaikan rute API
     if (event.request.url.includes('/api/')) return;
 
+    // Untuk dokumen HTML (navigate), gunakan Network First
+    // Ini memastikan user selalu mendapatkan versi aplikasi terbaru tanpa harus clear cache manual
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).then((networkResponse) => {
+                return caches.open(DYNAMIC_CACHE).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                });
+            }).catch(() => {
+                return caches.match(event.request);
+            })
+        );
+        return;
+    }
+
+    // Untuk aset lainnya (JS, CSS, dll), gunakan Cache First / Stale-While-Revalidate
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
-            // Jika ada di cache, gunakan itu (dengan Stale-While-Revalidate untuk resource dinamis)
             const fetchPromise = fetch(event.request).then((networkResponse) => {
                 if (networkResponse.ok && event.request.url.startsWith('http')) {
                     const responseToCache = networkResponse.clone();
@@ -51,11 +62,9 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch(() => {
-                // Jika offline dan network gagal
                 return cachedResponse;
             });
 
-            // Kembalikan dari cache langsung jika ada, jika tidak, tunggu jaringan
             return cachedResponse || fetchPromise;
         })
     );
