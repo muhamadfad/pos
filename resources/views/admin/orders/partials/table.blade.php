@@ -62,7 +62,12 @@
                     </div>
                     <div class="text-[12px] text-slate-500 flex items-center gap-1.5">
                         <span class="iconify" data-icon="mdi:account-outline"></span>
-                        {{ $row->user->name ?? 'Unknown' }}
+                        @if($row->cashierShift && $row->cashierShift->cashier_name)
+                            {{ $row->cashierShift->cashier_name }}
+                        @else
+                            {{ $row->user->name ?? 'Unknown' }}
+                        @endif
+                        
                         @if($row->cashierShift)
                             <span class="text-slate-400">|</span>
                             <span class="text-[11px] font-semibold bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">
