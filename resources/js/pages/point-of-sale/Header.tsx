@@ -100,15 +100,6 @@ export default function Header({
                             </span>
                         </button>
                     )}
-                    
-                    <button
-                        onClick={onOpenExpense}
-                        className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
-                        title="Catat Pengeluaran"
-                    >
-                        <span className="iconify text-rose-500 text-lg" data-icon="mdi:cash-minus"></span>
-                        <span className="hidden sm:inline">Pengeluaran</span>
-                    </button>
 
                     <button
                         onClick={onOpenHistory}
