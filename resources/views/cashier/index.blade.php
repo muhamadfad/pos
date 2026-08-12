@@ -16,8 +16,10 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <h1 class="text-xl font-semibold text-slate-800">Shift Aktif</h1>
-                                <span
-                                    class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg">OPEN</span>
+                                <span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg">OPEN</span>
+                                <button type="button" onclick="document.getElementById('editShiftModal').classList.remove('hidden')" class="ml-2 px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-bold rounded-lg flex items-center gap-1 transition-colors border border-blue-200">
+                                    <span class="iconify" data-icon="mdi:pencil"></span> Edit Info
+                                </button>
                             </div>
                             <p class="text-slate-500 text-sm mt-1">Dibuka {{ $activeShift->opened_at->diffForHumans() }}
                             </p>
@@ -487,6 +489,49 @@
     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
         <div id="modalContent"></div>
+    </div>
+</div>
+
+<!-- Edit Shift Modal -->
+<div id="editShiftModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
+        <form action="{{ route('pos.shift.update') }}" method="POST">
+            @csrf
+            @method('PUT')
+            
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <h2 class="text-xl font-bold text-slate-800">Edit Info Shift</h2>
+                <button type="button" onclick="document.getElementById('editShiftModal').classList.add('hidden')" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors">
+                    <span class="iconify" data-icon="mdi:close" data-width="20"></span>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Nama Kasir</label>
+                    <input type="text" name="cashier_name" value="{{ $activeShift->cashier_name }}" required
+                        class="w-full px-4 py-3 text-sm border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Jam Shift</label>
+                    <select name="shift_time" required
+                        class="w-full px-4 py-3 text-sm border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none bg-white text-slate-800">
+                        <option value="Pagi (08:00 - 15:00)" {{ $activeShift->shift_time == 'Pagi (08:00 - 15:00)' ? 'selected' : '' }}>Pagi (08:00 - 15:00)</option>
+                        <option value="Sore (15:00 - 22:00)" {{ $activeShift->shift_time == 'Sore (15:00 - 22:00)' ? 'selected' : '' }}>Sore (15:00 - 22:00)</option>
+                        <option value="Malam (22:00 - 05:00)" {{ $activeShift->shift_time == 'Malam (22:00 - 05:00)' ? 'selected' : '' }}>Malam (22:00 - 05:00)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('editShiftModal').classList.add('hidden')" class="px-6 py-2.5 rounded-xl text-slate-600 font-semibold hover:bg-slate-200 transition-colors">
+                    Batal
+                </button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

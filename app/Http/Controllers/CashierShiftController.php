@@ -142,13 +142,42 @@ class CashierShiftController extends Controller
             'opening_balance' => $request->opening_balance,
             'status' => 'open',
             'total_sales' => 0,
+            'expected_cash' => 0,
+            'actual_cash' => 0,
+            'cash_difference' => 0
         ]);
 
-        $branch = Branch::find($branchId);
-        $branchName = $branch ? $branch->name : 'Cabang';
+        return redirect()->route('pos.shift.index')->with('success', 'Shift kasir berhasil dibuka');
+    }
 
-        return redirect()->route('pos.shift.index')
-            ->with('success', "Kasir {$branchName} berhasil dibuka");
+    public function update(Request $request)
+    {
+        $request->validate([
+            'cashier_name' => 'required|string|max:255',
+            'shift_time' => 'required|string|max:255',
+        ]);
+
+        $user = auth()->user();
+        $branchId = $user->branch_id;
+        if ($user->role === 'super_admin' && $request->has('branch_id')) {
+            $branchId = $request->branch_id;
+        }
+
+        $activeShift = CashierShift::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)
+            ->where('status', 'open')
+            ->first();
+
+        if (!$activeShift) {
+            return back()->withErrors(['error' => 'Tidak ada shift aktif yang bisa diubah']);
+        }
+
+        $activeShift->update([
+            'cashier_name' => $request->cashier_name,
+            'shift_time' => $request->shift_time,
+        ]);
+
+        return back()->with('success', 'Informasi shift berhasil diperbarui');
     }
 
     public function close(Request $request)

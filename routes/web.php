@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pos/shift')->name('pos.shift.')->group(function () {
         Route::get('/', [CashierShiftController::class, 'index'])->name('index');
         Route::post('/open', [CashierShiftController::class, 'store'])->name('open');
+        Route::put('/update', [CashierShiftController::class, 'update'])->name('update');
         Route::post('/close', [CashierShiftController::class, 'close'])->name('close');
         Route::get('/report', [CashierShiftController::class, 'report'])->name('report');
     });
