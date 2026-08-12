@@ -411,7 +411,7 @@ class PointOfSaleController extends Controller
                 return [
                     'id' => $order->id,
                     'invoice_number' => $order->invoice_number,
-                    'date' => \Carbon\Carbon::parse($order->date)->format('d/m/Y H:i'),
+                    'date' => \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i'),
                     'customerName' => $order->customer ? $order->customer->name : 'Walk-in Customer',
                     'totalPrice' => $order->total_amount,
                     'paidAmount' => $order->total_paid,

@@ -304,7 +304,11 @@ function updateQty(productId: number, qty: number) {
                     paidAmount: actualPaid,
                     change: actualPaid - totalPrice,
                     paymentType,
-                    date: new Date().toLocaleString("id-ID"),
+                    date: (() => {
+                        const d = new Date();
+                        const pad = (n: number) => n.toString().padStart(2, '0');
+                        return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                    })(),
                     customerName: customerName,
                     cashierName: authUser.name,
                 };
