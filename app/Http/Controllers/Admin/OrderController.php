@@ -135,7 +135,7 @@ class OrderController extends Controller
             'items.*.discount'       => 'nullable|numeric|min:0',
         ]);
 
-        DB::transaction(function () use ($request, $customer) {
+        DB::transaction(function () use ($request, $customer, $kaspro) {
             $subtotal = 0;
 
             foreach ($request->items as $item) {
