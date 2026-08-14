@@ -196,13 +196,13 @@
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-full">
         
         <!-- Left Column: Charts & Financial (mengambil 8 kolom penuh) -->
-        <div class="lg:col-span-12 space-y-8">
+        <div class="lg:col-span-12 space-y-8 min-w-0 w-full">
             
             <!-- Revenue Chart -->
-            <div class="card-modern p-8 bg-white/40">
+            <div class="card-modern p-6 sm:p-8 bg-white/40 overflow-hidden min-w-0 w-full">
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
                     <div>
                         <h3 class="text-xl font-black text-slate-800">Analisis Arus Kas</h3>
