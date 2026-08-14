@@ -1,0 +1,36 @@
+{
+  "_index-Dm-UBGom.js": {
+    "file": "assets/index-Dm-UBGom.js",
+    "name": "index"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CICaCNZV.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-r2zbG-ac.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-Dm-UBGom.js"
+    ]
+  },
+  "resources/js/app.tsx": {
+    "file": "assets/app-ChZK033v.js",
+    "name": "app",
+    "src": "resources/js/app.tsx",
+    "isEntry": true,
+    "imports": [
+      "_index-Dm-UBGom.js"
+    ],
+    "css": [
+      "assets/app-CICaCNZV.css"
+    ]
+  }
+}
