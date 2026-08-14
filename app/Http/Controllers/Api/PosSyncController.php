@@ -67,7 +67,26 @@ class PosSyncController extends Controller
             $itemsData = [];
 
             foreach ($payload['items'] as $item) {
-                $product = Product::find($item['product_id']);
+                if (isset($item['is_custom']) && $item['is_custom']) {
+                    $defaultCategory = \App\Models\Category::firstOrCreate(
+                        ['name' => 'Lain-lain'],
+                        ['description' => 'Kategori Lain-lain']
+                    );
+                    $product = Product::firstOrCreate(
+                        ['name' => 'Item Tambahan Manual'],
+                        [
+                            'category_id' => $defaultCategory->id,
+                            'selling_price' => 0,
+                            'purchase_price' => 0,
+                            'min_stock' => 0,
+                            'is_active' => true,
+                        ]
+                    );
+                    $customName = $item['custom_name'] ?? 'Item Tambahan Manual';
+                } else {
+                    $product = Product::find($item['product_id']);
+                    $customName = null;
+                }
                 
                 if (!$product) {
                      // If product was deleted, we still need to record the transaction to keep financial integrity.
@@ -81,7 +100,8 @@ class PosSyncController extends Controller
                 $subtotal += $lineTotal;
 
                 $itemsData[] = [
-                    'product_id'    => $item['product_id'],
+                    'product_id'    => $product->id,
+                    'custom_name'   => $customName,
                     'quantity'      => $item['qty'],
                     'selling_price' => $item['price'],
                     'cost_price'    => $product->purchase_price ?? 0,
@@ -129,6 +149,7 @@ class PosSyncController extends Controller
                 OrderItem::create([
                     'order_id'      => $order->id,
                     'product_id'    => $data['product_id'],
+                    'custom_name'   => $data['custom_name'],
                     'quantity'      => $data['quantity'],
                     'selling_price' => $data['selling_price'],
                     'cost_price'    => $data['cost_price'],

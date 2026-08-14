@@ -158,6 +158,13 @@ Route::middleware(['auth', 'admin'])
             Route::post('/', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'show'])->name('show');
         });
+
+        Route::prefix('central-productions')->name('central-productions.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\CentralProductionController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'store'])->name('store');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\CentralProductionController::class, 'show'])->name('show');
+        });
         
         Route::get('/central-stocks', [\App\Http\Controllers\Admin\CentralStockController::class, 'index'])->name('central-stocks.index');
 

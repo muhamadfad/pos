@@ -50,7 +50,7 @@ class CashierShiftController extends Controller
                         'remaining_receivable' => $order->remaining_receivable,
                         'items' => $order->items->map(function($item) {
                             return (object) [
-                                'product_name' => $item->product->name ?? 'Produk tidak ditemukan',
+                                'product_name' => $item->custom_name ?: ($item->product->name ?? 'Produk tidak ditemukan'),
                                 'quantity' => $item->quantity,
                                 'selling_price' => $item->selling_price,
                                 'price' => $item->selling_price,

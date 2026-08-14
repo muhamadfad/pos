@@ -145,6 +145,7 @@
                     </button>
                     <div x-show="open && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 border-l border-emerald-800/50 ml-6">
                         <a href="{{ route('admin.central-purchases.index') }}" class="block py-2 hover:text-white transition">Pembelian Pusat</a>
+                        <a href="{{ route('admin.central-productions.index') }}" class="block py-2 hover:text-white transition">Produksi (Olah Bahan)</a>
                         <a href="{{ route('admin.central-stocks.index') }}" class="block py-2 hover:text-white transition">Stok Gudang Pusat</a>
                         <a href="{{ route('admin.stock-transfers.index') }}" class="block py-2 hover:text-white transition">Distribusi Cabang</a>
                         <a href="{{ route('admin.stock-returns.index') }}" class="block py-2 hover:text-white transition">Return Cabang</a>

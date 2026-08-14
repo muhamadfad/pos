@@ -99,7 +99,7 @@
                         @foreach($order->items as $item)
                         <tr>
                             <td class="px-6 py-5">
-                                <div class="font-bold text-slate-800">{{ $item->product->name ?? 'Unknown Product' }}
+                                <div class="font-bold text-slate-800">{{ $item->custom_name ?: ($item->product->name ?? 'Produk Custom') }}
                                 </div>
                                 <div class="text-[11px] text-slate-400 uppercase tracking-tight">{{
                                     $item->product->category->name ?? 'Umum' }}</div>

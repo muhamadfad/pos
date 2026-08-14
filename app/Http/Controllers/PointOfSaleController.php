@@ -105,7 +105,7 @@ class PointOfSaleController extends Controller
     {
         $request->validate([
             'items'                  => 'required|array|min:1',
-            'items.*.product_id'     => 'required|exists:products,id',
+            'items.*.product_id'     => 'required',
             'items.*.qty'            => 'required|integer|min:1',
             'items.*.price'          => 'required|numeric|min:0',
             'paid'                   => 'required|numeric|min:0',

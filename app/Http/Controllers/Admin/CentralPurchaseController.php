@@ -147,7 +147,14 @@ class CentralPurchaseController extends Controller
                 $averagePrice = $totalQty > 0 ? ($oldTotal + $newTotal) / $totalQty : $newPrice;
 
                 // Auto-kategorisasi (Kaspro)
-                $categorization = $kaspro->categorize($request->notes ?? 'Pembelian Pusat' . ($supplier ? ' dari ' . $supplier->name : ''));
+                $notesText = $request->notes;
+                if (empty($notesText)) {
+                    $notesText = 'Pembelian Pusat';
+                    if ($supplier && isset($supplier->name)) {
+                        $notesText .= ' dari ' . $supplier->name;
+                    }
+                }
+                $categorization = $kaspro->categorize($notesText);
                 $purchase->kaspro_category = $categorization['category'];
                 $purchase->kaspro_confidence = $categorization['confidence'];
                 $purchase->kaspro_needs_review = $categorization['needs_review'];
