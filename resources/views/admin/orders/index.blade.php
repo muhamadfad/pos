@@ -48,6 +48,30 @@
             </div>
         </div>
     </div>
+    <!-- Filters -->
+    @if(isset($branches) && count($branches) > 0)
+    <div class="mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                <span class="iconify text-xl" data-icon="mdi:filter-variant"></span>
+            </div>
+            <div>
+                <h3 class="font-semibold text-slate-800">Filter Transaksi</h3>
+                <p class="text-xs text-slate-500">Tampilkan data berdasarkan cabang</p>
+            </div>
+        </div>
+        <form action="{{ route('admin.orders.index') }}" method="GET" class="w-full sm:w-64">
+            <select name="branch_id" onchange="this.form.submit()" class="w-full text-sm border-slate-200 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">Semua Cabang</option>
+                @foreach($branches as $branch)
+                    <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>
+                        {{ $branch->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+    @endif
 
     <!-- Table Card -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">

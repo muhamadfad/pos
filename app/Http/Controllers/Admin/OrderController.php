@@ -34,16 +34,25 @@ class OrderController extends Controller
         return $query;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $query = Order::with(['customer', 'items.product', 'branch', 'user', 'cashierShift'])
             ->latest('date');
             
         $query = $this->applyBranchFilter($query);
-        $orders = $query->paginate(20);
+        
+        if ($request->filled('branch_id')) {
+            $query->where('branch_id', $request->branch_id);
+        }
+        
+        $orders = $query->paginate(20)->withQueryString();
 
         $statsQuery = Order::query();
         $statsQuery = $this->applyBranchFilter($statsQuery);
+        
+        if ($request->filled('branch_id')) {
+            $statsQuery->where('branch_id', $request->branch_id);
+        }
 
         $stats = [
             'total'      => (clone $statsQuery)->count(),
@@ -51,7 +60,12 @@ class OrderController extends Controller
             'receivable' => (clone $statsQuery)->whereIn('payment_status', ['unpaid', 'partial'])->count(),
         ];
 
-        return view('admin.orders.index', compact('orders', 'stats'));
+        $branches = [];
+        if (Auth::user()->isSuperAdmin()) {
+            $branches = Branch::where('code', '!=', 'PUSAT')->orderBy('name')->get();
+        }
+
+        return view('admin.orders.index', compact('orders', 'stats', 'branches'));
     }
 
     public function selectCustomer()
