@@ -22,7 +22,7 @@
                     </div>
                     <div class="text-[12px] text-slate-500 flex items-center gap-1.5">
                         <span class="iconify" data-icon="mdi:calendar"></span>
-                        {{ \Carbon\Carbon::parse($row->date)->format('d M Y') }}
+                        {{ \Carbon\Carbon::parse($row->created_at)->format('d M Y, H:i') }}
                     </div>
                 </td>
 
