@@ -176,7 +176,7 @@ class PurchaseController extends Controller
 
 
                 // Auto-kategorisasi
-                $categorization = $kaspro->categorize($request->notes ?? 'Pembelian dari ' . $supplier->name);
+                $categorization = $kaspro->categorize($request->notes ?? 'Pembelian' . ($supplier ? ' dari ' . $supplier->name : ''));
                 $purchase->kaspro_category = $categorization['category'];
                 $purchase->kaspro_confidence = $categorization['confidence'];
                 $purchase->kaspro_needs_review = $categorization['needs_review'];
