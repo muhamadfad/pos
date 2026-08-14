@@ -166,11 +166,7 @@ class OrderController extends Controller
             foreach ($request->items as $item) {
                 $product = Product::findOrFail($item['product_id']);
 
-                if ($product->stock < $item['quantity']) {
-                    throw new \Exception("Stok {$product->name} tidak mencukupi (tersedia: {$product->stock})");
-                }
 
-                
 
                 $lineDiscount = $item['discount'] ?? 0;
                 $lineSubtotal = ($item['quantity'] * $item['selling_price']) - $lineDiscount;
@@ -199,8 +195,6 @@ class OrderController extends Controller
                 
                 // Cek alert
                 $kaspro->checkAndCreateAlerts();
-
-                $product->decrement('stock', $item['quantity']);
             }
         });
 
