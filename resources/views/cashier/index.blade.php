@@ -549,11 +549,11 @@
             'total_amount' => $t->total_amount,
             'total_paid' => $t->total_paid,
             'remaining_receivable' => $t->remaining_receivable,
-            'items' => $t->items->map(function($item) {
+            'items' => collect($t->items)->map(function($item) {
                 return [
-                    'product_name' => $item->custom_name ?: ($item->product->name ?? 'Produk tidak ditemukan'),
+                    'product_name' => $item->product_name,
                     'quantity' => $item->quantity,
-                    'price' => $item->selling_price,
+                    'price' => $item->price,
                     'subtotal' => $item->subtotal,
                 ];
             })->values()
