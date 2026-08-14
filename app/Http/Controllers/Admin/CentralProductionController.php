@@ -71,13 +71,7 @@ class CentralProductionController extends Controller
             // 1. Hitung total cost dan siapkan data item (pemotongan stok)
             foreach ($request->items as $item) {
                 $ingredient = Ingredient::findOrFail($item['ingredient_id']);
-                
-                // Cek stok cukup
-                if ($ingredient->current_stock < $item['quantity']) {
-                    throw \Illuminate\Validation\ValidationException::withMessages([
-                        'items' => "Stok {$ingredient->name} tidak mencukupi. Sisa stok: {$ingredient->current_stock}"
-                    ]);
-                }
+
 
                 $cost = $ingredient->unit_cost ?? 0;
                 $subtotal = $cost * $item['quantity'];
