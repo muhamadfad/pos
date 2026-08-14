@@ -299,7 +299,11 @@
                 fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [20, 100] } },
                 colors: ['#4f46e5', '#f43f5e'],
                 stroke: { curve: 'monotoneCubic', width: 4, lineCap: 'round' },
-                grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+                grid: { 
+                    borderColor: '#f1f5f9', 
+                    strokeDashArray: 4,
+                    padding: { top: 30, right: 10, left: 10, bottom: 0 }
+                },
                 xaxis: { 
                     categories: dashboardData.months,
                     axisBorder: { show: false }, axisTicks: { show: false },

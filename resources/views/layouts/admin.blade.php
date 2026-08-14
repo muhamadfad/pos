@@ -26,7 +26,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased bg-slate-50 text-slate-800">
+<body class="font-sans antialiased bg-slate-50 text-slate-800 overflow-x-hidden">
 
     <div x-data="{
         sidebarOpen: false,
