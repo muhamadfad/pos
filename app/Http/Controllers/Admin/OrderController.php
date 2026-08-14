@@ -117,7 +117,7 @@ class OrderController extends Controller
 
     public function create(Customer $customer)
     {
-        $products = Product::with('unit')->where('stock', '>', 0)->orderBy('name')->get();
+        $products = Product::with('unit')->where('is_active', true)->orderBy('name')->get();
         return view('admin.orders.create', compact('customer', 'products'));
     }
 
