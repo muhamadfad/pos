@@ -1,95 +1,130 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
-@section('title', 'Tambah Produksi (Olah Bahan)')
+@section('title', 'Tambah Produksi')
 
 @section('content')
-<div class="max-w-4xl mx-auto" x-data="productionForm()">
+<div class="max-w-4xl mx-auto space-y-6 pb-12" x-data="productionForm()">
     
-    <div class="mb-6 flex items-center justify-between">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Olah Bahan Baku</h1>
-            <p class="text-slate-500 mt-1 text-sm">Ubah bahan mentah menjadi bahan olahan dengan yield dinamis</p>
+            <a href="{{ route('admin.central-productions.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 mb-2 transition-colors">
+                <span class="iconify mr-1" data-icon="lucide:arrow-left"></span>
+                Kembali ke Daftar Produksi
+            </a>
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Olah Bahan Baku</h1>
+            <p class="text-slate-500 mt-1">Ubah bahan mentah menjadi bahan olahan dengan kalkulasi yield otomatis.</p>
         </div>
-        <a href="{{ route('admin.central-productions.index') }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium flex items-center transition-colors">
-            <span class="iconify mr-1" data-icon="lucide:arrow-left" data-width="16"></span>
-            Kembali
-        </a>
     </div>
 
-    @if ($errors->any())
-    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
-        <div class="flex items-start">
-            <span class="iconify text-red-500 mt-0.5 mr-3 flex-shrink-0" data-icon="lucide:alert-circle" data-width="20"></span>
-            <div>
-                <h3 class="text-red-800 font-semibold text-sm mb-1">Terdapat Kesalahan</h3>
-                <ul class="list-disc list-inside text-red-600 text-sm space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+    <!-- Error Messages -->
+    @if($errors->any())
+        <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-xl shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <span class="iconify text-rose-500 mt-0.5 text-lg" data-icon="lucide:alert-circle"></span>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-bold text-rose-800">Terdapat kesalahan saat menyimpan:</h3>
+                    <ul class="mt-2 text-sm text-rose-700 list-disc list-inside space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 
-    <form action="{{ route('admin.central-productions.store') }}" method="POST" id="productionForm" class="space-y-6">
+    <form action="{{ route('admin.central-productions.store') }}" method="POST" class="space-y-6">
         @csrf
-        
-        <!-- Informasi Utama -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-slate-800 mb-6 flex items-center">
-                    <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mr-3">1</span>
-                    Informasi Hasil Produksi (Barang Jadi)
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Produksi <span class="text-red-500">*</span></label>
-                        <input type="date" name="date" value="{{ date('Y-m-d') }}" required
-                               class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 px-4 py-2.5">
+
+        <!-- SECTION 1: Hasil Produksi -->
+        <div class="bg-white rounded-3xl shadow-sm shadow-slate-200/50 border border-slate-200 overflow-hidden relative">
+            <div class="absolute top-0 left-0 w-2 h-full bg-indigo-500"></div>
+            <div class="p-6 sm:p-8 pl-8 sm:pl-10">
+                <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-inner">
+                        <span class="text-xl font-black">1</span>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">No. Referensi (Opsional)</label>
-                        <input type="text" name="reference_number" placeholder="PRD-XXXX"
-                               class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 px-4 py-2.5">
+                        <h2 class="text-xl font-bold text-slate-800">Informasi Hasil Produksi</h2>
+                        <p class="text-sm text-slate-500">Tentukan barang jadi yang dihasilkan dari proses memasak.</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Tanggal Produksi <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <span class="iconify text-slate-400" data-icon="lucide:calendar-days"></span>
+                            </div>
+                            <input type="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required
+                                   class="w-full pl-10 bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 py-3 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">No. Referensi (Opsional)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <span class="iconify text-slate-400" data-icon="lucide:hash"></span>
+                            </div>
+                            <input type="text" name="reference_number" value="{{ old('reference_number') }}" placeholder="PRD-XXXX"
+                                   class="w-full pl-10 bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 py-3 transition-colors">
+                        </div>
                     </div>
                     
-                    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
-                        <div>
-                            <label class="block text-sm font-medium text-blue-900 mb-2">Pilih Barang Jadi <span class="text-red-500">*</span></label>
-                            <select name="result_ingredient_id" required class="w-full bg-white border border-blue-200 text-slate-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 px-4 py-2.5">
-                                <option value="">-- Pilih Barang Jadi --</option>
-                                @foreach($ingredients as $ing)
-                                    <option value="{{ $ing->id }}" data-unit="{{ $ing->unit->name ?? 'kg' }}">{{ $ing->name }} (Stok: {{ $ing->current_stock }} {{ $ing->unit->name ?? 'kg' }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-blue-900 mb-2">Berat/Jumlah Aktual (Yield) <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="number" step="0.01" name="result_quantity" required placeholder="0.00"
-                                       class="w-full bg-white border border-blue-200 text-slate-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 pl-4 pr-12 py-2.5">
+                    <div class="md:col-span-2 mt-4">
+                        <div class="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100/50">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-indigo-900 mb-2">Pilih Barang Jadi <span class="text-rose-500">*</span></label>
+                                    <select name="result_ingredient_id" required class="w-full bg-white border border-indigo-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 px-4 py-3 shadow-sm font-medium appearance-none">
+                                        <option value="">-- Pilih Barang Jadi --</option>
+                                        @foreach($ingredients as $ing)
+                                            <option value="{{ $ing->id }}" {{ old('result_ingredient_id') == $ing->id ? 'selected' : '' }}>
+                                                {{ $ing->name }} (Stok saat ini: {{ $ing->current_stock }} {{ $ing->unit->name ?? 'kg' }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-indigo-900 mb-2">Berat/Jumlah Aktual (Yield) <span class="text-rose-500">*</span></label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" name="result_quantity" value="{{ old('result_quantity') }}" required placeholder="Contoh: 7.5"
+                                               class="w-full bg-white border border-indigo-200 text-slate-800 text-lg font-bold rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 pl-4 pr-12 py-2.5 shadow-sm">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-bold">
+                                            Kg
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-indigo-600 mt-2 flex items-start leading-snug">
+                                        <span class="iconify mr-1.5 mt-0.5 shrink-0" data-icon="lucide:info" data-width="14"></span>
+                                        Masukkan berat BERSIH yang didapatkan SETELAH daging/bahan selesai dimasak.
+                                    </p>
+                                </div>
                             </div>
-                            <p class="text-xs text-blue-600 mt-1.5 flex items-center">
-                                <span class="iconify mr-1" data-icon="lucide:info" data-width="12"></span>
-                                Masukkan berat SETELAH dimasak/diolah.
-                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bahan Baku yang Dipakai -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-semibold text-slate-800 flex items-center">
-                        <span class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mr-3">2</span>
-                        Bahan Mentah yang Dipakai
-                    </h2>
-                    <button type="button" @click="addItem" class="inline-flex items-center justify-center px-4 py-2 bg-orange-50 text-orange-600 font-semibold text-sm rounded-lg hover:bg-orange-100 transition-colors">
+        <!-- SECTION 2: Bahan Baku Dipakai -->
+        <div class="bg-white rounded-3xl shadow-sm shadow-slate-200/50 border border-slate-200 overflow-hidden relative">
+            <div class="absolute top-0 left-0 w-2 h-full bg-amber-500"></div>
+            <div class="p-6 sm:p-8 pl-8 sm:pl-10">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 shadow-inner">
+                            <span class="text-xl font-black">2</span>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Bahan Mentah yang Dipakai</h2>
+                            <p class="text-sm text-slate-500">Masukkan bahan kotor yang digunakan sebelum menyusut.</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="addItem" class="inline-flex items-center justify-center px-4 py-2 bg-slate-800 text-white font-semibold text-sm rounded-xl hover:bg-slate-700 transition-colors shadow-md">
                         <span class="iconify mr-2" data-icon="lucide:plus" data-width="16"></span>
                         Tambah Bahan Mentah
                     </button>
@@ -97,45 +132,62 @@
                 
                 <div class="space-y-4">
                     <template x-for="(item, index) in items" :key="index">
-                        <div class="flex flex-col sm:flex-row gap-4 p-4 border border-slate-100 rounded-xl bg-slate-50 relative group">
+                        <div class="flex flex-col sm:flex-row gap-4 p-5 border border-slate-200 rounded-2xl bg-slate-50/50 relative group hover:border-amber-200 hover:bg-amber-50/30 transition-all">
+                            <!-- Delete Button -->
                             <button type="button" @click="removeItem(index)" x-show="items.length > 1"
-                                    class="absolute -right-2 -top-2 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-200">
-                                <span class="iconify" data-icon="lucide:x" data-width="14"></span>
+                                    class="absolute -right-3 -top-3 w-8 h-8 bg-white border border-rose-200 text-rose-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm hover:bg-rose-50 hover:text-rose-600 hover:scale-110 z-10">
+                                <span class="iconify" data-icon="lucide:x" data-width="16"></span>
                             </button>
                             
                             <div class="flex-1">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Bahan Mentah</label>
-                                <select x-model="item.ingredient_id" :name="`items[${index}][ingredient_id]`" required class="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 px-3 py-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Pilih Bahan Mentah</label>
+                                <select x-model="item.ingredient_id" :name="'items['+index+'][ingredient_id]'" required class="w-full bg-white border border-slate-200 text-slate-800 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 px-4 py-3 appearance-none shadow-sm">
                                     <option value="">-- Pilih Bahan --</option>
                                     @foreach($ingredients as $ing)
-                                        <option value="{{ $ing->id }}" data-cost="{{ $ing->unit_cost }}">{{ $ing->name }} (Stok: {{ $ing->current_stock }} {{ $ing->unit->name ?? 'kg' }})</option>
+                                        <option value="{{ $ing->id }}">{{ $ing->name }} (Modal: Rp {{ number_format($ing->unit_cost,0,',','.') }}/{{ $ing->unit->name ?? 'kg' }})</option>
                                     @endforeach
                                 </select>
                             </div>
                             
-                            <div class="w-full sm:w-48">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Jumlah Dipakai</label>
-                                <input type="number" step="0.01" x-model="item.quantity" :name="`items[${index}][quantity]`" required min="0.1"
-                                       class="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 px-3 py-2 text-right">
+                            <div class="w-full sm:w-56">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Berat/Jml Kotor</label>
+                                <div class="relative">
+                                    <input type="number" step="0.01" x-model="item.quantity" :name="'items['+index+'][quantity]'" required min="0.1" placeholder="0.0"
+                                           class="w-full bg-white border border-slate-200 text-slate-800 font-bold text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 pl-4 pr-12 py-3 shadow-sm text-right">
+                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium text-sm">
+                                        Kg
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </template>
                 </div>
+                
+                <div class="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100/50 flex gap-3 items-start">
+                    <span class="iconify text-amber-500 mt-0.5 text-lg shrink-0" data-icon="lucide:info"></span>
+                    <p class="text-sm text-amber-800 leading-relaxed">
+                        Jika stok daging mentah habis/kosong sebelum Anda memasak, sistem <strong>akan otomatis membiarkannya menjadi minus</strong>. Anda dapat melunasinya kapan-kapan melalui menu Pembelian Pusat tanpa mengganggu operasional masak dapur!
+                    </p>
+                </div>
             </div>
         </div>
 
-        <!-- Catatan & Submit -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
-            <div class="p-6">
-                <label class="block text-sm font-medium text-slate-700 mb-2">Catatan Produksi</label>
-                <textarea name="notes" rows="2" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 p-4" placeholder="Misal: Daging susut banyak karena kadar air tinggi..."></textarea>
+        <!-- SECTION 3: Catatan & Submit -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 sm:p-8 border-b border-slate-100">
+                <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
+                    <span class="iconify text-slate-400" data-icon="lucide:message-square"></span>
+                    Catatan Produksi (Opsional)
+                </label>
+                <textarea name="notes" rows="2" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 p-4 transition-colors placeholder:text-slate-400" placeholder="Ketikkan catatan khusus, misal: Daging susut banyak karena kadar air tinggi..."></textarea>
             </div>
-            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
-                <a href="{{ route('admin.central-productions.index') }}" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
+            <div class="px-6 py-5 bg-slate-50/50 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4">
+                <a href="{{ route('admin.central-productions.index') }}" class="w-full sm:w-auto text-center px-6 py-3 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-colors">
                     Batal
                 </a>
-                <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-semibold text-sm rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200">
-                    Simpan & Proses Produksi
+                <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+                    <span class="iconify" data-icon="lucide:save"></span>
+                    Simpan Produksi
                 </button>
             </div>
         </div>
