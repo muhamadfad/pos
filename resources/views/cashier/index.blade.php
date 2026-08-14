@@ -492,6 +492,7 @@
     </div>
 </div>
 
+@if($activeShift)
 <!-- Edit Shift Modal -->
 <div id="editShiftModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden relative">
@@ -534,6 +535,7 @@
         </form>
     </div>
 </div>
+@endif
 
 <script>
     // Transaction detail data
