@@ -426,7 +426,7 @@ class PointOfSaleController extends Controller
                         ];
                     })->toArray(),
                 ];
-            });
+            })->values();
 
         return response()->json($orders);
     }

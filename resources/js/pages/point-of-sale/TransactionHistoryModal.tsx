@@ -17,7 +17,17 @@ export default function TransactionHistoryModal({ isOpen, onClose, onReprint }: 
             setLoading(true);
             axios.get("/pos/transactions")
                 .then((res) => {
-                    setTransactions(res.data);
+                    let data = res.data;
+                    if (typeof data === 'string') {
+                        // Jika terlempar halaman login (HTML string)
+                        data = [];
+                    } else if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        // Jika response json menjadi object keys e.g. {"0": {...}}
+                        data = Object.values(data);
+                    } else if (!Array.isArray(data)) {
+                        data = [];
+                    }
+                    setTransactions(data);
                 })
                 .catch((err) => {
                     console.error("Gagal mengambil riwayat transaksi:", err);
