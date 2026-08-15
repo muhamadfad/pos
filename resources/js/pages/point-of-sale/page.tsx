@@ -389,7 +389,6 @@ function updateQty(productId: number, qty: number) {
                             isOnline={isOnline}
                             pendingCount={pendingCount}
                             isSyncing={isSyncing}
-                            onOpenHistory={() => setShowHistoryModal(true)}
                         />
                         <div className="flex-1 overflow-y-auto p-4 lg:p-6 pb-28 lg:pb-6 custom-scroll">
                             <ProductGrid
