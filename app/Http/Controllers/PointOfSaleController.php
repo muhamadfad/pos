@@ -403,7 +403,8 @@ class PointOfSaleController extends Controller
             return response()->json([]);
         }
 
-        $orders = Order::with(['customer', 'items.product', 'user'])
+        $orders = Order::withoutGlobalScope('decoy_filter')
+            ->with(['customer', 'items.product', 'user'])
             ->where('cashier_shift_id', $activeShift->id)
             ->orderBy('created_at', 'desc')
             ->get()
