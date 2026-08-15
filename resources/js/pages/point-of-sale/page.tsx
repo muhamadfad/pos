@@ -29,6 +29,12 @@ function PointOfSaleContent() {
     const { isOnline, pendingCount, isSyncing, processOfflineCheckout } = usePosSync();
 
     const [customers, setCustomers] = useState(serverCustomers);
+    const [localActiveShift, setLocalActiveShift] = useState(activeShift);
+
+    // Sync localActiveShift if activeShift from server changes
+    useEffect(() => {
+        setLocalActiveShift(activeShift);
+    }, [activeShift]);
 
     // Load offline customers from IndexedDB
     useEffect(() => {
@@ -316,6 +322,14 @@ function updateQty(productId: number, qty: number) {
                 
                 setLastTransaction(transactionData);
                 
+                // Optimistic update for local active shift total sales
+                if (localActiveShift) {
+                    setLocalActiveShift({
+                        ...localActiveShift,
+                        total_sales: (localActiveShift.total_sales || 0) + totalPrice,
+                    });
+                }
+                
                 // Show success immediately (optimistic update)
                 setShowSuccess(true);
                 setCart([]);
@@ -549,7 +563,7 @@ function updateQty(productId: number, qty: number) {
                             flash={flash}
                             showSuccess={showSuccess}
                             paidRef={paidRef}
-                            activeShift={activeShift}
+                            activeShift={localActiveShift}
                             customers={customers}
                             selectedCustomerId={selectedCustomerId}
                             onUpdateQty={updateQty}
