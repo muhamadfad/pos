@@ -62,7 +62,7 @@ export default function Header({
                     {/* Install App Button */}
                     {isInstallable && (
                         <button
-                            onClick={installPrompt}
+                            onClick={installPwa}
                             className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs sm:text-sm border border-blue-100 shadow-sm transition-all hover:bg-blue-100 hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
                         >
                             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
