@@ -53,5 +53,11 @@ export function printWithRawBT(t: TransactionDetails) {
     const base64Data = btoa(str);
     
     // Gunakan scheme rawbt:base64 untuk print latar belakang (silent print)
-    window.location.href = `rawbt:base64,${base64Data}`;
+    const url = `rawbt:base64,${base64Data}`;
+    
+    const a = document.createElement('a');
+    a.href = url;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }

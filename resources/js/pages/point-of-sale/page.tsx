@@ -377,7 +377,7 @@ function updateQty(productId: number, qty: number) {
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
                 {/* LEFT: Product Grid — hanya tampil saat mode pos */}
                 {mode === "pos" && (
-                    <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden lg:flex' : 'flex'}`}>
+                    <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden md:flex' : 'flex'}`}>
                         <Header
                             search={search}
                             onSearchChange={setSearch}
@@ -403,7 +403,7 @@ function updateQty(productId: number, qty: number) {
 
                 {/* Debt mode: full width left panel (placeholder) */}
                 {mode === "debt" && (
-                    <div className={`flex-1 flex-col min-w-0 bg-gray-50 ${showMobileCart ? 'hidden lg:flex' : 'flex'}`}>
+                    <div className={`flex-1 flex-col min-w-0 bg-gray-50 ${showMobileCart ? 'hidden md:flex' : 'flex'}`}>
                         <div className="px-8 py-5 bg-white border-b border-gray-200">
                             <h2 className="text-lg font-bold text-gray-700">
                                 Pembayaran Kasbon
@@ -465,15 +465,15 @@ function updateQty(productId: number, qty: number) {
                 {/* Backdrop for mobile */}
                 {showMobileCart && (
                     <div 
-                        className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+                        className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
                         onClick={() => setShowMobileCart(false)}
                     />
                 )}
                 
-                <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 lg:relative lg:w-[420px] bg-white lg:border-l border-gray-200 flex-col shrink-0 shadow-2xl lg:shadow-lg min-h-0 overflow-hidden transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${showMobileCart ? 'translate-x-0 flex' : 'translate-x-full lg:flex hidden'}`}>
+                <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 md:relative md:w-[350px] lg:w-[420px] bg-white md:border-l border-gray-200 flex-col shrink-0 shadow-2xl md:shadow-lg min-h-0 overflow-hidden transform transition-transform duration-300 ease-in-out md:translate-x-0 ${showMobileCart ? 'translate-x-0 flex' : 'translate-x-full md:flex hidden'}`}>
                     
                     {/* Mobile Cart Header & Close Button */}
-                    <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+                    <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-100 bg-white">
                         <h2 className="text-lg font-bold text-gray-800">Keranjang Belanja</h2>
                         <button 
                             onClick={() => setShowMobileCart(false)}
@@ -571,7 +571,7 @@ function updateQty(productId: number, qty: number) {
 
                 {/* Mobile Floating Cart Button */}
                 {!showMobileCart && cart.length > 0 && (
-                    <div className="fixed bottom-6 inset-x-0 mx-4 lg:hidden z-30">
+                    <div className="fixed bottom-6 inset-x-0 mx-4 md:hidden z-30">
                         <button
                             onClick={() => setShowMobileCart(true)}
                             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between font-bold active:scale-[0.98] transition-transform"
