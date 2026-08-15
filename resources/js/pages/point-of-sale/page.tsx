@@ -12,8 +12,9 @@ import { useWebBluetoothPrinter } from "../../hooks/useWebBluetoothPrinter";
 import ReceiptPrint, { TransactionDetails } from "./ReceiptPrint";
 import TransactionHistoryModal from "./TransactionHistoryModal";
 import { printWithRawBT } from "./printHelper";
+import { ErrorBoundary } from "../../components/ErrorBoundary";
 
-export default function PointOfSalePage() {
+function PointOfSaleContent() {
     const {
         authUser,
         products,
@@ -663,3 +664,12 @@ function updateQty(productId: number, qty: number) {
         </>
     );
 }
+
+export default function PointOfSalePage() {
+    return (
+        <ErrorBoundary>
+            <PointOfSaleContent />
+        </ErrorBoundary>
+    );
+}
+

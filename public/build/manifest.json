@@ -4,7 +4,7 @@
     "name": "index"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CICaCNZV.css",
+    "file": "assets/app-S90AhJ5O.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -22,7 +22,7 @@
     ]
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-ChZK033v.js",
+    "file": "assets/app-DjGjNa9f.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -30,7 +30,7 @@
       "_index-Dm-UBGom.js"
     ],
     "css": [
-      "assets/app-CICaCNZV.css"
+      "assets/app-S90AhJ5O.css"
     ]
   }
 }
