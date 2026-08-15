@@ -180,6 +180,42 @@ export default function CartPanel({
                     </div>
                 )}
 
+                {/* ── SHIFT BANNER ── */}
+                {activeShift && (
+                    <div className="px-4 pt-3 pb-2 bg-linear-to-r from-green-50 to-emerald-50 border-b border-green-100 shrink-0">
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span className="text-xs font-semibold text-green-700">
+                                    Shift Aktif
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => setShowExitModal(true)}
+                                className="text-xs text-red-600 hover:text-red-700 font-medium px-2 py-1 hover:bg-red-50 rounded transition-colors"
+                            >
+                                Tutup Kasir
+                            </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <div className="text-green-600">Modal Awal</div>
+                                <div className="font-semibold text-gray-800">
+                                    {formatRupiah(activeShift.opening_balance)}
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-green-600">
+                                    Total Penjualan
+                                </div>
+                                <div className="font-semibold text-gray-800">
+                                    {formatRupiah(activeShift.total_sales)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* ── HEADER ── */}
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
                     <div className="flex items-center gap-3">
@@ -249,42 +285,6 @@ export default function CartPanel({
                         ) : null}
                     </div>
                 </div>
-
-                {/* ── SHIFT BANNER ── */}
-                {activeShift && (
-                    <div className="px-4 pt-3 pb-2 bg-linear-to-r from-green-50 to-emerald-50 border-b border-green-100 shrink-0">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span className="text-xs font-semibold text-green-700">
-                                    Shift Aktif
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => setShowExitModal(true)}
-                                className="text-xs text-red-600 hover:text-red-700 font-medium px-2 py-1 hover:bg-red-50 rounded transition-colors"
-                            >
-                                Tutup Kasir
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div>
-                                <div className="text-green-600">Modal Awal</div>
-                                <div className="font-semibold text-gray-800">
-                                    {formatRupiah(activeShift.opening_balance)}
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-green-600">
-                                    Total Penjualan
-                                </div>
-                                <div className="font-semibold text-gray-800">
-                                    {formatRupiah(activeShift.total_sales)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 {/* ── ERROR ALERTS ── */}
                 {errors && Object.keys(errors).length > 0 && (
