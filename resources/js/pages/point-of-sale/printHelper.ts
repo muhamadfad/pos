@@ -53,12 +53,9 @@ export function printWithRawBT(t: TransactionDetails) {
     // Encode text to Base64
     const base64Data = btoa(str);
     
-    // Gunakan scheme rawbt:base64 untuk print latar belakang (silent print)
-    const url = `rawbt:base64,${base64Data}`;
+    // Gunakan Android Intent URI scheme agar lebih cepat dan langsung membuka aplikasi RawBT tanpa prompt browser
+    const url = `intent:base64,${base64Data}#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;`;
     
-    const a = document.createElement('a');
-    a.href = url;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // Fallback/Direct launch
+    window.location.href = url;
 }
