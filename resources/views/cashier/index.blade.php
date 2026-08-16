@@ -448,14 +448,9 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">Jam Shift</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 iconify text-slate-400" data-icon="mdi:clock-outline" data-width="20"></span>
-                            <select name="shift_time" id="shift_time"
-                                class="w-full pl-12 pr-4 py-3 text-lg font-medium border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 appearance-none bg-white"
-                                required>
-                                <option value="" disabled selected>Pilih Jam Shift</option>
-                                <option value="Pagi (08:00 - 15:00)">Pagi (08:00 - 15:00)</option>
-                                <option value="Sore (15:00 - 22:00)">Sore (15:00 - 22:00)</option>
-                            </select>
-                            <span class="absolute right-4 top-1/2 -translate-y-1/2 iconify text-slate-400 pointer-events-none" data-icon="mdi:chevron-down" data-width="20"></span>
+                            <input type="text" name="shift_time" id="shift_time"
+                                class="w-full pl-12 pr-4 py-3 text-lg font-medium border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-slate-800 bg-white"
+                                placeholder="Contoh: Pagi (08:00 - 15:00)" required>
                         </div>
                     </div>
 
@@ -515,12 +510,9 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">Jam Shift</label>
-                    <select name="shift_time" required
-                        class="w-full px-4 py-3 text-sm border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all appearance-none bg-white text-slate-800">
-                        <option value="Pagi (08:00 - 15:00)" {{ $activeShift->shift_time == 'Pagi (08:00 - 15:00)' ? 'selected' : '' }}>Pagi (08:00 - 15:00)</option>
-                        <option value="Sore (15:00 - 22:00)" {{ $activeShift->shift_time == 'Sore (15:00 - 22:00)' ? 'selected' : '' }}>Sore (15:00 - 22:00)</option>
-                        <option value="Malam (22:00 - 05:00)" {{ $activeShift->shift_time == 'Malam (22:00 - 05:00)' ? 'selected' : '' }}>Malam (22:00 - 05:00)</option>
-                    </select>
+                    <input type="text" name="shift_time" required
+                        class="w-full px-4 py-3 text-sm border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-800"
+                        value="{{ $activeShift->shift_time }}" placeholder="Contoh: Pagi (08:00 - 15:00)">
                 </div>
             </div>
             

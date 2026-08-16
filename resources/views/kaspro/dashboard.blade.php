@@ -18,10 +18,13 @@
             <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">KasPro Intelligence</h1>
             <p class="text-slate-500 text-sm font-medium">Monitor dan prediksi kesehatan keuangan bisnis Anda</p>
         </div>
-        <div class="flex gap-3">
-             <div class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 shadow-sm">
-                Periode: {{ $cashFlow['start_date'] }} - {{ $cashFlow['end_date'] }}
-             </div>
+        <div class="flex gap-3 items-center">
+             <form action="{{ route('kaspro.dashboard') }}" method="GET" class="flex gap-2 items-center">
+                 <input type="date" name="start_date" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value="{{ request('start_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['start_date'])->format('Y-m-d')) }}">
+                 <span class="text-xs text-slate-500 font-medium">s/d</span>
+                 <input type="date" name="end_date" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value="{{ request('end_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['end_date'])->format('Y-m-d')) }}">
+                 <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-sm hover:bg-blue-700 transition-colors">Filter</button>
+             </form>
         </div>
     </div>
 
@@ -139,11 +142,11 @@
                 
                 @if(!empty($prediction['recommendations']))
                 <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-4 items-start">
-                    <span class="text-xl">💡</span>
+                    <span class="text-xl">ðŸ’¡</span>
                     <div>
                         <h4 class="text-xs font-bold text-amber-800 uppercase mb-1 tracking-widest">KasPro Strategy Insight</h4>
                         @foreach($prediction['recommendations'] as $rec)
-                            <p class="text-sm text-amber-900/80 leading-relaxed">• {{ $rec }}</p>
+                            <p class="text-sm text-amber-900/80 leading-relaxed">â€¢ {{ $rec }}</p>
                         @endforeach
                     </div>
                 </div>
@@ -181,7 +184,7 @@
                 @endforelse
             </div>
             <a href="{{ route('kaspro.alerts') }}" class="mt-auto p-4 text-center border-t border-slate-100 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition">
-                LIHAT SEMUA NOTIFIKASI →
+                LIHAT SEMUA NOTIFIKASI â†’
             </a>
         </div>
     </div>

@@ -22,10 +22,20 @@ class KasproController extends Controller
         $this->kaspro = $kaspro;
     }
     
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $survival = $this->kaspro->getDaysToSurvive();
-        $cashFlow = $this->kaspro->getCashFlowSummary('monthly');
+        $period = 'monthly';
+        $customStart = null;
+        $customEnd = null;
+
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $period = 'custom';
+            $customStart = $request->start_date;
+            $customEnd = $request->end_date;
+        }
+
+        $cashFlow = $this->kaspro->getCashFlowSummary($period, $customStart, $customEnd);
         $prediction = $this->kaspro->predictCashFlow(3);
         $recentAlerts = KasproAlert::where('user_id', auth()->id())
             ->where('is_read', false)
@@ -368,16 +378,16 @@ class KasproController extends Controller
                 $monthName .= ' (sd hari ini)';
             }
             
-            // ✅ Income dari orders (pakai whereBetween, lebih akurat)
+            // âœ… Income dari orders (pakai whereBetween, lebih akurat)
             $income = Order::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->where('payment_status', 'paid')
                 ->sum('total_amount');
             
-            // ✅ Expense dari purchases (pakai total_paid, sesuai arus kas riil)
+            // âœ… Expense dari purchases (pakai total_paid, sesuai arus kas riil)
             $expense = Purchase::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->sum('total_paid');
             
-            // ✅ Expense dari expenses (operasional)
+            // âœ… Expense dari expenses (operasional)
             $expense += Expense::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->sum('amount');
             

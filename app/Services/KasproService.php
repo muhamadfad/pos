@@ -73,12 +73,12 @@ class KasproService
     
     /**
      * Hitung saldo kas saat ini
-     * ✅ PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
+     * âœ… PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
      */
     public function getCurrentCash()
     {
         $totalIncome = $this->getOrdersQuery()->sum('total_amount');
-        $totalPurchaseExpense = $this->getPurchasesQuery()->sum('total_paid');  // ✅ UBAH: total_amount → total_paid
+        $totalPurchaseExpense = $this->getPurchasesQuery()->sum('total_paid');  // âœ… UBAH: total_amount â†’ total_paid
         $totalOperationalExpense = $this->getExpensesQuery()->sum('amount');
         
         $initialCash = 0;
@@ -89,7 +89,7 @@ class KasproService
     
     /**
      * Hitung hari bertahan (runway)
-     * ✅ PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
+     * âœ… PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
      */
     public function getDaysToSurvive()
     {
@@ -99,7 +99,7 @@ class KasproService
         
         $purchaseExpense = $this->getPurchasesQuery()
             ->whereDate('date', '>=', $startDate)
-            ->sum('total_paid');  // ✅ UBAH: total_amount → total_paid
+            ->sum('total_paid');  // âœ… UBAH: total_amount â†’ total_paid
         
         $operationalExpense = $this->getExpensesQuery()
             ->whereDate('date', '>=', $startDate)
@@ -152,11 +152,14 @@ class KasproService
     
     /**
      * Ringkasan arus kas per periode
-     * ✅ PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
+     * âœ… PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
      */
-    public function getCashFlowSummary($period = 'monthly')
+    public function getCashFlowSummary($period = 'monthly', $customStart = null, $customEnd = null)
     {
-        if ($period == 'daily') {
+        if ($period == 'custom' && $customStart && $customEnd) {
+            $startDate = Carbon::parse($customStart)->startOfDay();
+            $endDate = Carbon::parse($customEnd)->endOfDay();
+        } elseif ($period == 'daily') {
             $startDate = Carbon::now()->startOfDay();
             $endDate = Carbon::now()->endOfDay();
         } elseif ($period == 'weekly') {
@@ -175,7 +178,7 @@ class KasproService
         $expenseFromPurchases = $this->getPurchasesQuery()
             ->whereDate('date', '>=', $startDate)
             ->whereDate('date', '<=', $endDate)
-            ->sum('total_paid');  // ✅ UBAH: total_amount → total_paid
+            ->sum('total_paid');  // âœ… UBAH: total_amount â†’ total_paid
         
         $expenseFromOperational = $this->getExpensesQuery()
             ->whereDate('date', '>=', $startDate)
@@ -198,7 +201,7 @@ class KasproService
     
     /**
      * Ambil data historis per bulan
-     * ✅ PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
+     * âœ… PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
      */
     public function getHistoricalData($months = 12)
     {
@@ -218,7 +221,7 @@ class KasproService
             ->whereDate('date', '>=', $startDate)
             ->select(
                 DB::raw('DATE_FORMAT(date, "%Y-%m") as month'),
-                DB::raw('SUM(total_paid) as total')  // ✅ UBAH: total_amount → total_paid
+                DB::raw('SUM(total_paid) as total')  // âœ… UBAH: total_amount â†’ total_paid
             )
             ->groupBy('month')
             ->get()
@@ -249,7 +252,7 @@ class KasproService
     
     /**
      * Ambil data per bulan tertentu (untuk musiman)
-     * ✅ PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
+     * âœ… PERBAIKAN: pakai total_paid untuk pengeluaran ke supplier
      */
     public function getDataByMonth($month, $year)
     {
@@ -261,7 +264,7 @@ class KasproService
         $expense = $this->getPurchasesQuery()
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
-            ->sum('total_paid');  // ✅ UBAH: total_amount → total_paid
+            ->sum('total_paid');  // âœ… UBAH: total_amount â†’ total_paid
         
         $expense += $this->getExpensesQuery()
             ->whereYear('date', $year)
@@ -373,7 +376,7 @@ class KasproService
             // Data tahun lalu untuk bulan yang sama
             $lastYearData = $monthlyDataLastYear[$monthNumber] ?? ['income' => 0, 'expense' => 0];
             
-            // Prediksi = data tahun lalu × growth rate
+            // Prediksi = data tahun lalu Ã— growth rate
             $predictedIncome = $lastYearData['income'] * $growthRate;
             $predictedExpense = $lastYearData['expense'] * $growthRate;
             
@@ -457,7 +460,7 @@ class KasproService
             foreach ($predictions as $pred) {
                 $predMonth = (int) substr($pred['month'], 5, 2);
                 if ($predMonth == $peakMonth && $pred['predicted_income'] > 0) {
-                    $recommendations[] = "📈 Persiapan Ekstra: Pada {$monthNames[$peakMonth]} {$pred['month']}, sistem memproyeksikan lonjakan pemasukan hingga Rp " . 
+                    $recommendations[] = "ðŸ“ˆ Persiapan Ekstra: Pada {$monthNames[$peakMonth]} {$pred['month']}, sistem memproyeksikan lonjakan pemasukan hingga Rp " . 
                                           number_format($pred['predicted_income'], 0, ',', '.') . 
                                           ". Sangat disarankan untuk mengamankan stok bahan baku 2-3 minggu sebelumnya!";
                 }
@@ -466,20 +469,20 @@ class KasproService
         
         // Insight pertumbuhan
         if ($growthRate > 1.05) {
-            $recommendations[] = "📈 Momentum Positif: Algoritma kami mencatat bisnis Anda sedang tumbuh " . round(($growthRate - 1) * 100) . 
+            $recommendations[] = "ðŸ“ˆ Momentum Positif: Algoritma kami mencatat bisnis Anda sedang tumbuh " . round(($growthRate - 1) * 100) . 
                                  "% lebih pesat dibandingkan rekam jejak tahun lalu. Pertahankan strategi yang ada!";
         } elseif ($growthRate < 0.95) {
-            $recommendations[] = "📉 Peringatan Penurunan: Sistem mendeteksi pelemahan performa sebesar " . round((1 - $growthRate) * 100) . 
+            $recommendations[] = "ðŸ“‰ Peringatan Penurunan: Sistem mendeteksi pelemahan performa sebesar " . round((1 - $growthRate) * 100) . 
                                  "% dari periode yang sama tahun lalu. Pertimbangkan untuk meluncurkan promo baru!";
         } else {
-            $recommendations[] = "➡️ Kestabilan Terjaga: Alur performa kas Anda saat ini sangat identik dengan tahun lalu (Stabil). Tetap konsisten dan fokus pada retensi pelanggan.";
+            $recommendations[] = "âž¡ï¸ Kestabilan Terjaga: Alur performa kas Anda saat ini sangat identik dengan tahun lalu (Stabil). Tetap konsisten dan fokus pada retensi pelanggan.";
         }
         
         // Deteksi defisit di prediksi
         $hasDeficit = false;
         foreach ($predictions as $pred) {
             if ($pred['predicted_net'] < 0) {
-                $recommendations[] = "⚠️ Peringatan Defisit: Pada bulan {$pred['month_name']}, sistem memprediksi arus kas negatif (tekor) sebesar Rp " . 
+                $recommendations[] = "âš ï¸ Peringatan Defisit: Pada bulan {$pred['month_name']}, sistem memprediksi arus kas negatif (tekor) sebesar Rp " . 
                                       number_format(abs($pred['predicted_net']), 0, ',', '.') . 
                                       ". Mulailah menyisihkan dana cadangan dari bulan-bulan profit.";
                 $hasDeficit = true;
@@ -493,13 +496,13 @@ class KasproService
             $maxExpense = max($expensePredictions);
             $minExpense = min($expensePredictions);
             if ($maxExpense > $minExpense * 1.5) {
-                $recommendations[] = '📊 Volatilitas Pengeluaran: Rekam jejak menunjukkan rentang pengeluaran Anda sangat fluktuatif antar bulannya. Disarankan untuk mulai membuat batasan anggaran (budgeting) bulanan yang ketat.';
+                $recommendations[] = 'ðŸ“Š Volatilitas Pengeluaran: Rekam jejak menunjukkan rentang pengeluaran Anda sangat fluktuatif antar bulannya. Disarankan untuk mulai membuat batasan anggaran (budgeting) bulanan yang ketat.';
             }
         }
         
         // Rekomendasi default jika kosong
         if (empty($recommendations)) {
-            $recommendations[] = '✅ Kondisi keuangan stabil. Tetap pantau pengeluaran dan evaluasi rutin.';
+            $recommendations[] = 'âœ… Kondisi keuangan stabil. Tetap pantau pengeluaran dan evaluasi rutin.';
         }
         
         return $recommendations;
@@ -553,30 +556,30 @@ class KasproService
         $trend = [];
         
         if ($avgIncomeChange > 0) {
-            $trend['income'] = "📈 Meningkat rata-rata Rp " . number_format($avgIncomeChange, 0, ',', '.') . " per bulan";
+            $trend['income'] = "ðŸ“ˆ Meningkat rata-rata Rp " . number_format($avgIncomeChange, 0, ',', '.') . " per bulan";
             $trend['income_direction'] = 'up';
         } elseif ($avgIncomeChange < 0) {
-            $trend['income'] = "📉 Menurun rata-rata Rp " . number_format(abs($avgIncomeChange), 0, ',', '.') . " per bulan";
+            $trend['income'] = "ðŸ“‰ Menurun rata-rata Rp " . number_format(abs($avgIncomeChange), 0, ',', '.') . " per bulan";
             $trend['income_direction'] = 'down';
         } else {
-            $trend['income'] = "➡️ Stabil";
+            $trend['income'] = "âž¡ï¸ Stabil";
             $trend['income_direction'] = 'stable';
         }
         
         if ($avgExpenseChange > 0) {
-            $trend['expense'] = "📈 Meningkat rata-rata Rp " . number_format($avgExpenseChange, 0, ',', '.') . " per bulan";
+            $trend['expense'] = "ðŸ“ˆ Meningkat rata-rata Rp " . number_format($avgExpenseChange, 0, ',', '.') . " per bulan";
             $trend['expense_direction'] = 'up';
         } elseif ($avgExpenseChange < 0) {
-            $trend['expense'] = "📉 Menurun rata-rata Rp " . number_format(abs($avgExpenseChange), 0, ',', '.') . " per bulan";
+            $trend['expense'] = "ðŸ“‰ Menurun rata-rata Rp " . number_format(abs($avgExpenseChange), 0, ',', '.') . " per bulan";
             $trend['expense_direction'] = 'down';
         } else {
-            $trend['expense'] = "➡️ Stabil";
+            $trend['expense'] = "âž¡ï¸ Stabil";
             $trend['expense_direction'] = 'stable';
         }
         
         if ($avgIncomeChange > 0 && $avgExpenseChange < 0) {
             $trend['direction'] = 'positive';
-            $trend['direction_text'] = '✅ Tren POSITIF: Pemasukan naik, pengeluaran turun';
+            $trend['direction_text'] = 'âœ… Tren POSITIF: Pemasukan naik, pengeluaran turun';
         } elseif ($avgIncomeChange < 0 && $avgExpenseChange > 0) {
             $trend['direction'] = 'negative';
             $trend['direction_text'] = 'Tren NEGATIF: Pemasukan turun, pengeluaran naik';
@@ -588,7 +591,7 @@ class KasproService
             $trend['direction_text'] = 'Tren CAMPURAN: Pemasukan dan pengeluaran sama-sama turun';
         } else {
             $trend['direction'] = 'stable';
-            $trend['direction_text'] = '➡️ Tren STABIL: Tidak ada perubahan signifikan';
+            $trend['direction_text'] = 'âž¡ï¸ Tren STABIL: Tidak ada perubahan signifikan';
         }
         
         return $trend;
@@ -674,7 +677,7 @@ class KasproService
                 $this->createAlert(
                     'cash_flow_gap',
                     $gap['severity'] == 'HIGH' ? 'critical' : 'warning',
-                    '📉 Potensi Kekurangan Kas',
+                    'ðŸ“‰ Potensi Kekurangan Kas',
                     "Bulan {$gap['month']} diprediksi kekurangan kas sebesar Rp " . number_format($gap['gap_amount'], 0, ',', '.'),
                     null, null, $gap
                 );
