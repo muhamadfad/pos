@@ -166,14 +166,28 @@ class FinanceController extends Controller
             $branchId = $userBranchId;
         }
         
-        $todayObj = Carbon::today();
-        $todayStr = $todayObj->toDateString();
-        $finance = $this->calculateProfit($todayObj, null, $branchId);
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        if ($startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end = Carbon::parse($endDate)->endOfDay();
+        } else {
+            $start = Carbon::today();
+            $end = null;
+        }
+
+        $finance = $this->calculateProfit($start, $end, $branchId);
 
         $topProductsQuery = DB::table('order_items')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->join('products', 'order_items.product_id', '=', 'products.id')
-            ->whereDate('orders.date', $todayStr);
+            ->join('products', 'order_items.product_id', '=', 'products.id');
+
+        if ($startDate && $endDate) {
+            $topProductsQuery->whereBetween('orders.date', [$start, $end]);
+        } else {
+            $topProductsQuery->whereDate('orders.date', Carbon::today()->toDateString());
+        }
         
         if ($branchId) {
             $topProductsQuery->where('orders.branch_id', $branchId);
@@ -207,7 +221,7 @@ class FinanceController extends Controller
             $currentBranchName = $branch ? $branch->name : 'Cabang';
         }
 
-        return view('admin.finance.daily', compact(
+        return view('admin.finance.daily', compact('startDate', 'endDate', 
             'finance', 
             'todayObj',
             'topProducts', 

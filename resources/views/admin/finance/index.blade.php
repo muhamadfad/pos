@@ -17,24 +17,11 @@
             <p class="text-slate-500 font-medium">Monitoring pergerakan kas dan profitabilitas toko</p>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center gap-3">
-            <form action="{{ route('admin.finance.index') }}" method="GET" class="flex gap-2 items-center">
-                <input type="date" name="start_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $startDate }}">
-                <span class="text-xs text-slate-500">s/d</span>
-                <input type="date" name="end_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $endDate }}">
-                @if(request('branch_id'))
-                    <input type="hidden" name="branch_id" value="{{ request('branch_id') }}">
-                @endif
-                <button type="submit" class="px-3 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-indigo-700">Filter</button>
-                @if($startDate || $endDate)
-                    <a href="{{ route('admin.finance.index', ['branch_id' => request('branch_id')]) }}" class="px-3 py-2 bg-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-300">Reset</a>
-                @endif
-            </form>
-
+        <div class="flex items-center gap-3">
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">ðŸŒ Semua Cabang</option>
+                <option value="">Ã°Å¸Å’Â Semua Cabang</option>
                 @foreach($branches as $branch)
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -131,7 +118,7 @@
             </div>
         </div>
 
-        <!-- Net Balance (clickable â†’ detail) -->
+        <!-- Net Balance (clickable Ã¢â€ â€™ detail) -->
         @php $isPositive = $netCashflow >= 0; @endphp
         <a href="{{ route('admin.finance.cashflow') . ($branchId ? '?branch_id=' . $branchId : '') }}"
             class="relative overflow-hidden {{ $isPositive ? 'bg-indigo-600 shadow-indigo-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl hover:scale-[1.02] active:scale-[0.99] transition-all group md:col-span-3 block">
@@ -152,7 +139,7 @@
                     '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-4 font-medium">
-                Pendapatan âˆ’ Bayar Supplier âˆ’ Operasional &nbsp;â€¢&nbsp; {{ $isPositive ? 'Surplus' : 'Defisit' }}
+                Pendapatan Ã¢Ë†â€™ Bayar Supplier Ã¢Ë†â€™ Operasional &nbsp;Ã¢â‚¬Â¢&nbsp; {{ $isPositive ? 'Surplus' : 'Defisit' }}
             </p>
         </a>
 

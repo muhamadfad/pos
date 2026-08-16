@@ -14,14 +14,36 @@
                 </span>
                 Laporan Harian
             </h1>
-            <p class="text-slate-500 font-medium">{{ $todayObj->translatedFormat('d F Y') }}</p>
+            <p class="text-slate-500 font-medium">
+                @if($startDate && $endDate)
+                    {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}
+                @elseif($startDate)
+                    {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }}
+                @else
+                    {{ \Carbon\Carbon::today()->translatedFormat('d M Y') }}
+                @endif
+            </p>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-col md:flex-row items-center gap-3">
+            <!-- Date Filter -->
+            <form action="{{ route('admin.finance.daily') }}" method="GET" class="flex gap-2 items-center">
+                <input type="date" name="start_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $startDate }}">
+                <span class="text-xs text-slate-500">s/d</span>
+                <input type="date" name="end_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $endDate }}">
+                @if(request('branch_id'))
+                    <input type="hidden" name="branch_id" value="{{ request('branch_id') }}">
+                @endif
+                <button type="submit" class="px-3 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-indigo-700">Filter</button>
+                @if($startDate || $endDate)
+                    <a href="{{ route('admin.finance.daily', ['branch_id' => request('branch_id')]) }}" class="px-3 py-2 bg-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-300">Reset</a>
+                @endif
+            </form>
+
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin ?? false)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">🌍 Semua Cabang</option>
+                <option value="">ðŸŒ Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -129,7 +151,7 @@
                 <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
             </div>
             <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
-            <p class="text-xs text-white/60 mt-2">Pendapatan − HPP − Biaya Operasional</p>
+            <p class="text-xs text-white/60 mt-2">Pendapatan âˆ’ HPP âˆ’ Biaya Operasional</p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:chart-line"></span>
                 Laba Bersih Hari Ini
@@ -153,7 +175,7 @@
                 <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
-                Pendapatan − (Pembayaran Supplier + Operasional)
+                Pendapatan âˆ’ (Pembayaran Supplier + Operasional)
             </p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>
@@ -166,7 +188,7 @@
     <!-- Chart Section -->
     <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
         <div class="flex items-center justify-between mb-8">
-            <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris Hari Ini</h3>
+            <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris</h3>
             <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
         </div>
         <div class="h-[400px]">
