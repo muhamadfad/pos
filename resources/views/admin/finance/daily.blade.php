@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Laporan Harian')
 
@@ -34,6 +34,9 @@
                 @if(request('branch_id'))
                     <input type="hidden" name="branch_id" value="{{ request('branch_id') }}">
                 @endif
+                @if(request('payment_method'))
+                    <input type="hidden" name="payment_method" value="{{ request('payment_method') }}">
+                @endif
                 <button type="submit" class="px-3 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-indigo-700">Filter</button>
                 @if($startDate || $endDate)
                     <a href="{{ route('admin.finance.daily', ['branch_id' => request('branch_id')]) }}" class="px-3 py-2 bg-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-300">Reset</a>
@@ -43,7 +46,7 @@
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin ?? false)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">🏢 Semua Cabang</option>
+                <option value="">ðŸ¢ Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -151,7 +154,7 @@
                 <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
             </div>
             <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
-            <p class="text-xs text-white/60 mt-2">Pendapatan Ã¢Ë†â€™ HPP Ã¢Ë†â€™ Biaya Operasional</p>
+            <p class="text-xs text-white/60 mt-2">Pendapatan ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ HPP ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Biaya Operasional</p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:chart-line"></span>
                 Laba Bersih Hari Ini
@@ -175,7 +178,7 @@
                 <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
-                Pendapatan Ã¢Ë†â€™ (Pembayaran Supplier + Operasional)
+                Pendapatan ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ (Pembayaran Supplier + Operasional)
             </p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>
@@ -187,9 +190,17 @@
 
     <!-- Chart Section -->
     <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
-        <div class="flex items-center justify-between mb-8">
-            <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris</h3>
-            <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-2">
+                <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris</h3>
+                <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl w-fit">
+                <a href="{{ request()->fullUrlWithQuery(['payment_method' => null]) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ !($paymentMethodFilter ?? null) ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Semua</a>
+                <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'cash']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'cash' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Cash</a>
+                <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'transfer']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'transfer' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Transfer</a>
+            </div>
         </div>
         <div class="h-[400px]">
             @if($topProducts->count() > 0)

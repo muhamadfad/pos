@@ -189,6 +189,11 @@ class FinanceController extends Controller
             $topProductsQuery->whereDate('orders.date', Carbon::today()->toDateString());
         }
         
+        $paymentMethodFilter = $request->get('payment_method');
+        if (in_array($paymentMethodFilter, ['cash', 'transfer'])) {
+            $topProductsQuery->where('orders.payment_method', $paymentMethodFilter);
+        }
+        
         if ($branchId) {
             $topProductsQuery->where('orders.branch_id', $branchId);
         }
@@ -226,7 +231,7 @@ class FinanceController extends Controller
             $currentBranchName = $branch ? $branch->name : 'Cabang';
         }
 
-        return view('admin.finance.daily', compact('startDate', 'endDate', 
+        return view('admin.finance.daily', compact('startDate', 'endDate', 'paymentMethodFilter', 
             'finance', 'topProducts', 
             'expenses',
             'isSuperAdmin',
