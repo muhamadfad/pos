@@ -501,7 +501,7 @@ class FinanceController extends Controller
             $title = "Laporan Keuangan Keseluruhan";
         }
 
-        $finance = $this->getFinanceData($branchId, $startDate, $endDate);
+        $finance = $this->calculateProfit($startDate, $endDate, $branchId);
         
         $currentBranchName = 'Semua Cabang';
         if ($branchId) {
