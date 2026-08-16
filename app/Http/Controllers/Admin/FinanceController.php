@@ -534,7 +534,21 @@ class FinanceController extends Controller
         $expensesList = $expensesQuery->orderBy('date', 'asc')->get();
         $purchasesList = $purchasesQuery->orderBy('date', 'asc')->get();
 
+        
+        $productSummary = [];
+        foreach ($ordersList as $order) {
+            foreach ($order->items as $item) {
+                $productName = $item->product ? $item->product->name : 'Produk Dihapus';
+                if (!isset($productSummary[$productName])) {
+                    $productSummary[$productName] = 0;
+                }
+                $productSummary[$productName] += $item->quantity;
+            }
+        }
+        arsort($productSummary);
+
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.finance', compact(
+            'productSummary', 
             'ordersList', 'expensesList', 'purchasesList', 
             'finance', 'title', 'startDate', 'endDate', 'currentBranchName', 'period'
         ));

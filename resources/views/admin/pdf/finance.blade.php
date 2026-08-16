@@ -130,7 +130,32 @@
         <p>{{ $title }}</p>
     </div>
 
-    <div class="sub-title">2. RINCIAN PENDAPATAN (PENJUALAN)</div>
+    <div class="sub-title">2. REKAPITULASI PENJUALAN PRODUK</div>
+    <table class="finance-table" style="margin-bottom: 30px;">
+        <thead>
+            <tr>
+                <th style="width: 10%; text-align: center;">No</th>
+                <th style="width: 70%;">Nama Menu / Produk</th>
+                <th style="width: 20%; text-align: center;">Total Terjual (Porsi)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $productNo = 1; @endphp
+            @forelse($productSummary as $productName => $qty)
+            <tr>
+                <td class="text-center">{{ $productNo++ }}</td>
+                <td>{{ $productName }}</td>
+                <td class="text-center"><strong>{{ $qty }}</strong></td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="3" class="text-center" style="font-style: italic;">Tidak ada data penjualan produk.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div class="sub-title">3. RINCIAN PENDAPATAN (PENJUALAN)</div>
     <table class="finance-table">
         <thead>
             <tr>
@@ -175,7 +200,7 @@
         </tbody>
     </table>
 
-    <div class="sub-title" style="margin-top: 30px;">3. RINCIAN BIAYA OPERASIONAL</div>
+    <div class="sub-title" style="margin-top: 30px;">4. RINCIAN BIAYA OPERASIONAL</div>
     <table class="finance-table">
         <thead>
             <tr>
@@ -209,7 +234,7 @@
         </tbody>
     </table>
 
-    <div class="sub-title" style="margin-top: 30px;">4. RINCIAN PEMBAYARAN SUPPLIER</div>
+    <div class="sub-title" style="margin-top: 30px;">5. RINCIAN PEMBAYARAN SUPPLIER</div>
     <table class="finance-table">
         <thead>
             <tr>
