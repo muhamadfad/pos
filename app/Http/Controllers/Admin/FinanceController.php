@@ -203,7 +203,12 @@ class FinanceController extends Controller
                 return $item;
             });
 
-        $expenseQuery = Expense::whereDate('date', $todayStr);
+                $expenseQuery = Expense::query();
+        if ($startDate && $endDate) {
+            $expenseQuery->whereBetween('date', [$start, $end]);
+        } else {
+            $expenseQuery->whereDate('date', Carbon::today()->toDateString());
+        }
         if ($branchId) {
             $expenseQuery->where('branch_id', $branchId);
         }

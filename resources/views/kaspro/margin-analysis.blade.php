@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Analisis Margin Produk')
 
@@ -23,7 +23,7 @@
         <div class="flex items-center gap-3">
             @if($isSuperAdmin ?? false)
             <select id="branchFilter" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold">
-                <option value="">🌍 Semua Cabang</option>
+                <option value="">ðŸŒ Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -167,7 +167,7 @@
         <div class="bg-indigo-900 rounded-[28px] p-8 text-white relative overflow-hidden shadow-xl">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="text-2xl">💡</span>
+                    <span class="text-2xl">ðŸ’¡</span>
                     <h3 class="text-xs font-black uppercase tracking-widest opacity-60">Strategic Strategy</h3>
                 </div>
                 <p class="text-sm font-medium leading-relaxed italic text-indigo-50">
