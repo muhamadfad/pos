@@ -17,11 +17,11 @@
             <p class="text-slate-500 font-medium">{{ $start->translatedFormat('F Y') }}</p>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin ?? false)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">🌍 Semua Cabang</option>
+                <option value="">Ã°Å¸Å’Â Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -129,7 +129,7 @@
                 <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
             </div>
             <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
-            <p class="text-xs text-white/60 mt-2">Pendapatan − HPP − Biaya Operasional</p>
+            <p class="text-xs text-white/60 mt-2">Pendapatan - HPP - Biaya Operasional</p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:chart-line"></span>
                 Laba Bersih Bulan Ini
@@ -153,7 +153,7 @@
                 <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
-                Pendapatan − (Pembayaran Supplier + Operasional)
+                Pendapatan - (Pembayaran Supplier + Operasional)
             </p>
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>

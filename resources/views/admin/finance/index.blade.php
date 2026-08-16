@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Laporan Keuangan')
 
@@ -17,11 +17,11 @@
             <p class="text-slate-500 font-medium">Monitoring pergerakan kas dan profitabilitas toko</p>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">🏢 Semua Cabang</option>
+                <option value="">ðŸ¢ Semua Cabang</option>
                 @foreach($branches as $branch)
                 <option value="{{ $branch->id }}" {{ $branchId == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
@@ -118,7 +118,7 @@
             </div>
         </div>
 
-        <!-- Net Balance (clickable ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ detail) -->
+        <!-- Net Balance (clickable ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ detail) -->
         @php $isPositive = $netCashflow >= 0; @endphp
         <a href="{{ route('admin.finance.cashflow') . ($branchId ? '?branch_id=' . $branchId : '') }}"
             class="relative overflow-hidden {{ $isPositive ? 'bg-indigo-600 shadow-indigo-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl hover:scale-[1.02] active:scale-[0.99] transition-all group md:col-span-3 block">
@@ -139,7 +139,7 @@
                     '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-4 font-medium">
-                Pendapatan ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Bayar Supplier ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Operasional &nbsp;ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢&nbsp; {{ $isPositive ? 'Surplus' : 'Defisit' }}
+                Pendapatan ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Bayar Supplier ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Operasional &nbsp;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢&nbsp; {{ $isPositive ? 'Surplus' : 'Defisit' }}
             </p>
         </a>
 

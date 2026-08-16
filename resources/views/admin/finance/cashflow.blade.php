@@ -16,7 +16,7 @@
                 <h1 class="text-2xl font-black text-slate-800 tracking-tight">Rincian Saldo Bersih</h1>
             </div>
             <p class="text-slate-500 text-sm ml-9">
-                Saldo Bersih = Pendapatan Penjualan − Bayar Supplier − Pengeluaran Operasional
+                Saldo Bersih = Pendapatan Penjualan Ã¢Ë†â€™ Bayar Supplier Ã¢Ë†â€™ Pengeluaran Operasional
             </p>
         </div>
         <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
@@ -91,7 +91,7 @@
                     <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
                 </div>
                 <p class="text-2xl font-black text-white">Rp {{ number_format($totalProfit, 0, ',', '.') }}</p>
-                <p class="text-xs text-white/60 mt-1">Pendapatan − HPP</p>
+                <p class="text-xs text-white/60 mt-1">Pendapatan Ã¢Ë†â€™ HPP</p>
             </div>
     </div>
 
@@ -103,12 +103,12 @@
                 Rp {{ number_format($totalIncome, 0, ',', '.') }} <span
                     class="font-normal text-emerald-500">(Pendapatan)</span>
             </span>
-            <span class="text-slate-400 text-lg">−</span>
+            <span class="text-slate-400 text-lg">Ã¢Ë†â€™</span>
             <span class="px-4 py-2 bg-orange-50 text-orange-700 border border-orange-200 rounded-xl">
                 Rp {{ number_format($totalSupplierPaid, 0, ',', '.') }} <span
                     class="font-normal text-orange-500">(Supplier)</span>
             </span>
-            <span class="text-slate-400 text-lg">−</span>
+            <span class="text-slate-400 text-lg">Ã¢Ë†â€™</span>
             <span class="px-4 py-2 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl">
                 Rp {{ number_format($totalOperasional, 0, ',', '.') }} <span
                     class="font-normal text-rose-500">(Operasional)</span>
@@ -217,15 +217,15 @@
                 @forelse($topSupplierPurchases as $purchase)
                 <a href="{{ route('admin.purchases.show', $purchase->id) }}"
                     class="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-colors group">
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
                         <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
                             <span class="iconify text-orange-500" data-icon="mdi:truck-outline"></span>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-800 text-sm">{{ $purchase->supplier->name ?? '—' }}</p>
+                            <p class="font-bold text-slate-800 text-sm">{{ $purchase->supplier->name ?? 'Ã¢â‚¬â€' }}</p>
                             <p class="text-[11px] text-slate-400">
                                 {{ \Carbon\Carbon::parse($purchase->date)->format('d M Y') }}
-                                &nbsp;•&nbsp;
+                                &nbsp;Ã¢â‚¬Â¢&nbsp;
                                 <span
                                     class="font-bold {{ $purchase->payment_status === 'paid' ? 'text-emerald-500' : 'text-orange-500' }}">
                                     {{ $purchase->payment_status === 'paid' ? 'Lunas' : ($purchase->payment_status ===

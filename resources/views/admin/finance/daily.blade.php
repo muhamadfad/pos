@@ -1,20 +1,22 @@
 @extends('layouts.admin')
 
+@extends('layouts.admin')
+
 @section('title', 'Laporan Harian')
 
 @section('content')
 <div class="space-y-8">
 
     <!-- Branding & Range -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 mb-8">
         <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-                <span class="p-2 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
-                    <span class="iconify" data-icon="mdi:calendar-today"></span>
-                </span>
+            <h2 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <span class="iconify text-white text-2xl" data-icon="mdi:calendar-today"></span>
+                </div>
                 Laporan Harian
-            </h1>
-            <p class="text-slate-500 font-medium">
+            </h2>
+            <p class="text-slate-500 font-medium mt-2">
                 @if($startDate && $endDate)
                     {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}
                 @elseif($startDate)
@@ -25,7 +27,7 @@
             </p>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             <!-- Date Filter -->
             <form action="{{ route('admin.finance.daily') }}" method="GET" class="flex gap-2 items-center">
                 <input type="date" name="start_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $startDate }}">
@@ -36,155 +38,6 @@
                 @endif
                 @if(request('payment_method'))
                     <input type="hidden" name="payment_method" value="{{ request('payment_method') }}">
-                @endif
-                <button type="submit" class="px-3 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-indigo-700">Filter</button>
-                @if($startDate || $endDate)
-                    <a href="{{ route('admin.finance.daily', ['branch_id' => request('branch_id')]) }}" class="px-3 py-2 bg-slate-200 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-300">Reset</a>
-                @endif
-            </form>
-
-            <!-- Branch Filter (Hanya untuk Super Admin) -->
-            @if($isSuperAdmin ?? false)
-            <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">ðŸ¢ Semua Cabang</option>
-                @foreach($branches ?? [] as $branch)
-                <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
-                    <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
-                </option>
-                @endforeach
-            </select>
-            @endif
-            
-            <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
-                <a href="{{ route('admin.finance.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
-                <a href="{{ route('admin.finance.daily') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
-                <a href="{{ route('admin.finance.weekly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
-                <a href="{{ route('admin.finance.monthly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Info Cabang -->
-    @if(isset($currentBranchName))
-    <div class="bg-indigo-50 rounded-2xl p-3 px-5 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <span class="iconify text-indigo-600" data-icon="mdi:store"></span>
-            <span class="text-sm font-semibold text-indigo-800">Cabang: {{ $currentBranchName }}</span>
-        </div>
-        @if(($isSuperAdmin ?? false) && ($branchId ?? false))
-        <a href="{{ route('admin.finance.daily') }}" class="text-xs text-indigo-600 hover:text-indigo-800">Reset Filter</a>
-        @endif
-    </div>
-    @endif
-
-    <!-- Stats Grid - 4 kolom untuk card utama -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- Income Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Total Pendapatan</p>
-            <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-emerald-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['income'], 0, ',', '.') }}</span>
-            </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:trending-up"></span>
-                Penjualan Hari Ini
-            </div>
-        </div>
-
-        <!-- HPP Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">HPP (Cost of Goods Sold)</p>
-            <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-orange-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['cost'], 0, ',', '.') }}</span>
-            </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:package-variant"></span>
-                Modal Bahan Baku
-            </div>
-        </div>
-
-        <!-- Expense Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Biaya Operasional</p>
-            <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-rose-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['expenses'], 0, ',', '.') }}</span>
-            </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:cash-remove"></span>
-                Listrik, Gaji, dll
-            </div>
-        </div>
-
-        <!-- Pembayaran Supplier Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Pembayaran Supplier</p>
-            <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-purple-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['supplierPaid'], 0, ',', '.') }}</span>
-            </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:truck-outline"></span>
-                Pembelian Stok
-            </div>
-        </div>
-    </div>
-
-    <!-- Baris kedua: Profit & Net Cashflow -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- PROFIT Card (Keuntungan Bersih) -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-7 rounded-[2rem] shadow-xl group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full opacity-30 group-hover:scale-110 transition-transform"></div>
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
-                    <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
-                </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
-            </div>
-            <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
-            <p class="text-xs text-white/60 mt-2">Pendapatan ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ HPP ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Biaya Operasional</p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:chart-line"></span>
-                Laba Bersih Hari Ini
-            </div>
-        </div>
-
-        <!-- Net Cashflow Card -->
-        @php $isPositive = $finance['netCashflow'] >= 0; @endphp
-        <div class="relative overflow-hidden {{ $isPositive ? 'bg-emerald-600 shadow-emerald-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl group">
-            <div class="absolute right-0 bottom-0 opacity-10">
-                <span class="iconify text-9xl text-white" data-icon="{{ $isPositive ? 'mdi:piggy-bank' : 'mdi:alert-circle' }}"></span>
-            </div>
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
-                    <span class="iconify text-white text-xl" data-icon="mdi:currency-usd"></span>
-                </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Arus Kas Bersih</p>
-            </div>
-            <div class="flex items-baseline gap-1">
-                <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
-            </div>
-            <p class="text-white/50 text-[10px] mt-2 font-medium">
-                Pendapatan ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ (Pembayaran Supplier + Operasional)
-            </p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>
-                {{ $isPositive ? 'Surplus Kas' : 'Defisit Kas' }}
-            </div>
-        </div>
 
     </div>
 
