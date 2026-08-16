@@ -38,6 +38,7 @@ export interface CashierShift {
     opening_balance: number;
     total_sales: number;
     transaction_count: number;
+    total_transfer?: number;
 }
 
 export interface DebtOrder {

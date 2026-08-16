@@ -327,6 +327,7 @@ function updateQty(productId: number, qty: number) {
                     setLocalActiveShift({
                         ...localActiveShift,
                         total_sales: (localActiveShift.total_sales || 0) + totalPrice,
+                        total_transfer: (localActiveShift.total_transfer || 0) + (paymentMethod === 'transfer' ? totalPrice : 0),
                     });
                 }
                 
@@ -389,7 +390,7 @@ function updateQty(productId: number, qty: number) {
             />
 
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
-                {/* LEFT: Product Grid — hanya tampil saat mode pos */}
+                {/* LEFT: Product Grid â€” hanya tampil saat mode pos */}
                 {mode === "pos" && (
                     <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden md:flex' : 'flex'}`}>
                         <Header

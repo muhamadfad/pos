@@ -33,6 +33,10 @@ class PointOfSaleController extends Controller
             return redirect()->route('pos.shift.index');
         }
 
+        $totalTransfer = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
+            ->where('payment_method', 'transfer')
+            ->sum('total_paid');
+
         $products = Product::with('category')
             ->where('is_active', true)
             ->orderBy('name')
@@ -97,6 +101,7 @@ class PointOfSaleController extends Controller
                 'opening_balance'  => $activeShift->opening_balance,
                 'total_sales'      => (float) $activeShift->total_sales,
                 'transaction_count' => $activeShift->transaction_count,
+                'total_transfer'    => (float) $totalTransfer,
             ],
         ])->rootView('inertia');
     }
