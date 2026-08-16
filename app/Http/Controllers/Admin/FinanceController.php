@@ -509,7 +509,33 @@ class FinanceController extends Controller
             $currentBranchName = $currentBranch ? $currentBranch->name : 'Cabang ' . $branchId;
         }
 
+        
+        $ordersQuery = \App\Models\Order::with('customer')->where('payment_status', 'paid');
+        $expensesQuery = \App\Models\Expense::query();
+        $purchasesQuery = \App\Models\Purchase::with('supplier');
+
+        if ($startDate && $endDate) {
+            $ordersQuery->whereBetween('date', [\Carbon\Carbon::parse($startDate)->startOfDay(), \Carbon\Carbon::parse($endDate)->endOfDay()]);
+            $expensesQuery->whereBetween('date', [\Carbon\Carbon::parse($startDate)->startOfDay(), \Carbon\Carbon::parse($endDate)->endOfDay()]);
+            $purchasesQuery->whereBetween('date', [\Carbon\Carbon::parse($startDate)->startOfDay(), \Carbon\Carbon::parse($endDate)->endOfDay()]);
+        } elseif ($startDate) {
+            $ordersQuery->whereDate('date', \Carbon\Carbon::parse($startDate));
+            $expensesQuery->whereDate('date', \Carbon\Carbon::parse($startDate));
+            $purchasesQuery->whereDate('date', \Carbon\Carbon::parse($startDate));
+        }
+
+        if ($branchId) {
+            $ordersQuery->where('branch_id', $branchId);
+            $expensesQuery->where('branch_id', $branchId);
+            $purchasesQuery->where('branch_id', $branchId);
+        }
+
+        $ordersList = $ordersQuery->orderBy('date', 'asc')->get();
+        $expensesList = $expensesQuery->orderBy('date', 'asc')->get();
+        $purchasesList = $purchasesQuery->orderBy('date', 'asc')->get();
+
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.finance', compact(
+            'ordersList', 'expensesList', 'purchasesList', 
             'finance', 'title', 'startDate', 'endDate', 'currentBranchName', 'period'
         ));
         
