@@ -27,7 +27,13 @@ class FinanceController extends Controller
             $branchId = $userBranchId;
         }
         
-        $total   = $this->calculateProfit(null, null, $branchId);
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $start = $startDate ? Carbon::parse($startDate)->startOfDay() : null;
+        $end = $endDate ? Carbon::parse($endDate)->endOfDay() : null;
+
+        $total   = $this->calculateProfit($start, $end, $branchId);
         $daily   = $this->calculateProfit(Carbon::today(), null, $branchId);
         $weekly  = $this->calculateProfit(Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek(), $branchId);
         $monthly = $this->calculateProfit(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth(), $branchId);
@@ -51,6 +57,8 @@ class FinanceController extends Controller
         }
 
         return view('admin.finance.index', compact(
+            'startDate',
+            'endDate',
             'total',
             'daily',
             'weekly',
