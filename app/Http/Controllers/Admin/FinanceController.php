@@ -227,9 +227,7 @@ class FinanceController extends Controller
         }
 
         return view('admin.finance.daily', compact('startDate', 'endDate', 
-            'finance', 
-            'todayObj',
-            'topProducts', 
+            'finance', 'topProducts', 
             'expenses',
             'isSuperAdmin',
             'branches',
