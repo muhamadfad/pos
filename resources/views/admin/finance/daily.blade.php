@@ -46,7 +46,7 @@
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin ?? false)
             <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
-                <option value="">Ã°Å¸ÂÂ¢ Semua Cabang</option>
+                <option value="">Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
                     <span class="iconify inline-block" data-icon="mdi:store-outline"></span> {{ $branch->name }}
