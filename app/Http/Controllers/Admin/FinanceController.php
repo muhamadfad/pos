@@ -471,4 +471,48 @@ class FinanceController extends Controller
             'netCashflow' => $netCashflow,
         ];
     }
+
+    public function export(Request $request)
+    {
+        $period = $request->get('period', 'index');
+        $branchId = $request->get('branch_id');
+        
+        $user = auth()->user();
+        if ($user->role !== 'super_admin') {
+            $branchId = $user->branch_id;
+        }
+
+        $startDate = null;
+        $endDate = null;
+        $title = "Laporan Keuangan";
+
+        if ($period == 'daily') {
+            $startDate = \Carbon\Carbon::today()->format('Y-m-d');
+            $title = "Laporan Keuangan Harian";
+        } elseif ($period == 'weekly') {
+            $startDate = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+            $endDate = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+            $title = "Laporan Keuangan Mingguan";
+        } elseif ($period == 'monthly') {
+            $startDate = \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate = \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d');
+            $title = "Laporan Keuangan Bulanan";
+        } else {
+            $title = "Laporan Keuangan Keseluruhan";
+        }
+
+        $finance = $this->getFinanceData($branchId, $startDate, $endDate);
+        
+        $currentBranchName = 'Semua Cabang';
+        if ($branchId) {
+            $currentBranch = \App\Models\Branch::find($branchId);
+            $currentBranchName = $currentBranch ? $currentBranch->name : 'Cabang ' . $branchId;
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.finance', compact(
+            'finance', 'title', 'startDate', 'endDate', 'currentBranchName', 'period'
+        ));
+        
+        return $pdf->download('Laporan_Finance_'.date('Y-m-d').'.pdf');
+    }
 }

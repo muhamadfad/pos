@@ -30,6 +30,10 @@
             </select>
             @endif
             
+            
+            <a href="{{ route('admin.finance.export', ['period' => 'weekly', 'branch_id' => $branchId]) }}" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
+                <span class="iconify" data-icon="mdi:file-pdf-box"></span> Export PDF
+            </a>
             <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
                 <a href="{{ route('admin.finance.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
