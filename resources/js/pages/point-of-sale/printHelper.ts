@@ -7,6 +7,7 @@ export function printWithRawBT(t: TransactionDetails) {
 
     let str = "";
     str += "      COTO SELERA RAKYAT      \n";
+    str += "     Hub: +62 822-9037-1299   \n";
     str += "     Terima Kasih Atas        \n";
     str += "       Kunjungan Anda         \n";
     str += "--------------------------------\n";

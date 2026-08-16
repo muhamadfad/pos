@@ -89,6 +89,7 @@ class PointOfSaleController extends Controller
         return Inertia::render('point-of-sale/page', [
             'authUser'      => [
                 'id'        => $user->id,
+                'name'      => $user->name,
                 'branch_id' => $branchId,
             ],
             'products'      => $products,

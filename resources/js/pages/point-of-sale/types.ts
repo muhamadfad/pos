@@ -63,6 +63,7 @@ export interface PageProps {
     [key: string]: unknown;
     authUser: {
         id: number;
+        name: string;
         branch_id: number;
     };
     products: Product[];
