@@ -5,92 +5,130 @@
     <title>{{ $title }}</title>
     <style>
         body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #333; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        .header h1 { margin: 0; font-size: 24px; color: #4338ca; }
-        .header p { margin: 5px 0 0; color: #666; font-size: 14px; }
-        .info-table { width: 100%; margin-bottom: 20px; }
-        .info-table td { padding: 5px; }
-        .kpi-container { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .kpi-container td { width: 50%; padding: 10px; vertical-align: top; }
-        .kpi-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background-color: #f8fafc; }
-        .kpi-box h3 { margin: 0 0 10px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
-        .kpi-box .value { font-size: 24px; font-weight: bold; color: #0f172a; margin: 0; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 20px; text-transform: uppercase; }
+        .header p { margin: 5px 0 0; font-size: 14px; }
         
-        .net-cashflow { background-color: {{ $finance['netCashflow'] >= 0 ? '#10b981' : '#ef4444' }}; color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 30px; }
-        .net-cashflow h3 { margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
-        .net-cashflow .value { font-size: 32px; font-weight: bold; margin: 0; }
+        .info-table { width: 100%; margin-bottom: 30px; font-size: 12px; }
+        .info-table td { padding: 3px 0; }
         
-        .section-title { font-size: 16px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; margin-top: 20px; }
-        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
-        table.data-table th { background-color: #f1f5f9; color: #475569; font-size: 12px; text-transform: uppercase; }
-        table.data-table tr:nth-child(even) { background-color: #f8fafc; }
+        table.finance-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        table.finance-table th, table.finance-table td { padding: 10px; border: 1px solid #000; }
+        table.finance-table th { background-color: #f0f0f0; font-weight: bold; text-align: left; text-transform: uppercase; font-size: 11px; }
+        
+        .section-header td { font-weight: bold; background-color: #f9f9f9; text-transform: uppercase; }
+        .item-row td:first-child { padding-left: 20px; }
+        .total-row td { font-weight: bold; border-top: 2px solid #000; }
+        
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        
+        .net-positive { color: #059669; }
+        .net-negative { color: #dc2626; }
+        
+        .signature-area { width: 100%; margin-top: 50px; }
+        .signature-box { width: 250px; float: right; text-align: center; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>COTO MAKASSAR SELERA RAKYAT</h1>
+        <h1>Coto Makassar Selera Rakyat</h1>
         <p>{{ $title }}</p>
     </div>
 
     <table class="info-table">
         <tr>
+            <td style="width: 15%;"><strong>Cabang</strong></td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 43%;">{{ $currentBranchName }}</td>
+            
+            <td style="width: 15%;"><strong>Tanggal Cetak</strong></td>
+            <td style="width: 2%;">:</td>
+            <td style="width: 23%;">{{ date('d/m/Y H:i') }}</td>
+        </tr>
+        <tr>
+            <td><strong>Periode</strong></td>
+            <td>:</td>
             <td>
-                <strong>Cabang:</strong> {{ $currentBranchName }}<br>
-                <strong>Periode:</strong> 
                 @if($startDate && $endDate)
-                    {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                    {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
                 @elseif($startDate)
                     {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }}
                 @else
                     Semua Waktu
                 @endif
             </td>
-            <td style="text-align: right; vertical-align: top;"><strong>Tanggal Cetak:</strong> {{ date('d/m/Y H:i') }}</td>
+            
+            <td><strong>Dicetak Oleh</strong></td>
+            <td>:</td>
+            <td>{{ auth()->user()->name ?? 'Admin' }}</td>
         </tr>
     </table>
 
-    <div class="net-cashflow">
-        <h3>Saldo Bersih (Net Cashflow)</h3>
-        <p class="value">Rp {{ number_format($finance['netCashflow'], 0, ',', '.') }}</p>
-        <p style="margin-top: 10px; font-size: 11px;">Pendapatan - Pembayaran Supplier - Operasional</p>
-    </div>
+    <table class="finance-table">
+        <thead>
+            <tr>
+                <th style="width: 70%;">Keterangan</th>
+                <th style="width: 30%; text-align: right;">Jumlah (Rp)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- PENDAPATAN -->
+            <tr class="section-header">
+                <td colspan="2">A. Pendapatan</td>
+            </tr>
+            <tr class="item-row">
+                <td>Pendapatan Penjualan (Cash-In)</td>
+                <td class="text-right">{{ number_format($finance['income'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="total-row">
+                <td>Total Pendapatan</td>
+                <td class="text-right">{{ number_format($finance['income'], 0, ',', '.') }}</td>
+            </tr>
 
-    <table class="kpi-container">
-        <tr>
-            <td>
-                <div class="kpi-box" style="border-left: 4px solid #10b981;">
-                    <h3>Total Pendapatan</h3>
-                    <p class="value">Rp {{ number_format($finance['income'], 0, ',', '.') }}</p>
-                </div>
-            </td>
-            <td>
-                <div class="kpi-box" style="border-left: 4px solid #f59e0b;">
-                    <h3>HPP (Cost of Goods Sold)</h3>
-                    <p class="value">Rp {{ number_format($finance['cost'], 0, ',', '.') }}</p>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="kpi-box" style="border-left: 4px solid #ef4444;">
-                    <h3>Biaya Operasional</h3>
-                    <p class="value">Rp {{ number_format($finance['expenses'], 0, ',', '.') }}</p>
-                </div>
-            </td>
-            <td>
-                <div class="kpi-box" style="border-left: 4px solid #8b5cf6;">
-                    <h3>Pembayaran Supplier</h3>
-                    <p class="value">Rp {{ number_format($finance['supplierPaid'], 0, ',', '.') }}</p>
-                </div>
-            </td>
-        </tr>
+            <!-- PENGELUARAN -->
+            <tr><td colspan="2" style="border:none; height: 10px;"></td></tr>
+            <tr class="section-header">
+                <td colspan="2">B. Pengeluaran (Cash-Out)</td>
+            </tr>
+            <tr class="item-row">
+                <td>Harga Pokok Penjualan (HPP) / Modal Bahan Baku</td>
+                <td class="text-right">{{ number_format($finance['cost'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="item-row">
+                <td>Biaya Operasional (Listrik, Gaji, dll)</td>
+                <td class="text-right">{{ number_format($finance['expenses'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="item-row">
+                <td>Pembayaran ke Supplier (Pembelian Stok)</td>
+                <td class="text-right">{{ number_format($finance['supplierPaid'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="total-row">
+                @php $totalPengeluaran = $finance['cost'] + $finance['expenses'] + $finance['supplierPaid']; @endphp
+                <td>Total Pengeluaran</td>
+                <td class="text-right">{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+            </tr>
+
+            <!-- RINGKASAN -->
+            <tr><td colspan="2" style="border:none; height: 10px;"></td></tr>
+            <tr class="section-header">
+                <td colspan="2">C. Ringkasan Keuangan</td>
+            </tr>
+            <tr class="total-row" style="font-size: 14px;">
+                <td>SALDO BERSIH (NET CASHFLOW)</td>
+                <td class="text-right {{ $finance['netCashflow'] >= 0 ? 'net-positive' : 'net-negative' }}">
+                    {{ number_format($finance['netCashflow'], 0, ',', '.') }}
+                </td>
+            </tr>
+        </tbody>
     </table>
-    
-    <div style="text-align: right; margin-top: 50px;">
-        <p>Penanggung Jawab,</p>
-        <br><br><br><br>
-        <p>_______________________</p>
+
+    <div class="signature-area">
+        <div class="signature-box">
+            <p>Penanggung Jawab,</p>
+            <br><br><br><br><br>
+            <p style="text-decoration: underline; font-weight: bold;">{{ auth()->user()->name ?? 'Admin' }}</p>
+        </div>
     </div>
 </body>
 </html>
