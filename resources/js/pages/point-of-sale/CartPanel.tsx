@@ -151,7 +151,7 @@ export default function CartPanel({
             )}
 
             <div className="flex-1 min-h-0 flex flex-col bg-white overflow-hidden h-full">
-                {/* Toast sukses â€” inline banner */}
+                {/* Toast sukses Ã¢â‚¬â€ inline banner */}
                 {showSuccess && (
                     <div className="shrink-0 mx-4 mt-3 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl">
                         <svg
@@ -180,7 +180,7 @@ export default function CartPanel({
                     </div>
                 )}
 
-                {/* â”€â”€ SHIFT BANNER â”€â”€ */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ SHIFT BANNER Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 {activeShift && (
                     <div className="px-4 pt-3 pb-2 bg-linear-to-r from-green-50 to-emerald-50 border-b border-green-100 shrink-0">
                         <div className="flex items-center justify-between mb-2">
@@ -206,10 +206,10 @@ export default function CartPanel({
                             </div>
                             <div>
                                 <div className="text-green-600">
-                                    Total Penjualan
+                                    Total Tunai
                                 </div>
                                 <div className="font-semibold text-gray-800">
-                                    {formatRupiah(activeShift.total_sales)}
+                                    {formatRupiah(activeShift.total_sales - (activeShift.total_transfer || 0))}
                                 </div>
                             </div>
                             <div>
@@ -224,7 +224,7 @@ export default function CartPanel({
                     </div>
                 )}
 
-                {/* â”€â”€ HEADER â”€â”€ */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ HEADER Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
@@ -248,7 +248,7 @@ export default function CartPanel({
                             </h2>
                             <p className="text-xs text-gray-400 font-medium mt-0.5">
                                 {step === "cart"
-                                    ? `${totalItems} item Â· ${cart.length} produk`
+                                    ? `${totalItems} item Ã‚Â· ${cart.length} produk`
                                     : "Selesaikan Transaksi"}
                             </p>
                         </div>
@@ -294,7 +294,7 @@ export default function CartPanel({
                     </div>
                 </div>
 
-                {/* â”€â”€ ERROR ALERTS â”€â”€ */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ ERROR ALERTS Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 {errors && Object.keys(errors).length > 0 && (
                     <div className="px-4 pt-3 space-y-2 shrink-0">
                         {Object.values(errors).map((err, i) => (
@@ -321,9 +321,9 @@ export default function CartPanel({
                     </div>
                 )}
 
-                {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                {/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
                     STEP 1: CART
-                â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+                Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */}
                 {step === "cart" && (
                     <>
                         {/* Cart items */}
@@ -425,9 +425,9 @@ export default function CartPanel({
                     </>
                 )}
 
-                {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+                {/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
                     STEP 2: PAYMENT
-                â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+                Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */}
                 {step === "payment" && (
                     <>
                         {/* Konten scrollable */}
@@ -450,7 +450,7 @@ export default function CartPanel({
                                                     {item.name}
                                                 </span>
                                                 <span className="text-gray-400 shrink-0 text-xs mr-2">
-                                                    Ã—{item.qty}
+                                                    Ãƒâ€”{item.qty}
                                                 </span>
                                                 <span className="font-semibold text-gray-800 shrink-0">
                                                     {formatRupiah(
@@ -606,7 +606,7 @@ export default function CartPanel({
                                     </div>
                                 )}
 
-                                {/* Bayar Input â€” hanya jika bukan kasbon */}
+                                {/* Bayar Input Ã¢â‚¬â€ hanya jika bukan kasbon */}
                                 {paymentType !== "kasbon" && (
                                     <div>
                                         <label className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2 flex items-center gap-1.5">
@@ -776,7 +776,7 @@ export default function CartPanel({
                                         </div>
                                     )}
 
-                                {/* Kembalian â€” hanya jika lunas dan ada uang lebih */}
+                                {/* Kembalian Ã¢â‚¬â€ hanya jika lunas dan ada uang lebih */}
                                 {paymentType === "lunas" && paidAmount > 0 && (
                                     <div
                                         className={`flex justify-between items-center px-4 py-3 rounded-xl ${change >= 0 ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}
@@ -798,7 +798,7 @@ export default function CartPanel({
                             </div>
                         </div>
 
-                        {/* Tombol Bayar â€” sticky di bawah */}
+                        {/* Tombol Bayar Ã¢â‚¬â€ sticky di bawah */}
                         <div className="shrink-0 p-4 border-t border-gray-200 bg-white">
                             <button
                                 onClick={() =>

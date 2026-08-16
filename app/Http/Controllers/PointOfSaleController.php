@@ -256,7 +256,15 @@ class PointOfSaleController extends Controller
             // Gunakan method increment atau update langsung dengan nilai numerik
             $activeShift->total_sales = $activeShift->total_sales + $totalAmount;
             $activeShift->transaction_count = $activeShift->transaction_count + 1;
-            $activeShift->expected_cash = $activeShift->opening_balance + $activeShift->total_sales;
+            
+            $totalTransferShift = \DB::table('orders')
+                ->where('cashier_shift_id', $activeShift->id)
+                ->where('payment_method', 'transfer')
+                ->sum('total_paid');
+                
+            $totalCashShift = $activeShift->total_sales - $totalTransferShift;
+            $activeShift->expected_cash = $activeShift->opening_balance + $totalCashShift;
+            
             $activeShift->save();
             
             // Refresh model untuk memastikan nilai terupdate

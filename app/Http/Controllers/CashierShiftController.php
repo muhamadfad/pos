@@ -22,9 +22,14 @@ class CashierShiftController extends Controller
             ->where('status', 'open')
             ->first();
 
-        $expectedCash = $activeShift
-            ? $activeShift->opening_balance + $activeShift->total_sales
-            : 0;
+        $expectedCash = 0;
+        if ($activeShift) {
+            $totalTransfer = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
+                ->where('payment_method', 'transfer')
+                ->sum('total_paid');
+            $totalCash = $activeShift->total_sales - $totalTransfer;
+            $expectedCash = $activeShift->opening_balance + $totalCash;
+        }
 
         // Get transactions for active shift with proper item data
         $transactions = $activeShift
@@ -200,8 +205,12 @@ class CashierShiftController extends Controller
             ->where('status', 'open')
             ->firstOrFail();
 
-        // Calculate expected cash
-        $expectedCash = $shift->opening_balance + $shift->total_sales;
+        // Calculate expected cash (only cash payments)
+        $totalTransfer = \App\Models\Order::where('cashier_shift_id', $shift->id)
+            ->where('payment_method', 'transfer')
+            ->sum('total_paid');
+        $totalCash = $shift->total_sales - $totalTransfer;
+        $expectedCash = $shift->opening_balance + $totalCash;
 
         $shift->update([
             'closed_at' => now(),
