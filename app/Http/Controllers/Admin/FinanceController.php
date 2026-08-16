@@ -510,7 +510,7 @@ class FinanceController extends Controller
         }
 
         
-        $ordersQuery = \App\Models\Order::with('customer')->where('payment_status', 'paid');
+        $ordersQuery = \App\Models\Order::with(['customer', 'items.product'])->where('payment_status', 'paid');
         $expensesQuery = \App\Models\Expense::query();
         $purchasesQuery = \App\Models\Purchase::with('supplier');
 

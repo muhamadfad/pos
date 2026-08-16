@@ -135,22 +135,31 @@
         <thead>
             <tr>
                 <th style="width: 5%; text-align: center;">No</th>
-                <th style="width: 15%;">Tanggal</th>
-                <th style="width: 20%;">No. Pesanan</th>
-                <th style="width: 25%;">Pelanggan</th>
-                <th style="width: 15%;">Metode Pembayaran</th>
-                <th style="width: 20%; text-align: right;">Jumlah (Rp)</th>
+                <th style="width: 13%;">Tanggal</th>
+                <th style="width: 17%;">No. Pesanan</th>
+                <th style="width: 40%;">Detail Pesanan</th>
+                <th style="width: 10%;">Metode</th>
+                <th style="width: 15%; text-align: right;">Jumlah (Rp)</th>
             </tr>
         </thead>
         <tbody>
             @forelse($ordersList as $index => $order)
             <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ \Carbon\Carbon::parse($order->date)->format('d/m/Y H:i') }}</td>
-                <td>#{{ $order->id }}</td>
-                <td>{{ $order->customer->name ?? 'Umum' }}</td>
-                <td>{{ ucfirst($order->payment_method) }}</td>
-                <td class="text-right">{{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                <td class="text-center" style="vertical-align: top;">{{ $index + 1 }}</td>
+                <td style="vertical-align: top;">{{ \Carbon\Carbon::parse($order->date)->format('d/m/Y H:i') }}</td>
+                <td style="vertical-align: top;">
+                    <strong>#{{ $order->id }}</strong><br>
+                    <span style="font-size: 9px; color: #555;">{{ $order->customer->name ?? 'Umum' }}</span>
+                </td>
+                <td style="vertical-align: top;">
+                    <ul style="margin: 0; padding-left: 15px; font-size: 10px;">
+                        @foreach($order->items as $item)
+                            <li>{{ $item->product->name ?? 'Produk' }} (x{{ $item->quantity }})</li>
+                        @endforeach
+                    </ul>
+                </td>
+                <td style="vertical-align: top;">{{ ucfirst($order->payment_method) }}</td>
+                <td class="text-right" style="vertical-align: top;">{{ number_format($order->total_amount, 0, ',', '.') }}</td>
             </tr>
             @empty
             <tr>
