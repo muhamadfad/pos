@@ -6,7 +6,7 @@
 <div class="space-y-8">
 
     <!-- Branding & Range -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col md:flex-row flex-wrap md:items-center justify-between gap-4">
         <div>
             <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
                 <span class="p-2 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
@@ -25,7 +25,7 @@
             </p>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center gap-3">
+        <div class="flex flex-col md:flex-row flex-wrap items-center gap-3">
             <!-- Date Filter -->
             <form action="{{ route('admin.finance.daily') }}" method="GET" class="flex gap-2 items-center">
                 <input type="date" name="start_date" class="px-3 py-2 text-xs border border-slate-200 rounded-xl text-slate-600 focus:ring-2 focus:ring-indigo-500" value="{{ $startDate }}">
@@ -56,7 +56,7 @@
             @endif
             
             
-            <a href="{{ route('admin.finance.export', ['period' => 'daily', 'branch_id' => $branchId]) }}" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
+            <a href="{{ route('admin.finance.export', ['period' => 'daily', 'branch_id' => $branchId]) }}" class="whitespace-nowrap flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
                 <span class="iconify" data-icon="mdi:file-pdf-box"></span> Export PDF
             </a>
             <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
