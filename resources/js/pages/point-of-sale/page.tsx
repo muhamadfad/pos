@@ -338,16 +338,14 @@ function updateQty(productId: number, qty: number) {
                 setSelectedCustomerId(null);
                 searchRef.current?.focus();
                 
-                // Auto-print receipt after a short delay
-                setTimeout(() => {
-                    if (isBluetoothConnected) {
-                        printBluetooth(transactionData);
-                    } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
-                        printWithRawBT(transactionData);
-                    } else {
-                        window.print();
-                    }
-                }, 500);
+                // Auto-print receipt
+                if (isBluetoothConnected) {
+                    printBluetooth(transactionData);
+                } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                    printWithRawBT(transactionData);
+                } else {
+                    setTimeout(() => window.print(), 500);
+                }
                 
                 // Hide success message after 5 seconds
                 setTimeout(() => setShowSuccess(false), 5000);
@@ -377,15 +375,13 @@ function updateQty(productId: number, qty: number) {
                 onClose={() => setShowHistoryModal(false)} 
                 onReprint={(trx) => {
                     setLastTransaction(trx);
-                    setTimeout(() => {
-                        if (isBluetoothConnected) {
-                            printBluetooth(trx);
-                        } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
-                            printWithRawBT(trx);
-                        } else {
-                            window.print();
-                        }
-                    }, 200);
+                    if (isBluetoothConnected) {
+                        printBluetooth(trx);
+                    } else if (window.navigator.userAgent.toLowerCase().includes("android")) {
+                        printWithRawBT(trx);
+                    } else {
+                        setTimeout(() => window.print(), 200);
+                    }
                 }} 
             />
 
