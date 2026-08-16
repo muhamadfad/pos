@@ -41,7 +41,8 @@ export default function ReceiptPrint({ transaction }: ReceiptPrintProps) {
             </style>
             
             <div className="text-center mb-4">
-                <h2 className="font-bold text-lg mb-1">Coto Selera Rakyat</h2>
+                <h2 className="font-bold text-lg mb-1">Coto Makassar Selera Rakyat</h2>
+                <p className="text-xs font-semibold mb-1">Hub: +62 822-9037-1299</p>
                 <p className="text-xs">
                     Terima kasih atas kunjungan Anda
                 </p>

@@ -317,7 +317,7 @@ function updateQty(productId: number, qty: number) {
                         return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
                     })(),
                     customerName: customerName,
-                    cashierName: authUser.name,
+                    cashierName: localActiveShift?.cashier_name || authUser.name,
                 };
                 
                 setLastTransaction(transactionData);
