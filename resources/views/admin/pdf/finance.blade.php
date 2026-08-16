@@ -171,7 +171,7 @@
             @forelse($ordersList as $index => $order)
             <tr>
                 <td class="text-center" style="vertical-align: top;">{{ $index + 1 }}</td>
-                <td style="vertical-align: top;">{{ \Carbon\Carbon::parse($order->date)->format('d/m/Y H:i') }}</td>
+                <td style="vertical-align: top;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
                 <td style="vertical-align: top;">
                     <strong>#{{ $order->id }}</strong><br>
                     <span style="font-size: 9px; color: #555;">{{ $order->customer->name ?? 'Umum' }}</span>
