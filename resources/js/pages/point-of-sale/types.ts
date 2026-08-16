@@ -39,6 +39,7 @@ export interface CashierShift {
     total_sales: number;
     transaction_count: number;
     total_transfer?: number;
+    cashier_name?: string;
 }
 
 export interface DebtOrder {

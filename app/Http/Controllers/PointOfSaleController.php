@@ -103,6 +103,7 @@ class PointOfSaleController extends Controller
                 'total_sales'      => (float) $activeShift->total_sales,
                 'transaction_count' => $activeShift->transaction_count,
                 'total_transfer'    => (float) $totalTransfer,
+                'cashier_name'      => $activeShift->cashier_name,
             ],
         ])->rootView('inertia');
     }

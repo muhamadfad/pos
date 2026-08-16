@@ -390,7 +390,7 @@ function updateQty(productId: number, qty: number) {
             />
 
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
-                {/* LEFT: Product Grid â€” hanya tampil saat mode pos */}
+                {/* LEFT: Product Grid Ã¢â‚¬â€ hanya tampil saat mode pos */}
                 {mode === "pos" && (
                     <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden md:flex' : 'flex'}`}>
                         <Header
