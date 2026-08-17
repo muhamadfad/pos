@@ -88,7 +88,7 @@
                             <input type="number" 
                                    step="0.01" 
                                    name="current_stock" 
-                                   value="{{ old('current_stock', $ingredient->current_stock) }}" 
+                                   value="{{ old('current_stock', round($ingredient->current_stock, 2)) }}" 
                                    class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all @error('current_stock') border-rose-500 @enderror"
                                    placeholder="0"
                                    required>
@@ -103,11 +103,11 @@
                             Stok Minimal <span class="text-rose-500">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">⚠️</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">âš ï¸</span>
                             <input type="number" 
                                    step="0.01" 
                                    name="min_stock" 
-                                   value="{{ old('min_stock', $ingredient->min_stock) }}" 
+                                   value="{{ old('min_stock', round($ingredient->min_stock, 2)) }}" 
                                    class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all @error('min_stock') border-rose-500 @enderror"
                                    placeholder="0"
                                    required>
@@ -123,11 +123,11 @@
                             Harga Beli
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">💰</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">ðŸ’°</span>
                             <input type="number" 
                                    step="0.01" 
                                    name="unit_cost" 
-                                   value="{{ old('unit_cost', $ingredient->unit_cost) }}" 
+                                   value="{{ old('unit_cost', round($ingredient->unit_cost, 0)) }}" 
                                    class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all @error('unit_cost') border-rose-500 @enderror"
                                    placeholder="0">
                         </div>
