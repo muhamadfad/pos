@@ -1,4 +1,4 @@
-{{--
+﻿{{--
 ingredient Combobox Ã¢â‚¬â€ Alpine.js (untuk baris di dalam x-for)
 Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
@@ -105,7 +105,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
                 const q = (item._search ?? '').toLowerCase().trim();
                 return !q || p.name.toLowerCase().includes(q);
             }).length === 0" class="px-4 py-3 text-sm text-slate-400 text-center">
-                    Tidak ditemukan Ã¢â‚¬â€ "<span x-text="item._search ?? ''"></span>"
+                    Tidak ditemukan - "<span x-text="item._search ?? ''"></span>"
                 </div>
             </div>
         </div>
