@@ -1,13 +1,13 @@
 {{--
-ingredient Combobox — Alpine.js (untuk baris di dalam x-for)
-──────────────────────────────────────────────────────────
+ingredient Combobox Ã¢â‚¬â€ Alpine.js (untuk baris di dalam x-for)
+Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
     State pencarian disimpan di item itu sendiri (item._search, item._open)
     sehingga setiap baris punya state independen tanpa konflik scope.
 
-    Props (Blade — pakai @include, bukan <x-component>):
-        $priceKey — field harga: "selling_price" | "purchase_price" (default: selling_price)
-        $showStock — boolean, tampilkan badge stok (default: false)
+    Props (Blade Ã¢â‚¬â€ pakai @include, bukan <x-component>):
+        $priceKey Ã¢â‚¬â€ field harga: "selling_price" | "purchase_price" (default: selling_price)
+        $showStock Ã¢â‚¬â€ boolean, tampilkan badge stok (default: false)
 
         Usage di dalam x-for:
         @include('components.ingredient-combobox', ['priceKey' => 'selling_price', 'showStock' => true])
@@ -24,7 +24,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
             {{-- Hidden input untuk form POST (ingredient_id) --}}
             <input type="hidden" :name="'items[' + index + '][ingredient_id]'" :value="item.ingredient_id" />
 
-            {{-- ── Badge Bahan Baku terpilih ── --}}
+            {{-- Ã¢â€â‚¬Ã¢â€â‚¬ Badge Bahan Baku terpilih Ã¢â€â‚¬Ã¢â€â‚¬ --}}
             <div x-show="item.ingredient_id"
                 class="flex items-center gap-2 px-3 py-2 bg-indigo-50 border border-indigo-200 rounded-xl cursor-pointer hover:bg-indigo-100 transition-colors"
                 @click="
@@ -32,12 +32,12 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
             @if($showStock) item.stock_available = 0; @endif
             item._search = '';
             const r = $refs.comboWrap.getBoundingClientRect();
-            item._dropPos = { top: r.bottom + window.scrollY + 4, left: r.left + window.scrollX, width: r.width };
+            item._dropPos = { top: r.bottom + 4, left: r.left, width: r.width };
             item._open = true;
         " title="Klik untuk ganti Bahan Baku">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-indigo-800 truncate"
-                        x-text="_ingredients.find(p => p.id == item.ingredient_id)?.name ?? '—'"></p>
+                        x-text="_ingredients.find(p => p.id == item.ingredient_id)?.name ?? 'Ã¢â‚¬â€'"></p>
                     <p class="text-xs text-indigo-400" x-text="item.unit_name"></p>
                 </div>
                 <button type="button"
@@ -50,7 +50,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
                 </button>
             </div>
 
-            {{-- ── Input pencarian (tampil saat belum ada pilihan) ── --}}
+            {{-- Ã¢â€â‚¬Ã¢â€â‚¬ Input pencarian (tampil saat belum ada pilihan) Ã¢â€â‚¬Ã¢â€â‚¬ --}}
             <div x-show="!item.ingredient_id" class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -60,14 +60,14 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
                 </div>
                 <input type="text" x-model="item._search" @focus="
                 const r = $refs.comboWrap.getBoundingClientRect();
-                item._dropPos = { top: r.bottom + window.scrollY + 4, left: r.left + window.scrollX, width: r.width };
+                item._dropPos = { top: r.bottom + 4, left: r.left, width: r.width };
                 item._open = true;
-            " @input="item._open = true" @keydown.escape.stop="item._open = false; item._search = ''"
+            " @input="const r = $refs.comboWrap.getBoundingClientRect(); item._dropPos = { top: r.bottom + 4, left: r.left, width: r.width }; item._open = true" @keydown.escape.stop="item._open = false; item._search = ''"
                     placeholder="Cari Bahan Baku..." autocomplete="off"
                     class="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all" />
             </div>
 
-            {{-- ── Dropdown hasil pencarian (fixed → tembus overflow) ── --}}
+            {{-- Ã¢â€â‚¬Ã¢â€â‚¬ Dropdown hasil pencarian (fixed Ã¢â€ â€™ tembus overflow) Ã¢â€â‚¬Ã¢â€â‚¬ --}}
             <div x-show="item._open && !item.ingredient_id" x-transition:enter="transition ease-out duration-100"
                 x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
@@ -105,7 +105,7 @@ Dirancang untuk digunakan di dalam <template x-for="(item, index) in items">
                 const q = (item._search ?? '').toLowerCase().trim();
                 return !q || p.name.toLowerCase().includes(q);
             }).length === 0" class="px-4 py-3 text-sm text-slate-400 text-center">
-                    Tidak ditemukan — "<span x-text="item._search ?? ''"></span>"
+                    Tidak ditemukan Ã¢â‚¬â€ "<span x-text="item._search ?? ''"></span>"
                 </div>
             </div>
         </div>
