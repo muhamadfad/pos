@@ -70,9 +70,9 @@
             <div class="text-left md:text-right space-y-4">
                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Supplier</p>
                 <div>
-                    <h3 class="text-xl font-bold text-slate-900">{{ $purchase->supplier->name }}</h3>
+                    <h3 class="text-xl font-bold text-slate-900">{{ $purchase->supplier->name ?? 'Supplier Umum' }}</h3>
                     <p class="text-slate-500 text-sm max-w-xs md:ml-auto">
-                        {{ $purchase->supplier->address ?? 'No Address' }}<br>
+                        {{ $purchase->supplier->address ?? '-' }}<br>
                         {{ $purchase->supplier->phone ?? '-' }}
                     </p>
                 </div>
@@ -181,7 +181,7 @@
                             <p class="text-[12px] text-slate-400">
                                 {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
                                 @if($payment->payment_method)
-                                <span class="mx-1">•</span> {{ strtoupper($payment->payment_method) }}
+                                <span class="mx-1">â€¢</span> {{ strtoupper($payment->payment_method) }}
                                 @endif
                             </p>
                         </div>
@@ -225,7 +225,7 @@
                         @csrf
                         <div class="p-8">
                             <div class="flex items-center justify-between mb-6">
-                                <h3 class="text-xl font-black text-slate-900 tracking-tight" id="modal-title">💰 Bayar
+                                <h3 class="text-xl font-black text-slate-900 tracking-tight" id="modal-title">ðŸ’° Bayar
                                     Hutang</h3>
                                 <button type="button" @click="showPaymentModal = false"
                                     class="text-slate-400 hover:text-slate-600 transition-colors">
