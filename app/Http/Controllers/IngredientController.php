@@ -138,6 +138,7 @@ class IngredientController extends Controller
             $data['branch_id'] = $userBranchId;
         }
         
+        $data['unit_cost'] = $data['unit_cost'] ?? 0;
         Ingredient::create($data);
         
         return redirect()->route('admin.ingredients.index')
@@ -235,6 +236,7 @@ class IngredientController extends Controller
             unset($data['branch_id']);
         }
         
+        $data['unit_cost'] = $data['unit_cost'] ?? 0;
         $ingredient->update($data);
         
         return redirect()->route('admin.ingredients.index')
