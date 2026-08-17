@@ -134,7 +134,7 @@
                             $transactions->count() }} transaksi</span>
                     </div>
 
-                    <div class="grid gap-3">
+                    <div class="grid gap-3 max-h-[65vh] overflow-y-auto pr-2 pb-2 custom-scrollbar">
                         @foreach($transactions as $index => $transaction)
                         <div onclick="showTransactionDetail({{ $transaction->id }})"
                             class="bg-white rounded-xl shadow-sm border border-slate-100 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group">
@@ -151,7 +151,7 @@
                                                 <div class="flex items-center gap-2">
                                                     <span class="font-semibold text-slate-800">#{{ str_pad($index + 1,
                                                         3, '0', STR_PAD_LEFT) }}</span>
-                                                    <span class="text-slate-400">•</span>
+                                                    <span class="text-slate-400">â€¢</span>
                                                     <span class="text-sm text-slate-600">{{
                                                         $transaction->created_at->format('H:i') }}</span>
                                                 </div>
@@ -572,7 +572,7 @@
                     <div class="flex-1">
                         <div class="font-medium text-slate-800">${item.product_name}</div>
                         <div class="text-sm text-slate-500 mt-1">
-                            ${item.quantity} × Rp ${new Intl.NumberFormat('id-ID').format(item.price)}
+                            ${item.quantity} Ã— Rp ${new Intl.NumberFormat('id-ID').format(item.price)}
                         </div>
                     </div>
                     <div class="font-semibold text-slate-800">
