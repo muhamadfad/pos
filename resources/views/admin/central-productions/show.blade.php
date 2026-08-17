@@ -36,9 +36,9 @@
                     </span>
                     Barang Jadi (Hasil)
                 </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-1">{{ $production->resultIngredient->name }}</h3>
+                <h3 class="text-xl font-bold text-slate-800 mb-1">{{ $production->resultIngredient?->name ?? 'Bahan Dihapus' }}</h3>
                 <div class="text-3xl font-black text-blue-600 mb-2">
-                    {{ number_format($production->result_quantity, 1, ',', '.') }} <span class="text-lg text-blue-400 font-semibold">{{ $production->resultIngredient->unit->name ?? 'kg' }}</span>
+                    {{ number_format($production->result_quantity, 1, ',', '.') }} <span class="text-lg text-blue-400 font-semibold">{{ $production->resultIngredient?->unit?->name ?? 'kg' }}</span>
                 </div>
                 <p class="text-sm text-slate-500 flex items-center">
                     <span class="iconify mr-1.5" data-icon="lucide:calendar" data-width="14"></span>
@@ -66,7 +66,7 @@
                 
                 <div class="pt-4 border-t border-orange-200/50">
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-500 font-medium">HPP (Modal) per {{ $production->resultIngredient->unit->name ?? 'kg' }}:</span>
+                        <span class="text-slate-500 font-medium">HPP (Modal) per {{ $production->resultIngredient?->unit?->name ?? 'kg' }}:</span>
                         <span class="font-bold text-slate-800">Rp {{ number_format($production->total_cost / ($production->result_quantity > 0 ? $production->result_quantity : 1), 0, ',', '.') }}</span>
                     </div>
                 </div>

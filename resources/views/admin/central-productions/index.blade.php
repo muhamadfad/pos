@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Produksi (Olah Bahan)')
 
@@ -107,12 +107,12 @@
                                     <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
                                         <span class="iconify" data-icon="lucide:beef"></span>
                                     </div>
-                                    <span class="font-bold text-slate-800">{{ $item->resultIngredient->name }}</span>
+                                    <span class="font-bold text-slate-800">{{ $item->resultIngredient?->name ?? 'Bahan Dihapus' }}</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-100">
-                                    {{ number_format($item->result_quantity, 1, ',', '.') }} <span class="text-xs font-normal opacity-70">{{ $item->resultIngredient->unit->name ?? 'kg' }}</span>
+                                    {{ number_format($item->result_quantity, 1, ',', '.') }} <span class="text-xs font-normal opacity-70">{{ $item->resultIngredient?->unit?->name ?? 'kg' }}</span>
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-right">
