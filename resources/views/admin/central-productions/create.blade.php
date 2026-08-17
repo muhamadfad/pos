@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Tambah Produksi')
 
@@ -84,7 +84,7 @@
                                         <option value="">-- Pilih Barang Jadi --</option>
                                         @foreach($ingredients as $ing)
                                             <option value="{{ $ing->id }}" {{ old('result_ingredient_id') == $ing->id ? 'selected' : '' }}>
-                                                {{ $ing->name }} (Stok saat ini: {{ $ing->current_stock }} {{ $ing->unit->name ?? 'kg' }})
+                                                {{ $ing->name }} (Stok saat ini: {{ floatval($ing->current_stock) }} {{ $ing->unit->name ?? 'kg' }})
                                             </option>
                                         @endforeach
                                     </select>
