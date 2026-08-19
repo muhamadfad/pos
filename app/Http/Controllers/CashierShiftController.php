@@ -27,7 +27,11 @@ class CashierShiftController extends Controller
             $totalTransfer = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
                 ->where('payment_method', 'transfer')
                 ->sum('total_paid');
-            $totalCash = $activeShift->total_sales - $totalTransfer;
+            $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
+                ->where('branch_id', $branchId)
+                ->where('created_at', '>=', $activeShift->opened_at)
+                ->sum('amount');
+            $totalCash = $activeShift->total_sales - $totalTransfer - $totalExpense;
             $expectedCash = $activeShift->opening_balance + $totalCash;
         }
 

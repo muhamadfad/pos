@@ -96,14 +96,15 @@ class PointOfSaleController extends Controller
             'categories'    => $categories,
             'customers'     => $customers,
             'customerDebts' => $customerDebts,
-            'activeShift'   => [
-                'id'               => $activeShift->id,
-                'opened_at'        => $activeShift->opened_at->format('Y-m-d H:i:s'),
-                'opening_balance'  => $activeShift->opening_balance,
-                'total_sales'      => (float) $activeShift->total_sales,
-                'transaction_count' => $activeShift->transaction_count,
-                'total_transfer'    => (float) $totalTransfer,
-                'cashier_name'      => $activeShift->cashier_name,
+                        'activeShift'   => [
+                'id'               => \->id,
+                'opened_at'        => \->opened_at->format('Y-m-d H:i:s'),
+                'opening_balance'  => \->opening_balance,
+                'total_sales'      => (float) \->total_sales,
+                'transaction_count' => \->transaction_count,
+                'total_transfer'    => (float) \,
+                'total_expense'     => (float) \,
+                'cashier_name'      => \->cashier_name,
             ],
         ])->rootView('inertia');
     }
@@ -447,25 +448,35 @@ class PointOfSaleController extends Controller
         return response()->json($orders);
     }
 
-    public function storeExpense(Request $request)
+        public function storeExpense(Request )
     {
-        $validated = $request->validate([
+        \ = \->validate([
             'amount' => 'required|numeric|min:1',
             'description' => 'required|string|max:255',
             'category' => 'nullable|string|max:100',
         ]);
 
-        $user = auth()->user();
+        \ = auth()->user();
 
         Expense::create([
-            'branch_id' => $user->branch_id,
-            'user_id' => $user->id,
-            'amount' => $validated['amount'],
-            'description' => $validated['description'],
-            'category' => $validated['category'] ?? 'Operasional',
+            'branch_id' => \->branch_id,
+            'user_id' => \->id,
+            'amount' => \['amount'],
+            'description' => \['description'],
+            'category' => \['category'] ?? 'Operasional',
             'date' => now()->toDateString(),
             'reference' => 'POS-' . time(),
         ]);
+
+        \ = CashierShift::where('user_id', \->id)
+            ->where('branch_id', \->branch_id)
+            ->where('status', 'open')
+            ->first();
+
+        if (\) {
+            \->expected_cash -= \['amount'];
+            \->save();
+        }
 
         return redirect()->back()->with('success', 'Pengeluaran berhasil dicatat!');
     }
