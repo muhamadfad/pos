@@ -121,7 +121,7 @@
     </div>
 
     <!-- Baris kedua: Profit & Net Cashflow -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 {{ $isSuperAdmin ? 'lg:grid-cols-4 md:grid-cols-2' : 'md:grid-cols-3' }} gap-6">
         
         @if($isSuperAdmin)
 <!-- PROFIT Card (Keuntungan Bersih) -->
@@ -196,6 +196,30 @@
             <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
                 <span class="iconify" data-icon="mdi:wallet"></span>
                 Uang Fisik Untuk Disetor
+            </div>
+        </div>
+        <!-- Total Kas Transfer -->
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[2rem] p-7 text-white shadow-xl shadow-blue-500/30 relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500"></div>
+            <div class="absolute right-4 bottom-4 opacity-10">
+                <span class="iconify text-8xl" data-icon="mdi:bank-transfer"></span>
+            </div>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <span class="iconify text-white text-xl" data-icon="mdi:bank-transfer"></span>
+                </div>
+                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Total Kas Transfer</p>
+            </div>
+            <div class="flex items-baseline gap-1">
+                <span class="text-sm font-bold text-white/70">Rp</span>
+                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['income_transfer'], 0, ',', '.') }}</span>
+            </div>
+            <p class="text-white/50 text-[10px] mt-2 font-medium">
+                Total Pendapatan via Transfer
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+                <span class="iconify" data-icon="mdi:bank"></span>
+                Masuk ke Rekening
             </div>
         </div>
     </div>
