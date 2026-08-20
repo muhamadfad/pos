@@ -24,14 +24,14 @@ class CashierShiftController extends Controller
 
         $expectedCash = 0;
         if ($activeShift) {
-            $totalTransfer = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
-                ->where('payment_method', 'transfer')
+            $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
+                ->where('payment_method', 'cash')
                 ->sum('total_paid');
             $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
                 ->where('branch_id', $branchId)
                 ->where('created_at', '>=', $activeShift->opened_at)
                 ->sum('amount');
-            $totalCash = $activeShift->total_sales - $totalTransfer - $totalExpense;
+            $totalCash = $totalCashIncome - $totalExpense;
             $expectedCash = $activeShift->opening_balance + $totalCash;
         }
 
@@ -210,10 +210,16 @@ class CashierShiftController extends Controller
             ->firstOrFail();
 
         // Calculate expected cash (only cash payments)
-        $totalTransfer = \App\Models\Order::where('cashier_shift_id', $shift->id)
-            ->where('payment_method', 'transfer')
+        $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $shift->id)
+            ->where('payment_method', 'cash')
             ->sum('total_paid');
-        $totalCash = $shift->total_sales - $totalTransfer;
+            
+        $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)
+            ->where('created_at', '>=', $shift->opened_at)
+            ->sum('amount');
+            
+        $totalCash = $totalCashIncome - $totalExpense;
         $expectedCash = $shift->opening_balance + $totalCash;
 
         $shift->update([
@@ -254,7 +260,28 @@ class CashierShiftController extends Controller
             $query->where('branch_id', $branchId);
         }
         
-        $shifts = $query->orderBy('opened_at', 'desc')->get();
+                \ = \->orderBy('opened_at', 'desc')->get()->map(function(\) {
+            // Hitung Pengeluaran
+            \->total_expense = \App\Models\Expense::where('user_id', \->user_id)
+                ->where('branch_id', \->branch_id)
+                ->where('created_at', '>=', \->opened_at)
+                ->where(function(\) use (\) {
+                    if (\->closed_at) {
+                        \->where('created_at', '<=', \->closed_at);
+                    }
+                })
+                ->sum('amount');
+                
+            // Hitung Uang Tunai Masuk murni (total_sales - total_transfer)
+            \ = \App\Models\Order::where('cashier_shift_id', \->id)
+                ->where('payment_method', 'transfer')
+                ->sum('total_paid');
+                
+            \->pure_cash_income = \->total_sales - \;
+            \->total_transfer = \;
+            
+            return \;
+        });
         $branches = Branch::where('is_active', true)->get();
         
         $summary = [

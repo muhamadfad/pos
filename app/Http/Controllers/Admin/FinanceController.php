@@ -40,6 +40,8 @@ class FinanceController extends Controller
         $yearly  = $this->calculateProfit(Carbon::now()->startOfYear(), Carbon::now()->endOfYear(), $branchId);
 
         $totalIncome       = $total['income'];
+        $totalIncomeCash   = $total['income_cash'];
+        $totalIncomeTransfer = $total['income_transfer'];
         $totalExpense      = $total['expenses'];
         $totalSupplierPaid = $total['supplierPaid'];
         $netCashflow       = $total['netCashflow'];
@@ -64,7 +66,9 @@ class FinanceController extends Controller
             'weekly',
             'monthly',
             'yearly',
-            'totalIncome',
+                        'totalIncome',
+            'totalIncomeCash',
+            'totalIncomeTransfer',
             'totalExpense',
             'totalSupplierPaid',
             'netCashflow',
@@ -106,6 +110,8 @@ class FinanceController extends Controller
 
         $total = $this->calculateProfit(null, null, $branchId);
         $totalIncome       = $total['income'];
+        $totalIncomeCash   = $total['income_cash'];
+        $totalIncomeTransfer = $total['income_transfer'];
         $totalSupplierPaid = $total['supplierPaid'];
         $totalOperasional  = $total['expenses'];
         $netCashflow       = $total['netCashflow'];
@@ -140,7 +146,9 @@ class FinanceController extends Controller
 
         return view('admin.finance.cashflow', compact(
             'months',
-            'totalIncome',
+                        'totalIncome',
+            'totalIncomeCash',
+            'totalIncomeTransfer',
             'totalSupplierPaid',
             'totalOperasional',
             'netCashflow',
@@ -412,10 +420,18 @@ class FinanceController extends Controller
         $orders = $orderQuery->get();
         
         $totalIncome = 0;
+        $totalIncomeCash = 0;
+        $totalIncomeTransfer = 0;
         $totalHPP = 0;
         
         foreach ($orders as $order) {
             $totalIncome += $order->total_amount;
+            
+            if ($order->payment_method === 'transfer') {
+                $totalIncomeTransfer += $order->total_amount;
+            } else {
+                $totalIncomeCash += $order->total_amount;
+            }
             
             // Hitung HPP berdasarkan resep ingredients
             $orderItems = DB::table('order_items')
@@ -464,6 +480,8 @@ class FinanceController extends Controller
         
         return [
             'income' => $totalIncome,
+            'income_cash' => $totalIncomeCash,
+            'income_transfer' => $totalIncomeTransfer,
             'cost' => $totalHPP,
             'profit' => $profit,
             'expenses' => $expenses,

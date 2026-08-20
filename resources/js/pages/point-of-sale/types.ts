@@ -39,6 +39,8 @@ export interface CashierShift {
     total_sales: number;
     transaction_count: number;
     total_transfer?: number;
+    total_expense?: number;
+    total_cash_income?: number;
     cashier_name?: string;
 }
 

@@ -85,6 +85,14 @@
                 <td>Total Pendapatan Penjualan</td>
                 <td class="text-right">{{ number_format($finance['income'], 0, ',', '.') }}</td>
             </tr>
+            <tr class="item-row">
+                <td>&nbsp;&nbsp;&nbsp;&bull; Pembayaran Tunai (Cash)</td>
+                <td class="text-right">{{ number_format($finance['income_cash'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="item-row">
+                <td>&nbsp;&nbsp;&nbsp;&bull; Pembayaran Transfer</td>
+                <td class="text-right">{{ number_format($finance['income_transfer'], 0, ',', '.') }}</td>
+            </tr>
             <tr class="total-row">
                 <td>Total Cash-In</td>
                 <td class="text-right">{{ number_format($finance['income'], 0, ',', '.') }}</td>

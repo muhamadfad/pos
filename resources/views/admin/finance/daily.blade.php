@@ -96,9 +96,15 @@
                 <span class="text-sm font-bold text-emerald-500">Rp</span>
                 <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['income'], 0, ',', '.') }}</span>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
-                <span class="iconify" data-icon="mdi:trending-up"></span>
-                Penjualan Hari Ini
+            <div class="mt-4 flex flex-col gap-1">
+                <div class="flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
+                    <span class="iconify" data-icon="mdi:cash"></span>
+                    Tunai: Rp {{ number_format($finance['income_cash'], 0, ',', '.') }}
+                </div>
+                <div class="flex items-center gap-2 text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full w-fit">
+                    <span class="iconify" data-icon="mdi:bank-transfer"></span>
+                    Transfer: Rp {{ number_format($finance['income_transfer'], 0, ',', '.') }}
+                </div>
             </div>
         </div>
 

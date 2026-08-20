@@ -96,13 +96,14 @@ class PointOfSaleController extends Controller
             'categories'    => $categories,
             'customers'     => $customers,
             'customerDebts' => $customerDebts,
-                        'activeShift'   => [
+                                    'activeShift'   => [
                 'id'               => \->id,
                 'opened_at'        => \->opened_at->format('Y-m-d H:i:s'),
                 'opening_balance'  => \->opening_balance,
                 'total_sales'      => (float) \->total_sales,
                 'transaction_count' => \->transaction_count,
                 'total_transfer'    => (float) \,
+                'total_cash_income' => (float) \,
                 'total_expense'     => (float) \,
                 'cashier_name'      => \->cashier_name,
             ],
