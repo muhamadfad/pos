@@ -145,6 +145,7 @@ class FinanceController extends Controller
         }
 
         return view('admin.finance.cashflow', compact(
+            'isSuperAdmin',
             'months',
                         'totalIncome',
             'totalIncomeCash',

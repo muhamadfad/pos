@@ -154,7 +154,8 @@
     <!-- Baris kedua: Profit & Net Cashflow -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- PROFIT Card (Keuntungan Bersih) -->
+        @if($isSuperAdmin)
+<!-- PROFIT Card (Keuntungan Bersih) -->
         <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-7 rounded-[2rem] shadow-xl group">
             <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full opacity-30 group-hover:scale-110 transition-transform"></div>
             <div class="flex items-center gap-3 mb-4">
@@ -170,6 +171,9 @@
                 Laba Bersih Hari Ini
             </div>
         </div>
+@else
+<!-- Keuntungan Bersih Disembunyikan untuk Cabang -->
+@endif
 
         <!-- Net Cashflow Card -->
         @php $isPositive = $finance['netCashflow'] >= 0; @endphp
