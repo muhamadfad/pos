@@ -201,7 +201,7 @@
             <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris Bulan Ini</h3>
             <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
         </div>
-        <div class="h-[500px]">
+        <div style="height: {{ max(500, $topProducts->count() * 40) }}px; min-height: 500px; position: relative;">
             @if($topProducts->count() > 0)
             <canvas id="monthlyChart"></canvas>
             @else

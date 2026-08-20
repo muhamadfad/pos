@@ -239,6 +239,7 @@
                 <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'cash']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'cash' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Cash</a>
                 <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'transfer']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'transfer' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Transfer</a>
             </div>
+        </div>
         <div style="height: {{ max(400, $topProducts->count() * 40) }}px; min-height: 400px; position: relative;">
             @if($topProducts->count() > 0)
             <canvas id="dailyChart"></canvas>
