@@ -152,7 +152,7 @@
     </div>
 
     <!-- Baris kedua: Profit & Net Cashflow -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <!-- PROFIT Card (Keuntungan Bersih) -->
         <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-7 rounded-[2rem] shadow-xl group">
@@ -195,9 +195,37 @@
                 {{ $isPositive ? 'Surplus Kas' : 'Defisit Kas' }}
             </div>
         </div>
-
+        <!-- Total Kas Tunai -->
+        @php
+            \ = \['income_cash'] - \['expenses'];
+            \ = \ >= 0;
+            \ = \ ? 'bg-gradient-to-br from-teal-500 to-emerald-600' : 'bg-gradient-to-br from-rose-500 to-red-600';
+            \ = \ ? 'shadow-emerald-500/30' : 'shadow-rose-500/30';
+        @endphp
+        <div class="{{\}} rounded-[2rem] p-7 text-white shadow-xl {{\}} relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500"></div>
+            <div class="absolute right-4 bottom-4 opacity-10">
+                <span class="iconify text-8xl" data-icon="mdi:cash-fast"></span>
+            </div>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
+                </div>
+                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Total Kas Tunai</p>
+            </div>
+            <div class="flex items-baseline gap-1">
+                <span class="text-sm font-bold text-white/70">Rp</span>
+                <span class="text-3xl font-black text-white tracking-tight">{{ number_format(\, 0, ',', '.') }}</span>
+            </div>
+            <p class="text-white/50 text-[10px] mt-2 font-medium">
+                Pendapatan Tunai - Biaya Operasional
+            </p>
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+                <span class="iconify" data-icon="mdi:wallet"></span>
+                Uang Fisik Untuk Disetor
+            </div>
+        </div>
     </div>
-
     <!-- Chart Section -->
     <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -211,8 +239,7 @@
                 <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'cash']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'cash' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Cash</a>
                 <a href="{{ request()->fullUrlWithQuery(['payment_method' => 'transfer']) }}" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all {{ ($paymentMethodFilter ?? null) === 'transfer' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Transfer</a>
             </div>
-        </div>
-        <div class="h-[400px]">
+        <div style="height: {{ max(400, $topProducts->count() * 40) }}px; min-height: 400px; position: relative;">
             @if($topProducts->count() > 0)
             <canvas id="dailyChart"></canvas>
             @else

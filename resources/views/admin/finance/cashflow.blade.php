@@ -16,7 +16,7 @@
                 <h1 class="text-2xl font-black text-slate-800 tracking-tight">Rincian Saldo Bersih</h1>
             </div>
             <p class="text-slate-500 text-sm ml-9">
-                Saldo Bersih = Pendapatan Penjualan ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Bayar Supplier ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Pengeluaran Operasional
+                Saldo Bersih = Pendapatan Penjualan ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Bayar Supplier ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Pengeluaran Operasional
             </p>
         </div>
         <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
@@ -32,7 +32,7 @@
     </div>
 
     {{-- Summary Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {{-- Pendapatan --}}
         <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-7">
             <div class="flex items-center gap-3 mb-4">
@@ -91,7 +91,7 @@
                     <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
                 </div>
                 <p class="text-2xl font-black text-white">Rp {{ number_format($totalProfit, 0, ',', '.') }}</p>
-                <p class="text-xs text-white/60 mt-1">Pendapatan ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ HPP</p>
+                <p class="text-xs text-white/60 mt-1">Pendapatan ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ HPP</p>
             </div>
     </div>
 
@@ -103,12 +103,12 @@
                 Rp {{ number_format($totalIncome, 0, ',', '.') }} <span
                     class="font-normal text-emerald-500">(Pendapatan)</span>
             </span>
-            <span class="text-slate-400 text-lg">ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</span>
+            <span class="text-slate-400 text-lg">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢</span>
             <span class="px-4 py-2 bg-orange-50 text-orange-700 border border-orange-200 rounded-xl">
                 Rp {{ number_format($totalSupplierPaid, 0, ',', '.') }} <span
                     class="font-normal text-orange-500">(Supplier)</span>
             </span>
-            <span class="text-slate-400 text-lg">ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢</span>
+            <span class="text-slate-400 text-lg">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¹ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢</span>
             <span class="px-4 py-2 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl">
                 Rp {{ number_format($totalOperasional, 0, ',', '.') }} <span
                     class="font-normal text-rose-500">(Operasional)</span>
@@ -222,10 +222,10 @@
                             <span class="iconify text-orange-500" data-icon="mdi:truck-outline"></span>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-800 text-sm">{{ $purchase->supplier->name ?? 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â' }}</p>
+                            <p class="font-bold text-slate-800 text-sm">{{ $purchase->supplier->name ?? 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â' }}</p>
                             <p class="text-[11px] text-slate-400">
                                 {{ \Carbon\Carbon::parse($purchase->date)->format('d M Y') }}
-                                &nbsp;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢&nbsp;
+                                &nbsp;ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢&nbsp;
                                 <span
                                     class="font-bold {{ $purchase->payment_status === 'paid' ? 'text-emerald-500' : 'text-orange-500' }}">
                                     {{ $purchase->payment_status === 'paid' ? 'Lunas' : ($purchase->payment_status ===

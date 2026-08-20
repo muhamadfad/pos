@@ -130,7 +130,7 @@ class FinanceController extends Controller
         if ($branchId) {
             $purchaseQuery->where('branch_id', $branchId);
         }
-        $topSupplierPurchases = $purchaseQuery->orderByDesc('total_paid')->limit(10)->get();
+        $topSupplierPurchases = $purchaseQuery->orderByDesc('total_paid')->limit(100)->get();
         
         // Get branches for filter
         $branches = [];
@@ -209,7 +209,7 @@ class FinanceController extends Controller
         $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_qty')
-            ->limit(10)
+            ->limit(100)
             ->get()
             ->map(function ($item) {
                 $item->total_qty = (float) $item->total_qty;
@@ -277,7 +277,7 @@ class FinanceController extends Controller
         $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_qty')
-            ->limit(10)
+            ->limit(100)
             ->get()
             ->map(function ($item) {
                 $item->total_qty = (float) $item->total_qty;
@@ -327,7 +327,7 @@ class FinanceController extends Controller
         $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_qty')
-            ->limit(10)
+            ->limit(100)
             ->get()
             ->map(function ($item) {
                 $item->total_qty = (float) $item->total_qty;

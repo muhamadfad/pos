@@ -37,7 +37,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with(['customer', 'items.product', 'branch', 'user', 'cashierShift'])
-            ->latest('date');
+            ->orderBy('created_at', 'desc');
             
         $query = $this->applyBranchFilter($query);
         
