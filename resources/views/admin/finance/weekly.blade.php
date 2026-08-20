@@ -144,7 +144,7 @@
         @php $isPositive = $finance['netCashflow'] >= 0; @endphp
         <div class="relative overflow-hidden {{ $isPositive ? 'bg-emerald-600 shadow-emerald-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl group">
             <div class="absolute right-0 bottom-0 opacity-10">
-                <span class="iconify text-9xl text-white" data-icon="{{ $isPositive ? 'mdi:piggy-bank' : 'mdi:alert-circle' }}"></span>
+                <span class="iconify text-9xl text-white" data-icon="{{ $isPositive ? 'mdi:safe' : 'mdi:alert-circle' }}"></span>
             </div>
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
