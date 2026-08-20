@@ -96,16 +96,16 @@ class PointOfSaleController extends Controller
             'categories'    => $categories,
             'customers'     => $customers,
             'customerDebts' => $customerDebts,
-                                    'activeShift'   => [
-                'id'               => \->id,
-                'opened_at'        => \->opened_at->format('Y-m-d H:i:s'),
-                'opening_balance'  => \->opening_balance,
-                'total_sales'      => (float) \->total_sales,
-                'transaction_count' => \->transaction_count,
-                'total_transfer'    => (float) \,
-                'total_cash_income' => (float) \,
-                'total_expense'     => (float) \,
-                'cashier_name'      => \->cashier_name,
+            'activeShift'   => [
+                'id'               => $activeShift->id,
+                'opened_at'        => $activeShift->opened_at->format('Y-m-d H:i:s'),
+                'opening_balance'  => $activeShift->opening_balance,
+                'total_sales'      => (float) $activeShift->total_sales,
+                'transaction_count' => $activeShift->transaction_count,
+                'total_transfer'    => (float) $totalTransfer,
+                'total_cash_income' => (float) $totalCashIncome,
+                'total_expense'     => (float) $totalExpense,
+                'cashier_name'      => $activeShift->cashier_name,
             ],
         ])->rootView('inertia');
     }
@@ -260,12 +260,17 @@ class PointOfSaleController extends Controller
             $activeShift->total_sales = $activeShift->total_sales + $totalAmount;
             $activeShift->transaction_count = $activeShift->transaction_count + 1;
             
-            $totalTransferShift = \DB::table('orders')
+            $totalCashIncome = \DB::table('orders')
                 ->where('cashier_shift_id', $activeShift->id)
-                ->where('payment_method', 'transfer')
+                ->where('payment_method', 'cash')
                 ->sum('total_paid');
                 
-            $totalCashShift = $activeShift->total_sales - $totalTransferShift;
+            $totalExpenseShift = \App\Models\Expense::where('user_id', Auth::id())
+                ->where('branch_id', $branchId)
+                ->where('created_at', '>=', $activeShift->opened_at)
+                ->sum('amount');
+                
+            $totalCashShift = $totalCashIncome - $totalExpenseShift;
             $activeShift->expected_cash = $activeShift->opening_balance + $totalCashShift;
             
             $activeShift->save();
@@ -449,34 +454,34 @@ class PointOfSaleController extends Controller
         return response()->json($orders);
     }
 
-        public function storeExpense(Request )
+    public function storeExpense(Request $request)
     {
-        \ = \->validate([
+        $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
             'description' => 'required|string|max:255',
             'category' => 'nullable|string|max:100',
         ]);
 
-        \ = auth()->user();
+        $user = auth()->user();
 
         Expense::create([
-            'branch_id' => \->branch_id,
-            'user_id' => \->id,
-            'amount' => \['amount'],
-            'description' => \['description'],
-            'category' => \['category'] ?? 'Operasional',
+            'branch_id' => $user->branch_id,
+            'user_id' => $user->id,
+            'amount' => $validated['amount'],
+            'description' => $validated['description'],
+            'category' => $validated['category'] ?? 'Operasional',
             'date' => now()->toDateString(),
             'reference' => 'POS-' . time(),
         ]);
 
-        \ = CashierShift::where('user_id', \->id)
-            ->where('branch_id', \->branch_id)
+        $activeShift = CashierShift::where('user_id', $user->id)
+            ->where('branch_id', $user->branch_id)
             ->where('status', 'open')
             ->first();
 
-        if (\) {
-            \->expected_cash -= \['amount'];
-            \->save();
+        if ($activeShift) {
+            $activeShift->expected_cash -= $validated['amount'];
+            $activeShift->save();
         }
 
         return redirect()->back()->with('success', 'Pengeluaran berhasil dicatat!');
