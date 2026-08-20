@@ -37,6 +37,15 @@ class PointOfSaleController extends Controller
             ->where('payment_method', 'transfer')
             ->sum('total_paid');
 
+        $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
+            ->where('payment_method', 'cash')
+            ->sum('total_paid');
+
+        $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
+            ->where('branch_id', $branchId)
+            ->where('created_at', '>=', $activeShift->opened_at)
+            ->sum('amount');
+
         $products = Product::with('category')
             ->where('is_active', true)
             ->orderBy('name')
