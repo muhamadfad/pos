@@ -260,27 +260,27 @@ class CashierShiftController extends Controller
             $query->where('branch_id', $branchId);
         }
         
-                \ = \->orderBy('opened_at', 'desc')->get()->map(function(\) {
+                $shifts = $query->orderBy('opened_at', 'desc')->get()->map(function($shift) {
             // Hitung Pengeluaran
-            \->total_expense = \App\Models\Expense::where('user_id', \->user_id)
-                ->where('branch_id', \->branch_id)
-                ->where('created_at', '>=', \->opened_at)
-                ->where(function(\) use (\) {
-                    if (\->closed_at) {
-                        \->where('created_at', '<=', \->closed_at);
+            $shift->total_expense = \App\Models\Expense::where('user_id', $shift->user_id)
+                ->where('branch_id', $shift->branch_id)
+                ->where('created_at', '>=', $shift->opened_at)
+                ->where(function($q) use ($shift) {
+                    if ($shift->closed_at) {
+                        $q->where('created_at', '<=', $shift->closed_at);
                     }
                 })
                 ->sum('amount');
                 
             // Hitung Uang Tunai Masuk murni (total_sales - total_transfer)
-            \ = \App\Models\Order::where('cashier_shift_id', \->id)
+            $totalTransfer = \App\Models\Order::where('cashier_shift_id', $shift->id)
                 ->where('payment_method', 'transfer')
                 ->sum('total_paid');
                 
-            \->pure_cash_income = \->total_sales - \;
-            \->total_transfer = \;
+            $shift->pure_cash_income = $shift->total_sales - $totalTransfer;
+            $shift->total_transfer = $totalTransfer;
             
-            return \;
+            return $shift;
         });
         $branches = Branch::where('is_active', true)->get();
         
