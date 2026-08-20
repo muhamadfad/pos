@@ -173,20 +173,23 @@
         </tbody>
     </table>
 
-    <div class="sub-title">3. RINCIAN PENDAPATAN (PENJUALAN)</div>
-    <table class="finance-table">
+        <!-- TABEL TUNAI -->
+    <div class="sub-title">3. RINCIAN PENDAPATAN (TUNAI)</div>
+    <table class="finance-table" style="margin-bottom: 20px;">
         <thead>
             <tr>
                 <th style="width: 5%; text-align: center;">No</th>
-                <th style="width: 13%;">Tanggal</th>
-                <th style="width: 17%;">No. Pesanan</th>
-                <th style="width: 40%;">Detail Pesanan</th>
-                <th style="width: 10%;">Metode</th>
+                <th style="width: 15%;">Tanggal</th>
+                <th style="width: 20%;">No. Pesanan</th>
+                <th style="width: 45%;">Detail Pesanan</th>
                 <th style="width: 15%; text-align: right;">Jumlah (Rp)</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($ordersList as $index => $order)
+            @php 
+                $cashOrders = $ordersList->where('payment_method', 'cash')->values();
+            @endphp
+            @forelse($cashOrders as $index => $order)
             <tr>
                 <td class="text-center" style="vertical-align: top;">{{ $index + 1 }}</td>
                 <td style="vertical-align: top;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
@@ -201,24 +204,71 @@
                         @endforeach
                     </ul>
                 </td>
-                <td style="vertical-align: top;">{{ ucfirst($order->payment_method) }}</td>
                 <td class="text-right" style="vertical-align: top;">{{ number_format($order->total_amount, 0, ',', '.') }}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center" style="font-style: italic;">Tidak ada data penjualan pada periode ini.</td>
+                <td colspan="5" class="text-center" style="font-style: italic;">Tidak ada data penjualan tunai.</td>
             </tr>
             @endforelse
-            @if($ordersList->count() > 0)
+            @if($cashOrders->count() > 0)
             <tr class="total-row">
-                <td colspan="5" class="text-right">Total Pendapatan</td>
-                <td class="text-right">{{ number_format($ordersList->sum('total_amount'), 0, ',', '.') }}</td>
+                <td colspan="4" class="text-right">Total Pendapatan Tunai</td>
+                <td class="text-right">{{ number_format($cashOrders->sum('total_amount'), 0, ',', '.') }}</td>
             </tr>
             @endif
         </tbody>
     </table>
 
-    <div class="sub-title" style="margin-top: 30px;">4. RINCIAN BIAYA OPERASIONAL</div>
+    <pagebreak />
+
+    <!-- TABEL TRANSFER -->
+    <div class="sub-title">4. RINCIAN PENDAPATAN (TRANSFER)</div>
+    <table class="finance-table" style="margin-bottom: 30px;">
+        <thead>
+            <tr>
+                <th style="width: 5%; text-align: center;">No</th>
+                <th style="width: 15%;">Tanggal</th>
+                <th style="width: 20%;">No. Pesanan</th>
+                <th style="width: 45%;">Detail Pesanan</th>
+                <th style="width: 15%; text-align: right;">Jumlah (Rp)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php 
+                $tfOrders = $ordersList->where('payment_method', 'transfer')->values();
+            @endphp
+            @forelse($tfOrders as $index => $order)
+            <tr>
+                <td class="text-center" style="vertical-align: top;">{{ $index + 1 }}</td>
+                <td style="vertical-align: top;">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                <td style="vertical-align: top;">
+                    <strong>#{{ $order->id }}</strong><br>
+                    <span style="font-size: 9px; color: #555;">{{ $order->customer->name ?? 'Umum' }}</span>
+                </td>
+                <td style="vertical-align: top;">
+                    <ul style="margin: 0; padding-left: 15px; font-size: 10px;">
+                        @foreach($order->items as $item)
+                            <li>{{ $item->product->name ?? 'Produk' }} (x{{ $item->quantity }})</li>
+                        @endforeach
+                    </ul>
+                </td>
+                <td class="text-right" style="vertical-align: top;">{{ number_format($order->total_amount, 0, ',', '.') }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5" class="text-center" style="font-style: italic;">Tidak ada data penjualan transfer.</td>
+            </tr>
+            @endforelse
+            @if($tfOrders->count() > 0)
+            <tr class="total-row">
+                <td colspan="4" class="text-right">Total Pendapatan Transfer</td>
+                <td class="text-right">{{ number_format($tfOrders->sum('total_amount'), 0, ',', '.') }}</td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+<div class="sub-title" style="margin-top: 30px;">5. RINCIAN BIAYA OPERASIONAL</div>
     <table class="finance-table">
         <thead>
             <tr>
@@ -252,7 +302,7 @@
         </tbody>
     </table>
 
-    <div class="sub-title" style="margin-top: 30px;">5. RINCIAN PEMBAYARAN SUPPLIER</div>
+    <div class="sub-title" style="margin-top: 30px;">6. RINCIAN PEMBAYARAN SUPPLIER</div>
     <table class="finance-table">
         <thead>
             <tr>
