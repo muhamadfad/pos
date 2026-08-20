@@ -166,12 +166,12 @@
         </div>
         <!-- Total Kas Tunai -->
         @php
-            \ = \['income_cash'] - \['expenses'];
-            \ = \ >= 0;
-            \ = \ ? 'bg-gradient-to-br from-teal-500 to-emerald-600' : 'bg-gradient-to-br from-rose-500 to-red-600';
-            \ = \ ? 'shadow-emerald-500/30' : 'shadow-rose-500/30';
+            $netCash = $finance['income_cash'] - $finance['expenses'];
+            $isCashPositive = $netCash >= 0;
+            $cashBgColor = $isCashPositive ? 'bg-gradient-to-br from-teal-500 to-emerald-600' : 'bg-gradient-to-br from-rose-500 to-red-600';
+            $cashShadowColor = $isCashPositive ? 'shadow-emerald-500/30' : 'shadow-rose-500/30';
         @endphp
-        <div class="{{\}} rounded-[2rem] p-7 text-white shadow-xl {{\}} relative overflow-hidden group">
+        <div class="{{$cashBgColor}} rounded-[2rem] p-7 text-white shadow-xl {{$cashShadowColor}} relative overflow-hidden group">
             <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500"></div>
             <div class="absolute right-4 bottom-4 opacity-10">
                 <span class="iconify text-8xl" data-icon="mdi:cash-fast"></span>
