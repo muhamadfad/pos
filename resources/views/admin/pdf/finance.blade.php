@@ -148,22 +148,26 @@
     <table class="finance-table" style="margin-bottom: 30px;">
         <thead>
             <tr>
-                <th style="width: 10%; text-align: center;">No</th>
-                <th style="width: 70%;">Nama Menu / Produk</th>
-                <th style="width: 20%; text-align: center;">Total Terjual (Porsi)</th>
+                <th style="width: 5%; text-align: center;">No</th>
+                <th style="width: 50%;">Nama Menu / Produk</th>
+                <th style="width: 15%; text-align: center;">Tunai</th>
+                <th style="width: 15%; text-align: center;">Transfer</th>
+                <th style="width: 15%; text-align: center;">Total Terjual</th>
             </tr>
         </thead>
         <tbody>
             @php $productNo = 1; @endphp
-            @forelse($productSummary as $productName => $qty)
+            @forelse($productSummary as $productName => $stats)
             <tr>
                 <td class="text-center">{{ $productNo++ }}</td>
                 <td>{{ $productName }}</td>
-                <td class="text-center"><strong>{{ $qty }}</strong></td>
+                <td class="text-center">{{ $stats['cash'] }}</td>
+                <td class="text-center">{{ $stats['transfer'] }}</td>
+                <td class="text-center"><strong>{{ $stats['total'] }}</strong></td>
             </tr>
             @empty
             <tr>
-                <td colspan="3" class="text-center" style="font-style: italic;">Tidak ada data penjualan produk.</td>
+                <td colspan="5" class="text-center" style="font-style: italic;">Tidak ada data penjualan produk.</td>
             </tr>
             @endforelse
         </tbody>

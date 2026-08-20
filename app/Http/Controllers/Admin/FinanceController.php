@@ -558,12 +558,23 @@ class FinanceController extends Controller
             foreach ($order->items as $item) {
                 $productName = $item->product ? $item->product->name : 'Produk Dihapus';
                 if (!isset($productSummary[$productName])) {
-                    $productSummary[$productName] = 0;
+                    $productSummary[$productName] = [
+                        'total' => 0,
+                        'cash' => 0,
+                        'transfer' => 0
+                    ];
                 }
-                $productSummary[$productName] += $item->quantity;
+                $productSummary[$productName]['total'] += $item->quantity;
+                if ($order->payment_method === 'cash') {
+                    $productSummary[$productName]['cash'] += $item->quantity;
+                } elseif ($order->payment_method === 'transfer') {
+                    $productSummary[$productName]['transfer'] += $item->quantity;
+                }
             }
         }
-        arsort($productSummary);
+        uasort($productSummary, function($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.finance', compact(
             'productSummary', 
