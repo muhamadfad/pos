@@ -215,7 +215,7 @@
             </div>
             <div class="flex items-baseline gap-1">
                 <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-3xl font-black text-white tracking-tight">{{ number_format(\, 0, ',', '.') }}</span>
+                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($netCash, 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
                 Pendapatan Tunai - Biaya Operasional
