@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <div class="mb-4">
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Selamat Datang</h2>
         <p class="text-sm text-gray-500 mt-1">Silakan masuk ke akun Anda untuk melanjutkan.</p>
@@ -19,8 +19,7 @@
                 </div>
                 <x-text-input id="email"
                     class="block w-full pl-10 pr-3 py-2.5 bg-gray-50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 rounded-xl"
-                    type="email" name="email" :value="old('email')" required autofocus autocomplete="username"
-                    placeholder="nama@email.com" />
+                    type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="nama@email.com" />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
@@ -43,7 +42,7 @@
                 </div>
                 <x-text-input id="password"
                     class="block w-full pl-10 pr-3 py-2.5 bg-gray-50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 rounded-xl"
-                    type="password" name="password" required autocomplete="current-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                    type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
             </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-1" />
