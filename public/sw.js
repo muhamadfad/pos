@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
     // Ini memastikan user selalu mendapatkan versi aplikasi terbaru tanpa harus clear cache manual
     if (event.request.mode === 'navigate' || isPosRequest) {
         event.respondWith(
-            fetch(event.request).then((networkResponse) => {
+            fetch(event.request, { cache: "no-store" }).then((networkResponse) => {
                 return caches.open(DYNAMIC_CACHE).then((cache) => {
                     cache.put(event.request, networkResponse.clone());
                     return networkResponse;
