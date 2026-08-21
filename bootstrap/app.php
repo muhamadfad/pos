@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\AdminMiddleware;
@@ -26,5 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (TokenMismatchException $e, Request $request) {
+            return redirect()->back()->withInput($request->except('_token'))->with('status', 'Halaman kadaluarsa (Sesi habis). Silakan coba tekan tombolnya sekali lagi.');
+        });
     })->create();
