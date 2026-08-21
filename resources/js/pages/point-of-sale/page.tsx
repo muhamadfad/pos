@@ -14,6 +14,7 @@ import TransactionHistoryModal from "./TransactionHistoryModal";
 import { printWithRawBT } from "./printHelper";
 import { ErrorBoundary } from "../../components/ErrorBoundary";
 
+
 function PointOfSaleContent() {
     const {
         authUser,
@@ -83,6 +84,17 @@ function PointOfSaleContent() {
     const [showCustomItemModal, setShowCustomItemModal] = useState(false);
     const [customItemName, setCustomItemName] = useState("");
     const [customItemPrice, setCustomItemPrice] = useState("");
+
+    const formatInputRupiah = (value: string): string => {
+        const num = value.replace(/\D/g, "");
+        if (num === "") return "";
+        return Number(num).toLocaleString("id-ID");
+    };
+
+    const parseInputRupiah = (value: string): string => {
+        return value.replace(/\D/g, "");
+    };
+
 
     const searchRef = useRef<HTMLInputElement>(null);
     const paidRef = useRef<HTMLInputElement>(null);
@@ -386,7 +398,7 @@ function updateQty(productId: number, qty: number) {
             />
 
             <div className="flex h-screen bg-[#f8fafc] overflow-hidden relative print:hidden">
-                {/* LEFT: Product Grid Ã¢â‚¬â€ hanya tampil saat mode pos */}
+                {/* LEFT: Product Grid ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â hanya tampil saat mode pos */}
                 {mode === "pos" && (
                     <div className={`flex-1 flex-col min-w-0 ${showMobileCart ? 'hidden md:flex' : 'flex'}`}>
                         <Header
@@ -644,12 +656,12 @@ function updateQty(productId: number, qty: number) {
                                     Harga (Rp)
                                 </label>
                                 <input
-                                    type="number"
-                                    min="0"
+                                    type="text"
+                                    inputMode="numeric"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                                    placeholder="Contoh: 15000"
-                                    value={customItemPrice}
-                                    onChange={(e) => setCustomItemPrice(e.target.value)}
+                                    placeholder="Contoh: 15.000"
+                                    value={formatInputRupiah(customItemPrice)}
+                                    onChange={(e) => setCustomItemPrice(parseInputRupiah(e.target.value))}
                                     onKeyDown={(e) => e.key === "Enter" && addCustomItem()}
                                 />
                             </div>
