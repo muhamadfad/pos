@@ -7,7 +7,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+    <form method="POST" action="{{ route('login') }}" class="space-y-5" data-turbo="false">
         @csrf
 
         <!-- Email Address -->
@@ -43,7 +43,7 @@
                 </div>
                 <x-text-input id="password"
                     class="block w-full pl-10 pr-3 py-2.5 bg-gray-50 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-200 rounded-xl"
-                    type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+                    type="password" name="password" required autocomplete="current-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
             </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-1" />

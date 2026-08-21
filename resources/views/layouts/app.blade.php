@@ -32,29 +32,29 @@
 
                 <a href="{{ route('admin.categories.index') }}"
                     class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
-                    <span class="text-lg">ðŸ—‚ï¸</span>
+                    <span class="text-lg">Ã°Å¸â€”â€šÃ¯Â¸Â</span>
                     <span class="ml-3">Kategori</span>
                 </a>
 
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
-                    <span class="text-lg">ðŸ‘¤</span>
+                    <span class="text-lg">Ã°Å¸â€˜Â¤</span>
                     <span class="ml-3">User</span>
                 </a>
 
                 <a href="{{ route('profile.edit') }}"
                     class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
-                    <span class="text-lg">âš™ï¸</span>
+                    <span class="text-lg">Ã¢Å¡â„¢Ã¯Â¸Â</span>
                     <span class="ml-3">Profil</span>
                 </a>
             </nav>
 
             <div class="border-t p-4">
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" data-turbo="false">
                     @csrf
                     <button type="submit"
                         class="w-full flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition">
-                        ðŸšª <span class="ml-3">Logout</span>
+                        Ã°Å¸Å¡Âª <span class="ml-3">Logout</span>
                     </button>
                 </form>
             </div>

@@ -260,7 +260,7 @@
                                 <span class="iconify text-lg" data-icon="mdi:account-outline"></span> Profil
                             </a>
                             <div class="border-t my-2 border-slate-100"></div>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" data-turbo="false">
                                 @csrf
                                 <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 text-sm font-medium">
                                     <span class="iconify text-lg" data-icon="mdi:logout"></span> Logout
