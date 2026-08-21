@@ -1,5 +1,5 @@
-const CACHE_NAME = 'resto-coto-pos-cache-v6';
-const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v6';
+const CACHE_NAME = 'resto-coto-pos-cache-v7';
+const DYNAMIC_CACHE = 'resto-coto-pos-dynamic-v7';
 
 // Aset yang akan di-cache secara default saat instalasi
 const ASSETS_TO_CACHE = [
@@ -38,7 +38,10 @@ self.addEventListener('fetch', (event) => {
     
     // Untuk dokumen HTML (navigate) dan request ke /pos (termasuk Inertia XHR), gunakan Network First
     // Ini memastikan user selalu mendapatkan versi aplikasi terbaru tanpa harus clear cache manual
-    if (event.request.mode === 'navigate' || isPosRequest) {
+    const acceptHeader = event.request.headers.get('Accept');
+    const isHtmlRequest = acceptHeader && acceptHeader.includes('text/html');
+    
+    if (event.request.mode === 'navigate' || isPosRequest || isHtmlRequest) {
         event.respondWith(
             fetch(event.request, { cache: "no-store" }).then((networkResponse) => {
                 return caches.open(DYNAMIC_CACHE).then((cache) => {
