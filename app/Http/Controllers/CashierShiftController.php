@@ -26,7 +26,7 @@ class CashierShiftController extends Controller
         if ($activeShift) {
             $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
                 ->where('payment_method', 'cash')
-                ->sum('total_paid');
+                ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
             $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
                 ->where('branch_id', $branchId)
                 ->where('created_at', '>=', $activeShift->opened_at)
@@ -212,7 +212,7 @@ class CashierShiftController extends Controller
         // Calculate expected cash (only cash payments)
         $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $shift->id)
             ->where('payment_method', 'cash')
-            ->sum('total_paid');
+            ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
             
         $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
             ->where('branch_id', $branchId)
@@ -275,7 +275,7 @@ class CashierShiftController extends Controller
             // Hitung Uang Tunai Masuk murni (total_sales - total_transfer)
             $totalTransfer = \App\Models\Order::where('cashier_shift_id', $shift->id)
                 ->where('payment_method', 'transfer')
-                ->sum('total_paid');
+                ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
                 
             $shift->pure_cash_income = $shift->total_sales - $totalTransfer;
             $shift->total_transfer = $totalTransfer;
