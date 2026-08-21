@@ -14,6 +14,11 @@ export function usePosSync() {
         0
     );
 
+    // Reset any stuck failed syncs back to pending on load
+    useEffect(() => {
+        db.sync_queue.where('status').equals('failed').modify({ status: 'pending', retry_count: 0 });
+    }, []);
+
     useEffect(() => {
         const handleOnline = () => setIsOnline(true);
         const handleOffline = () => setIsOnline(false);
@@ -91,7 +96,7 @@ export function usePosSync() {
                             const newRetryCount = item.retry_count + 1;
                             await db.sync_queue.update(item.id, {
                                 retry_count: newRetryCount,
-                                status: newRetryCount > 3 ? 'failed' : 'pending',
+                                status: 'pending', // NEVER fail silently, keep retrying
                             });
                         }
                     }
