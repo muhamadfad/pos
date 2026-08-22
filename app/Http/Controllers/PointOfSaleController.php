@@ -171,16 +171,20 @@ class PointOfSaleController extends Controller
                         ['name' => 'Lain-lain'],
                         ['description' => 'Kategori Lain-lain']
                     );
-                    $product = Product::firstOrCreate(
+                    $product = Product::withTrashed()->firstOrCreate(
                         ['name' => 'Item Tambahan Manual'],
                         [
                             'category_id' => $defaultCategory->id,
                             'selling_price' => 0,
                             'purchase_price' => 0,
                             'min_stock' => 0,
-                            'is_active' => true,
+                            'is_active' => false,
                         ]
                     );
+                    if ($product->is_active) {
+                        $product->is_active = false;
+                        $product->save();
+                    }
                     $customName = $item['custom_name'] ?? 'Item Tambahan Manual';
                 } else {
                     $product = Product::findOrFail($item['product_id']);
