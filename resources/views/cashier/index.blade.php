@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('content')
 <div class="container mx-auto">
@@ -572,7 +572,7 @@
                     <div class="flex-1">
                         <div class="font-medium text-slate-800">${item.product_name}</div>
                         <div class="text-sm text-slate-500 mt-1">
-                            ${item.quantity} Ã— Rp ${new Intl.NumberFormat('id-ID').format(item.price)}
+                            ${item.quantity} x Rp ${new Intl.NumberFormat('id-ID').format(item.price)}
                         </div>
                     </div>
                     <div class="font-semibold text-slate-800">
