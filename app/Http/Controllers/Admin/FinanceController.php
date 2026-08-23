@@ -207,12 +207,13 @@ class FinanceController extends Controller
             $topProductsQuery->where('orders.branch_id', $branchId);
         }
         
-        $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
-            ->groupBy('products.id', 'products.name')
+        $topProducts = $topProductsQuery->select(DB::raw('COALESCE(order_items.custom_name, products.name) as display_name'), DB::raw('SUM(order_items.quantity) as total_qty'))
+            ->groupBy('products.id', 'products.name', 'order_items.custom_name')
             ->orderByDesc('total_qty')
             ->limit(100)
             ->get()
             ->map(function ($item) {
+                $item->name = $item->display_name;
                 $item->total_qty = (float) $item->total_qty;
                 return $item;
             });
@@ -275,12 +276,13 @@ class FinanceController extends Controller
             $topProductsQuery->where('orders.branch_id', $branchId);
         }
         
-        $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
-            ->groupBy('products.id', 'products.name')
+        $topProducts = $topProductsQuery->select(DB::raw('COALESCE(order_items.custom_name, products.name) as display_name'), DB::raw('SUM(order_items.quantity) as total_qty'))
+            ->groupBy('products.id', 'products.name', 'order_items.custom_name')
             ->orderByDesc('total_qty')
             ->limit(100)
             ->get()
             ->map(function ($item) {
+                $item->name = $item->display_name;
                 $item->total_qty = (float) $item->total_qty;
                 return $item;
             });
@@ -325,12 +327,13 @@ class FinanceController extends Controller
             $topProductsQuery->where('orders.branch_id', $branchId);
         }
         
-        $topProducts = $topProductsQuery->select('products.name', DB::raw('SUM(order_items.quantity) as total_qty'))
-            ->groupBy('products.id', 'products.name')
+        $topProducts = $topProductsQuery->select(DB::raw('COALESCE(order_items.custom_name, products.name) as display_name'), DB::raw('SUM(order_items.quantity) as total_qty'))
+            ->groupBy('products.id', 'products.name', 'order_items.custom_name')
             ->orderByDesc('total_qty')
             ->limit(100)
             ->get()
             ->map(function ($item) {
+                $item->name = $item->display_name;
                 $item->total_qty = (float) $item->total_qty;
                 return $item;
             });

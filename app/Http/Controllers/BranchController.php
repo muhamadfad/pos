@@ -118,8 +118,8 @@ class BranchController extends Controller
                 ->join('orders', 'order_items.order_id', '=', 'orders.id')
                 ->join('products', 'order_items.product_id', '=', 'products.id')
                 ->where('orders.branch_id', $branch->id)
-                ->select('products.name', DB::raw('SUM(order_items.quantity) as total_sold'))
-                ->groupBy('products.id', 'products.name')
+                ->select(DB::raw('COALESCE(order_items.custom_name, products.name) as name'), DB::raw('SUM(order_items.quantity) as total_sold'))
+                ->groupBy('products.id', 'products.name', 'order_items.custom_name')
                 ->orderBy('total_sold', 'desc')
                 ->limit(5)
                 ->get(),

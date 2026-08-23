@@ -149,13 +149,13 @@ class KasproController extends Controller
         // Ambil data produk yang terjual
         $productSales = $orderItemsQuery->select(
             'products.id as product_id',
-            'products.name as product_name',
+            DB::raw('COALESCE(order_items.custom_name, products.name) as product_name'),
             'products.selling_price',
             'products.purchase_price',
             DB::raw('SUM(order_items.quantity) as total_quantity'),
             DB::raw('SUM(order_items.subtotal) as total_revenue')
         )
-        ->groupBy('products.id', 'products.name', 'products.selling_price', 'products.purchase_price')
+        ->groupBy('products.id', 'products.name', 'order_items.custom_name', 'products.selling_price', 'products.purchase_price')
         ->orderBy('total_revenue', 'desc')
         ->get();
         
@@ -378,16 +378,16 @@ class KasproController extends Controller
                 $monthName .= ' (sd hari ini)';
             }
             
-            // âœ… Income dari orders (pakai whereBetween, lebih akurat)
+            // ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Income dari orders (pakai whereBetween, lebih akurat)
             $income = Order::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->where('payment_status', 'paid')
                 ->sum('total_amount');
             
-            // âœ… Expense dari purchases (pakai total_paid, sesuai arus kas riil)
+            // ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Expense dari purchases (pakai total_paid, sesuai arus kas riil)
             $expense = Purchase::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->sum('total_paid');
             
-            // âœ… Expense dari expenses (operasional)
+            // ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Expense dari expenses (operasional)
             $expense += Expense::whereBetween('date', [$startOfMonth, $endOfMonth])
                 ->sum('amount');
             
