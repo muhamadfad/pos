@@ -82,7 +82,7 @@
                     <div class="space-y-1.5 min-w-[180px]">
                         @foreach($row->items->take(2) as $item)
                         <div class="flex items-center justify-between text-[12px]">
-                            <span class="text-slate-600 truncate mr-2">{{ $item->product->name ?? '-' }}</span>
+                            <span class="text-slate-600 truncate mr-2">{{ $item->custom_name ?: ($item->product->name ?? '-') }}</span>
                             <span class="text-slate-400 shrink-0 font-medium">x{{ $item->quantity }}</span>
                         </div>
                         @endforeach

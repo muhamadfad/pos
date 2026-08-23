@@ -21,7 +21,7 @@
     <table width="100%">
         @foreach($order->items as $item)
         <tr>
-            <td>{{ $item->product->name }} x{{ $item->quantity }}</td>
+            <td>{{ $item->custom_name ?: ($item->product->name ?? 'Unknown') }} x{{ $item->quantity }}</td>
             <td style="text-align:right;">{{ number_format($item->subtotal) }}</td>
         </tr>
         @endforeach
