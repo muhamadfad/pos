@@ -48,6 +48,7 @@ class PointOfSaleController extends Controller
 
         $products = Product::with('category')
             ->where('is_active', true)
+            ->where('name', '!=', 'Item Tambahan Manual')
             ->orderBy('name')
             ->get()
             ->map(fn($p) => [

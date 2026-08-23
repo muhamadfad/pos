@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'unit']);
+        $query = Product::with(['category', 'unit'])->where('name', '!=', 'Item Tambahan Manual');
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
