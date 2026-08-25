@@ -13,8 +13,24 @@
         </div>
         
         <div class="flex items-center gap-3">
+            <form action="{{ route('admin.orders.index') }}" method="GET" class="flex gap-2">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="iconify text-slate-400" data-icon="mdi:calendar"></span>
+                    </div>
+                    <select name="period" onchange="this.form.submit()" class="pl-9 pr-10 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 shadow-sm appearance-none cursor-pointer font-medium hover:border-slate-300 transition-colors">
+                        <option value="all" {{ request('period', 'all') == 'all' ? 'selected' : '' }}>Semua Waktu</option>
+                        <option value="today" {{ request('period') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                        <option value="week" {{ request('period') == 'week' ? 'selected' : '' }}>Minggu Ini</option>
+                        <option value="month" {{ request('period') == 'month' ? 'selected' : '' }}>Bulan Ini</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <span class="iconify text-slate-400" data-icon="mdi:chevron-down"></span>
+                    </div>
+                </div>
+
             @if(isset($branches) && count($branches) > 0)
-            <form action="{{ route('admin.orders.index') }}" method="GET" class="relative">
+                <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <span class="iconify text-slate-400" data-icon="mdi:filter-variant"></span>
                 </div>
@@ -30,8 +46,9 @@
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span class="iconify text-slate-400" data-icon="mdi:chevron-down"></span>
                 </div>
-            </form>
+                </div>
             @endif
+            </form>
 
             <a href="{{ route('admin.orders.select-customer') }}"
                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-all shadow-md shadow-indigo-100 whitespace-nowrap">

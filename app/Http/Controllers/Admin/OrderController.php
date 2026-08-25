@@ -45,6 +45,16 @@ class OrderController extends Controller
             $query->where('branch_id', $request->branch_id);
         }
         
+        $period = $request->get('period', 'all');
+        if ($period === 'today') {
+            $query->whereDate('date', \Carbon\Carbon::today());
+        } elseif ($period === 'week') {
+            $query->whereBetween('date', [\Carbon\Carbon::now()->startOfWeek(), \Carbon\Carbon::now()->endOfWeek()]);
+        } elseif ($period === 'month') {
+            $query->whereYear('date', \Carbon\Carbon::now()->year)
+                  ->whereMonth('date', \Carbon\Carbon::now()->month);
+        }
+        
         $orders = $query->paginate(20)->withQueryString();
 
         $statsQuery = Order::query();
@@ -52,6 +62,15 @@ class OrderController extends Controller
         
         if ($request->filled('branch_id')) {
             $statsQuery->where('branch_id', $request->branch_id);
+        }
+        
+        if ($period === 'today') {
+            $statsQuery->whereDate('date', \Carbon\Carbon::today());
+        } elseif ($period === 'week') {
+            $statsQuery->whereBetween('date', [\Carbon\Carbon::now()->startOfWeek(), \Carbon\Carbon::now()->endOfWeek()]);
+        } elseif ($period === 'month') {
+            $statsQuery->whereYear('date', \Carbon\Carbon::now()->year)
+                        ->whereMonth('date', \Carbon\Carbon::now()->month);
         }
 
         $stats = [
@@ -65,7 +84,7 @@ class OrderController extends Controller
             $branches = Branch::where('code', '!=', 'PUSAT')->orderBy('name')->get();
         }
 
-        return view('admin.orders.index', compact('orders', 'stats', 'branches'));
+        return view('admin.orders.index', compact('orders', 'stats', 'branches', 'period'));
     }
 
     public function selectCustomer()
@@ -176,7 +195,7 @@ class OrderController extends Controller
                     'product_id'    => $item['product_id'],
                     'quantity'      => $item['quantity'],
                     'selling_price' => $item['selling_price'],
-                    'cost_price'    => $product->purchase_price, // ✅ TAMBAHAN PENTING
+                    'cost_price'    => $product->purchase_price, // Ã¢Å“â€¦ TAMBAHAN PENTING
                     'discount'      => $lineDiscount,
                     'subtotal'      => $lineSubtotal,
                 ]);
