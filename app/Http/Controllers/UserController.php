@@ -37,7 +37,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.form');
+        $branches = \App\Models\Branch::where('is_active', true)->get();
+        return view('admin.users.form', compact('branches'));
     }
 
     /**

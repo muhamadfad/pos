@@ -132,7 +132,7 @@
                     </div>
                 </div>
 
-                @if($isSuperAdmin)
+                @if($isSuperAdmin || (auth()->user()->isAdmin() && auth()->user()->canManagePusat()))
                 <!-- Logistik Pusat -->
                 <div x-data="{ open: false }">
                     <button @click="open = !open" 

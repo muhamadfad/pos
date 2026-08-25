@@ -32,7 +32,7 @@
     <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden p-8 md:p-12">
 
         <form action="{{ isset($user) ? route('admin.users.update', $user) : route('admin.users.store') }}"
-            method="POST" class="space-y-10" x-data="{ showPw: false }">
+            method="POST" class="space-y-10" x-data="{ showPw: false, role: '{{ old('role', $user->role ?? '') }}' }">
             @csrf
             @if(isset($user))
             @method('PUT')
@@ -95,7 +95,7 @@
                         <!-- Role -->
                         <div class="space-y-2">
                             <label class="text-sm font-black text-slate-700 tracking-tight">Role User</label>
-                            <select name="role" required
+                            <select name="role" x-model="role" required
                                 class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
                                 <option value="">Pilih Otoritas</option>
                                 <option value="super_admin" {{ old('role', $user->role ?? '') == 'super_admin' ? 'selected' : '' }}>Super Admin (Owner / Pusat)</option>

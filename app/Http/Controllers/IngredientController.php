@@ -24,14 +24,27 @@ class IngredientController extends Controller
         $query = Ingredient::with('unit', 'branch');
         
         // Filter berdasarkan role
-        if (!$isSuperAdmin) {
-            // Admin dan kasir hanya melihat bahan baku di cabangnya sendiri
-            $query->where('branch_id', $userBranchId);
-        } else {
+        if ($isSuperAdmin) {
             // Super admin: filter berdasarkan branch_id yang dipilih
             if ($request->has('branch_id') && $request->branch_id) {
                 $query->where('branch_id', $request->branch_id);
             }
+        } elseif ($user->canManagePusat()) {
+            $pusat = Branch::where('code', 'PUSAT')->first();
+            if ($request->has('branch_id') && $request->branch_id) {
+                // Pastikan hanya bisa filter cabang sendiri atau PUSAT
+                if ($request->branch_id == $userBranchId || $request->branch_id == $pusat?->id) {
+                    $query->where('branch_id', $request->branch_id);
+                } else {
+                    $query->where('branch_id', $userBranchId);
+                }
+            } else {
+                // Tampilkan cabang sendiri dan Pusat
+                $query->whereIn('branch_id', array_filter([$userBranchId, $pusat?->id]));
+            }
+        } else {
+            // Admin dan kasir hanya melihat bahan baku di cabangnya sendiri
+            $query->where('branch_id', $userBranchId);
         }
         
         // Search filter
@@ -96,6 +109,11 @@ class IngredientController extends Controller
         // Branches: super admin bisa pilih cabang, admin biasa hanya cabang sendiri
         if ($isSuperAdmin) {
             $branches = Branch::where('is_active', true)->get();
+        } elseif ($user->canManagePusat()) {
+            $pusat = Branch::where('code', 'PUSAT')->first();
+            $branches = Branch::where('id', $userBranchId)
+                ->orWhere('id', $pusat?->id)
+                ->where('is_active', true)->get();
         } else {
             $branches = Branch::where('id', $userBranchId)->where('is_active', true)->get();
         }
@@ -157,7 +175,10 @@ class IngredientController extends Controller
         $ingredient = Ingredient::with('unit', 'branch')->findOrFail($id);
         
         // Cek akses: non-super admin hanya bisa melihat bahan baku di cabangnya sendiri
-        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+        $pusat = Branch::where('code', 'PUSAT')->first();
+        $isPusat = $ingredient->branch_id == $pusat?->id;
+        
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId && !($isPusat && $user->canManagePusat())) {
             abort(403, 'Anda tidak memiliki akses ke bahan baku ini.');
         }
         
@@ -178,7 +199,10 @@ class IngredientController extends Controller
         $ingredient = Ingredient::findOrFail($id);
         
         // Cek akses: non-super admin hanya bisa edit bahan baku di cabangnya sendiri
-        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+        $pusat = Branch::where('code', 'PUSAT')->first();
+        $isPusat = $ingredient->branch_id == $pusat?->id;
+        
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId && !($isPusat && $user->canManagePusat())) {
             abort(403, 'Anda tidak memiliki akses untuk mengedit bahan baku ini.');
         }
         
@@ -187,6 +211,11 @@ class IngredientController extends Controller
         // Branches: super admin bisa pilih cabang, admin biasa hanya cabang sendiri
         if ($isSuperAdmin) {
             $branches = Branch::where('is_active', true)->get();
+        } elseif ($user->canManagePusat()) {
+            $pusat = Branch::where('code', 'PUSAT')->first();
+            $branches = Branch::where('id', $userBranchId)
+                ->orWhere('id', $pusat?->id)
+                ->where('is_active', true)->get();
         } else {
             $branches = Branch::where('id', $userBranchId)->where('is_active', true)->get();
         }
@@ -255,7 +284,10 @@ class IngredientController extends Controller
         $ingredient = Ingredient::findOrFail($id);
         
         // Cek akses: non-super admin hanya bisa hapus bahan baku di cabangnya sendiri
-        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+        $pusat = Branch::where('code', 'PUSAT')->first();
+        $isPusat = $ingredient->branch_id == $pusat?->id;
+        
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId && !($isPusat && $user->canManagePusat())) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus bahan baku ini.');
         }
         
@@ -285,7 +317,10 @@ class IngredientController extends Controller
         $ingredient = Ingredient::findOrFail($id);
         
         // Cek akses: non-super admin hanya bisa adjust stok di cabangnya sendiri
-        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId) {
+        $pusat = Branch::where('code', 'PUSAT')->first();
+        $isPusat = $ingredient->branch_id == $pusat?->id;
+        
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId && !($isPusat && $user->canManagePusat())) {
             return response()->json(['error' => 'Anda tidak memiliki akses ke bahan baku ini.'], 403);
         }
         

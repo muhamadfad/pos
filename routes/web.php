@@ -152,7 +152,8 @@ Route::middleware(['auth', 'admin'])
         // =======================
         // LOGISTIK PUSAT
         // =======================
-        Route::prefix('central-purchases')->name('central-purchases.')->group(function () {
+        Route::middleware([\App\Http\Middleware\CheckPusatAccess::class])->group(function () {
+            Route::prefix('central-purchases')->name('central-purchases.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'index'])->name('index');
             Route::get('/create', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'store'])->name('store');
@@ -180,6 +181,7 @@ Route::middleware(['auth', 'admin'])
             Route::get('/create', [\App\Http\Controllers\Admin\StockReturnController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\StockReturnController::class, 'show'])->name('show');
+        });
         });
 
         // =======================
