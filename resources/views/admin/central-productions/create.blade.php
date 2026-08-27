@@ -133,12 +133,6 @@
                 <div class="space-y-4">
                     <template x-for="(item, index) in items" :key="index">
                         <div class="flex flex-col sm:flex-row gap-4 p-5 border border-slate-200 rounded-2xl bg-slate-50/50 relative group hover:border-amber-200 hover:bg-amber-50/30 transition-all">
-                            <!-- Delete Button -->
-                            <button type="button" @click="removeItem(index)" x-show="items.length > 1"
-                                    class="absolute -right-3 -top-3 w-8 h-8 bg-white border border-rose-200 text-rose-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm hover:bg-rose-50 hover:text-rose-600 hover:scale-110 z-10">
-                                <span class="iconify" data-icon="lucide:x" data-width="16"></span>
-                            </button>
-                            
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Pilih Bahan Mentah</label>
                                 <select x-model="item.ingredient_id" :name="'items['+index+'][ingredient_id]'" required class="w-full bg-white border border-slate-200 text-slate-800 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 px-4 py-3 appearance-none shadow-sm">
@@ -149,15 +143,21 @@
                                 </select>
                             </div>
                             
-                            <div class="w-full sm:w-56">
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Berat/Jml Kotor</label>
-                                <div class="relative">
-                                    <input type="number" step="0.01" x-model="item.quantity" :name="'items['+index+'][quantity]'" required min="0.1" placeholder="0.0"
-                                           class="w-full bg-white border border-slate-200 text-slate-800 font-bold text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 pl-4 pr-12 py-3 shadow-sm text-right">
-                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium text-sm">
-                                        Kg
+                            <div class="flex items-end gap-3 w-full sm:w-auto">
+                                <div class="w-full sm:w-48">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Berat/Jml Kotor</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" x-model="item.quantity" :name="'items['+index+'][quantity]'" required min="0.1" placeholder="0.0"
+                                               class="w-full bg-white border border-slate-200 text-slate-800 font-bold text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 pl-4 pr-12 py-3 shadow-sm text-right">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400 font-medium text-sm">
+                                            Kg
+                                        </div>
                                     </div>
                                 </div>
+                                <button type="button" @click="removeItem(index)" x-show="items.length > 1"
+                                        class="w-12 h-[46px] bg-rose-50 border border-rose-200 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm shrink-0" title="Hapus Bahan">
+                                    <span class="iconify text-lg" data-icon="lucide:trash-2"></span>
+                                </button>
                             </div>
                         </div>
                     </template>
