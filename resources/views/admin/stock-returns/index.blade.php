@@ -21,6 +21,7 @@
                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                     <th class="px-6 py-4 font-medium border-b border-slate-200">No. Ref & Tanggal</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200">Asal Cabang</th>
+                    <th class="px-6 py-4 font-medium border-b border-slate-200">Total Olahan per Item</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200">Catatan</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200">Status</th>
                     <th class="px-6 py-4 font-medium border-b border-slate-200 text-center">Aksi</th>

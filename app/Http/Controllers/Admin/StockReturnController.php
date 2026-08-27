@@ -32,7 +32,7 @@ class StockReturnController extends Controller
         $pusat = $this->getPusatBranch();
         $user = Auth::user();
         
-        $query = StockTransfer::with(['fromBranch', 'user'])
+        $query = StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
             ->where('to_branch_id', $pusat->id) // returns are bound for pusat
             ->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc');
