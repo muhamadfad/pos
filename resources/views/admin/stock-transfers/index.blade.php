@@ -8,10 +8,28 @@
         <h1 class="text-2xl font-bold text-slate-800">Distribusi Cabang</h1>
         <p class="text-slate-500 text-sm mt-1">Kelola pengiriman stok dari Gudang Pusat ke Cabang.</p>
     </div>
-    <a href="{{ route('admin.stock-transfers.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
-        <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
-        Distribusi Baru
-    </a>
+    <div class="flex items-center gap-3">
+        <!-- Filter Period -->
+        <form action="{{ route('admin.stock-transfers.index') }}" method="GET" class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <span class="iconify" data-icon="mdi:calendar-month-outline"></span>
+            </div>
+            <select name="period" onchange="this.form.submit()" class="pl-9 pr-8 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all appearance-none cursor-pointer">
+                <option value="all" {{ ($period ?? 'all') == 'all' ? 'selected' : '' }}>Semua Waktu</option>
+                <option value="today" {{ ($period ?? '') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                <option value="this_week" {{ ($period ?? '') == 'this_week' ? 'selected' : '' }}>Minggu Ini</option>
+                <option value="this_month" {{ ($period ?? '') == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+            </select>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                <span class="iconify" data-icon="mdi:chevron-down"></span>
+            </div>
+        </form>
+
+        <a href="{{ route('admin.stock-transfers.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
+            <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
+            Distribusi Baru
+        </a>
+    </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
