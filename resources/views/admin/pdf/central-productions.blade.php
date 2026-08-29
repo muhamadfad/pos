@@ -32,6 +32,7 @@
                     <th>No. Ref & Tanggal</th>
                     <th>Hasil Produksi (Bersih)</th>
                     <th>Bahan Mentah (Kotor)</th>
+                    <th>Catatan</th>
                     <th class="text-right">Biaya Tambahan</th>
                     <th class="text-right">HPP / Unit</th>
                 </tr>
@@ -54,6 +55,7 @@
                             @endforeach
                         </ul>
                     </td>
+                    <td style="font-size: 10px; max-width: 150px; word-wrap: break-word;">{{ $prod->notes ?: '-' }}</td>
                     <td class="text-right">Rp {{ number_format($prod->additional_costs, 0, ',', '.') }}</td>
                     <td class="text-right font-bold">Rp {{ number_format($prod->unit_cost, 0, ',', '.') }}</td>
                 </tr>
