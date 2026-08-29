@@ -38,8 +38,8 @@
                     <tr class="bg-slate-50/50 border-b border-slate-100">
                         <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Tanggal /
                             Invoice</th>
-                        <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Supplier
-                        </th>
+                        <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Supplier</th>
+<th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Item Barang</th>
                         <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest text-right">
                             Total Transaksi</th>
                         <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest text-right">
@@ -61,9 +61,20 @@
                                 STR_PAD_LEFT) }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-slate-800">{{ $purchase->supplier->name ?? '-' }}</div>
-                            <div class="text-[11px] text-slate-400">{{ $purchase->supplier->phone ?? 'No Phone' }}</div>
-                        </td>
+    <div class="text-sm font-bold text-slate-800">{{ $purchase->supplier->name ?? '-' }}</div>
+    <div class="text-[11px] text-slate-400">{{ $purchase->supplier->phone ?? 'No Phone' }}</div>
+</td>
+<td class="px-6 py-4">
+    <div class="flex flex-col gap-1 max-h-[80px] overflow-y-auto min-w-[150px]">
+        @forelse($purchase->items as $item)
+            <div class="text-xs text-slate-600 truncate" title="{{ $item->ingredient->name ?? ' }}">
+                • {{ $item->ingredient->name ?? ' }} ({{ $item->quantity }})
+            </div>
+        @empty
+            <span class="text-xs text-slate-400">-</span>
+        @endforelse
+    </div>
+</td>
                         <td class="px-6 py-4 text-right">
                             <div class="text-sm font-bold text-slate-500">Rp {{ number_format($purchase->total_amount,
                                 0, ',', '.') }}</div>

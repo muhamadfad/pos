@@ -27,14 +27,50 @@ class StockTransferController extends Controller
         return $branch;
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $transfers = StockTransfer::with(['toBranch', 'user'])
-            ->orderBy('transfer_date', 'desc')
+        $period = $request->get('period', 'all');
+        $query = StockTransfer::with(['toBranch', 'user']);
+        
+        if ($period === 'today') {
+            $query->whereDate('transfer_date', \Carbon\Carbon::today());
+        } elseif ($period === 'this_week') {
+            $query->whereBetween('transfer_date', [
+                \Carbon\Carbon::now()->startOfWeek(),
+                \Carbon\Carbon::now()->endOfWeek()
+            ]);
+        } elseif ($period === 'this_month') {
+            $query->whereMonth('transfer_date', \Carbon\Carbon::now()->month)
+                  ->whereYear('transfer_date', \Carbon\Carbon::now()->year);
+        }
+
+        $transfers = $query->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        return view('admin.stock-transfers.index', compact('transfers'));
+        return view('admin.stock-transfers.index', compact('transfers', 'period'));
+    }
+
+    public function downloadPdf(\Illuminate\Http\Request $request)
+    {
+        $period = $request->get('period', 'all');
+        $query = StockTransfer::with(['toBranch', 'user', 'items.ingredient.unit']);
+        
+        if ($period === 'today') {
+            $query->whereDate('transfer_date', \Carbon\Carbon::today());
+        } elseif ($period === 'this_week') {
+            $query->whereBetween('transfer_date', [
+                \Carbon\Carbon::now()->startOfWeek(),
+                \Carbon\Carbon::now()->endOfWeek()
+            ]);
+        } elseif ($period === 'this_month') {
+            $query->whereMonth('transfer_date', \Carbon\Carbon::now()->month)
+                  ->whereYear('transfer_date', \Carbon\Carbon::now()->year);
+        }
+
+        $transfers = $query->orderBy('transfer_date', 'desc')->orderBy('id', 'desc')->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.stock-transfers', compact('transfers', 'period'))->setPaper('a4', 'landscape');
+        return $pdf->download("Laporan_Distribusi_Cabang.pdf");
     }
 
     public function create()

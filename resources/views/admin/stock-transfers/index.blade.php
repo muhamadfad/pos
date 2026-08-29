@@ -25,6 +25,10 @@
             </div>
         </form>
 
+        <a href="{{ route('admin.stock-transfers.download-pdf', request()->all()) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-semibold rounded-xl transition-all">
+            <span class="iconify text-lg" data-icon="mdi:file-pdf-box"></span>
+            Download PDF
+        </a>
         <a href="{{ route('admin.stock-transfers.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
             <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
             Distribusi Baru

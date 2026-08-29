@@ -25,7 +25,12 @@
                     Konversi bahan mentah menjadi bahan jadi (Yield). Sistem otomatis merekap sisa stok dan mengkalkulasi ulang HPP sesuai modal awal.
                 </p>
             </div>
-            <div class="shrink-0">
+            <div class="shrink-0 flex items-center gap-3">
+                <a href="{{ route('admin.central-productions.download-pdf', request()->all()) }}" target="_blank"
+                   class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-rose-50 text-rose-600 font-bold text-sm rounded-2xl hover:bg-rose-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-rose-200">
+                    <span class="iconify text-xl" data-icon="mdi:file-pdf-box"></span>
+                    Download PDF
+                </a>
                 <a href="{{ route('admin.central-productions.create') }}" 
                    class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-indigo-600 font-bold text-sm rounded-2xl hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-black/10 ring-1 ring-white/50 focus:outline-none focus:ring-4 focus:ring-indigo-300">
                     <span class="iconify text-xl" data-icon="lucide:plus"></span>

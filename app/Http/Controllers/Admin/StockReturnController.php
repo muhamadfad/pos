@@ -46,6 +46,24 @@ class StockReturnController extends Controller
         return view('admin.stock-returns.index', compact('returns'));
     }
 
+    public function downloadPdf()
+    {
+        $pusat = $this->getPusatBranch();
+        $user = Auth::user();
+        $query = StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
+            ->where('to_branch_id', $pusat->id)
+            ->orderBy('transfer_date', 'desc')
+            ->orderBy('id', 'desc');
+
+        if ($user->role !== 'super_admin' && $user->branch_id !== $pusat->id) {
+            $query->where('from_branch_id', $user->branch_id);
+        }
+
+        $returns = $query->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.stock-returns', compact('returns'))->setPaper('a4', 'landscape');
+        return $pdf->download("Laporan_Return_Stok.pdf");
+    }
+
     public function create()
     {
         $pusat = $this->getPusatBranch();

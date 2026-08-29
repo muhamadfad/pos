@@ -162,15 +162,18 @@ Route::middleware(['auth', 'admin'])
 
         Route::prefix('central-productions')->name('central-productions.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'index'])->name('index');
+            Route::get('/download-pdf', [\App\Http\Controllers\Admin\CentralProductionController::class, 'downloadPdf'])->name('download-pdf');
             Route::get('/create', [\App\Http\Controllers\Admin\CentralProductionController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\CentralProductionController::class, 'show'])->name('show');
         });
         
         Route::get('/central-stocks', [\App\Http\Controllers\Admin\CentralStockController::class, 'index'])->name('central-stocks.index');
+        Route::get('/central-stocks/download-pdf', [\App\Http\Controllers\Admin\CentralStockController::class, 'downloadPdf'])->name('central-stocks.download-pdf');
 
         Route::prefix('stock-transfers')->name('stock-transfers.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\StockTransferController::class, 'index'])->name('index');
+            Route::get('/download-pdf', [\App\Http\Controllers\Admin\StockTransferController::class, 'downloadPdf'])->name('download-pdf');
             Route::get('/create', [\App\Http\Controllers\Admin\StockTransferController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\StockTransferController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\StockTransferController::class, 'show'])->name('show');
@@ -178,6 +181,7 @@ Route::middleware(['auth', 'admin'])
 
         Route::prefix('stock-returns')->name('stock-returns.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'index'])->name('index');
+            Route::get('/download-pdf', [\App\Http\Controllers\Admin\StockReturnController::class, 'downloadPdf'])->name('download-pdf');
             Route::get('/create', [\App\Http\Controllers\Admin\StockReturnController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\StockReturnController::class, 'show'])->name('show');

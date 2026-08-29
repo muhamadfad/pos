@@ -12,7 +12,7 @@ class PurchasePaymentController extends Controller
 {
     public function index()
     {
-        $purchases = Purchase::with('supplier')
+        $purchases = Purchase::with(['supplier', 'items.ingredient'])
             ->whereIn('payment_status', ['unpaid', 'partial'])
             ->orderBy('date', 'desc')
             ->paginate(10);

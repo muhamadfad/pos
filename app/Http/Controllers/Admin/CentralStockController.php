@@ -38,4 +38,18 @@ class CentralStockController extends Controller
 
         return view('admin.central-stocks.index', compact('ingredients', 'pusat'));
     }
+    public function downloadPdf(\Illuminate\Http\Request $request)
+    {
+        $pusat = $this->getPusatBranch();
+        $query = Ingredient::with('unit')->where('branch_id', $pusat->id);
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        $ingredients = $query->orderBy('name')->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-stocks', compact('ingredients'))->setPaper('a4', 'portrait');
+        return $pdf->download("Laporan_Stok_Pusat.pdf");
+    }
 }

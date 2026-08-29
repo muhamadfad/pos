@@ -35,6 +35,22 @@ class CentralProductionController extends Controller
         return view('admin.central-productions.index', compact('productions'));
     }
 
+    public function downloadPdf(Request $request)
+    {
+        $pusat = $this->getPusatBranch();
+        $query = Production::with(['resultIngredient', 'items.ingredient'])
+            ->where('branch_id', $pusat->id)
+            ->latest('date');
+
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        $productions = $query->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-productions', compact('productions', 'pusat'))->setPaper('a4', 'landscape');
+        return $pdf->download("Laporan_Produksi_Pusat.pdf");
+    }
+
     public function create()
     {
         $pusat = $this->getPusatBranch();

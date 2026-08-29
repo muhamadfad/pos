@@ -22,6 +22,10 @@
             <button type="submit" class="px-6 py-2 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-xl transition-all shadow-sm">
                 Cari
             </button>
+            <a href="{{ route('admin.central-stocks.download-pdf', request()->all()) }}" target="_blank" class="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                <span class="iconify" data-icon="mdi:file-pdf-box"></span>
+                Download PDF
+            </a>
         </form>
     </div>
 

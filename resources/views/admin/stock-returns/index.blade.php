@@ -8,10 +8,16 @@
         <h1 class="text-2xl font-bold text-slate-800">Return Cabang</h1>
         <p class="text-slate-500 text-sm mt-1">Kelola pengiriman stok dari cabang ke Gudang Pusat.</p>
     </div>
-    <a href="{{ route('admin.stock-returns.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
+    <div class="flex items-center gap-3">
+        <a href="{{ route('admin.stock-returns.download-pdf', request()->all()) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-semibold rounded-xl transition-all">
+            <span class="iconify text-lg" data-icon="mdi:file-pdf-box"></span>
+            Download PDF
+        </a>
+        <a href="{{ route('admin.stock-returns.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all active:scale-[0.98]">
         <span class="iconify text-lg" data-icon="mdi:truck-delivery-outline"></span>
         Return Baru
-    </a>
+        </a>
+    </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
