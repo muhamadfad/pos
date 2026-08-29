@@ -51,6 +51,45 @@ class CentralProductionController extends Controller
         return $pdf->download("Laporan_Produksi_Pusat.pdf");
     }
 
+    public function downloadCombinedPdf(Request $request)
+    {
+        $pusat = $this->getPusatBranch();
+        
+        // 1. Productions
+        $prodQuery = Production::with(['resultIngredient', 'items.ingredient'])
+            ->where('branch_id', $pusat->id)
+            ->latest('date');
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $prodQuery->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+        $productions = $prodQuery->get();
+
+        // 2. Transfers (Distribusi)
+        $transQuery = \App\Models\StockTransfer::with(['toBranch', 'user', 'items.ingredient.unit'])
+            ->where('from_branch_id', $pusat->id)
+            ->orderBy('transfer_date', 'desc')
+            ->orderBy('id', 'desc');
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $transQuery->whereBetween('transfer_date', [$request->start_date, $request->end_date]);
+        }
+        $transfers = $transQuery->get();
+
+        // 3. Returns (Return Cabang)
+        $returnQuery = \App\Models\StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
+            ->where('to_branch_id', $pusat->id)
+            ->orderBy('transfer_date', 'desc')
+            ->orderBy('id', 'desc');
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $returnQuery->whereBetween('transfer_date', [$request->start_date, $request->end_date]);
+        }
+        $returns = $returnQuery->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request'))
+            ->setPaper('a4', 'landscape');
+            
+        return $pdf->download("Laporan_Logistik_Lengkap.pdf");
+    }
+
     public function create()
     {
         $pusat = $this->getPusatBranch();

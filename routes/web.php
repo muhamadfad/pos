@@ -163,6 +163,7 @@ Route::middleware(['auth', 'admin'])
         Route::prefix('central-productions')->name('central-productions.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'index'])->name('index');
             Route::get('/download-pdf', [\App\Http\Controllers\Admin\CentralProductionController::class, 'downloadPdf'])->name('download-pdf');
+            Route::get('/download-combined-pdf', [\App\Http\Controllers\Admin\CentralProductionController::class, 'downloadCombinedPdf'])->name('download-combined-pdf');
             Route::get('/create', [\App\Http\Controllers\Admin\CentralProductionController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'store'])->name('store');
             Route::get('/{id}', [\App\Http\Controllers\Admin\CentralProductionController::class, 'show'])->name('show');

@@ -26,6 +26,11 @@
                 </p>
             </div>
             <div class="shrink-0 flex items-center gap-3">
+                <a href="{{ route('admin.central-productions.download-combined-pdf', request()->all()) }}" target="_blank"
+                   class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 text-emerald-600 font-bold text-sm rounded-2xl hover:bg-emerald-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-emerald-200" title="PDF Lengkap (Produksi, Distribusi, Return)">
+                    <span class="iconify text-xl" data-icon="mdi:file-pdf-box-multiple"></span>
+                    PDF Lengkap
+                </a>
                 <a href="{{ route('admin.central-productions.download-pdf', request()->all()) }}" target="_blank"
                    class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-rose-50 text-rose-600 font-bold text-sm rounded-2xl hover:bg-rose-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-rose-200">
                     <span class="iconify text-xl" data-icon="mdi:file-pdf-box"></span>
