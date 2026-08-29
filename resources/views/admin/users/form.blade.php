@@ -104,6 +104,35 @@
                             </select>
                         </div>
 
+                        <!-- Cabang (Only for admin and kasir) -->
+                        <div class="space-y-2" x-show="role === 'admin' || role === 'kasir'">
+                            <label class="text-sm font-black text-slate-700 tracking-tight">Penempatan Cabang</label>
+                            <select name="branch_id" :required="role === 'admin' || role === 'kasir'"
+                                class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+                                <option value="">Pilih Cabang</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ old('branch_id', $user->branch_id ?? '') == $branch->id ? 'selected' : '' }}>
+                                        {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Can Manage Pusat (Only for admin) -->
+                        <div class="space-y-2 sm:col-span-2" x-show="role === 'admin'">
+                            <div class="flex items-center gap-4 py-2 border-t border-slate-100 mt-2">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="can_manage_pusat" class="sr-only peer" value="1" {{ old('can_manage_pusat', $user->can_manage_pusat ?? false) ? 'checked' : '' }}>
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500">
+                                    </div>
+                                    <div class="ml-3">
+                                        <span class="block text-sm font-bold text-slate-700 tracking-tight">Beri Akses Kelola Logistik Pusat</span>
+                                        <span class="block text-xs font-medium text-slate-400">Admin cabang ini dapat menambah produksi, menyetujui transfer, & mengelola stok gudang pusat.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
                         <!-- Status Aktif -->
                         <div class="space-y-2">
                             <label class="text-sm font-black text-slate-700 tracking-tight">Status Account</label>

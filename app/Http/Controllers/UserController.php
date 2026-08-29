@@ -62,6 +62,8 @@ class UserController extends Controller
             'role'      => $request->role,
             'is_active' => $request->boolean('is_active', true),
             'is_decoy'  => $isDecoy,
+            'branch_id' => in_array($request->role, ['admin', 'kasir']) ? $request->branch_id : null,
+            'can_manage_pusat' => $request->role === 'admin' ? $request->boolean('can_manage_pusat') : false,
         ]);
 
         return redirect()
@@ -75,7 +77,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.users.form', compact('user'));
+        $branches = \App\Models\Branch::where('is_active', true)->get();
+        return view('admin.users.form', compact('user', 'branches'));
     }
 
     /**
