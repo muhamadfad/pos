@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'is_active',
+        'is_decoy',
+        'branch_id',
+        'can_manage_pusat'
     ];
 
     /**
@@ -43,6 +48,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_decoy' => 'boolean',
+            'can_manage_pusat' => 'boolean',
         ];
     }
     // Tambahkan method ini
