@@ -46,6 +46,12 @@
                         STR_PAD_LEFT) }}</h2>
                     <p class="text-slate-500 font-medium">{{ \Carbon\Carbon::parse($purchase->date)->format('d F Y') }}
                     </p>
+                    @if($purchase->branch && $purchase->branch->code !== 'PUSAT')
+                        <div class="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold shadow-sm">
+                            <span class="iconify" data-icon="mdi:wallet"></span>
+                            Dana Kasir: {{ $purchase->branch->name }}
+                        </div>
+                    @endif
                 </div>
                 <div class="flex items-center gap-2">
                     @php

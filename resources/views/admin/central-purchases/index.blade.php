@@ -70,6 +70,12 @@
                     <td class="px-6 py-4">
                         <div class="font-medium text-slate-800">{{ $purchase->reference_number ?: '-' }}</div>
                         <div class="text-slate-500 text-xs mt-0.5">{{ \Carbon\Carbon::parse($purchase->date)->format('d M Y') }}</div>
+                        @if($purchase->branch && $purchase->branch->code !== 'PUSAT')
+                            <div class="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700" title="Dana dari kas cabang">
+                                <span class="iconify" data-icon="mdi:wallet"></span>
+                                {{ $purchase->branch->name }}
+                            </div>
+                        @endif
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">

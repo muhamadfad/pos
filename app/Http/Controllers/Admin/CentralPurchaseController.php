@@ -33,8 +33,10 @@ class CentralPurchaseController extends Controller
     {
         $pusat = $this->getPusatBranch();
 
-        $query = Purchase::with(['supplier', 'items.ingredient'])
-            ->where('branch_id', $pusat->id)
+        $query = Purchase::with(['supplier', 'items.ingredient', 'branch'])
+            ->whereHas('items.ingredient', function($q) use ($pusat) {
+                $q->where('branch_id', $pusat->id);
+            })
             ->latest('date');
 
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -209,7 +211,9 @@ class CentralPurchaseController extends Controller
     public function show($id)
     {
         $pusat = $this->getPusatBranch();
-        $purchase = Purchase::where('branch_id', $pusat->id)->with(['supplier', 'items.ingredient', 'payments'])->findOrFail($id);
+        $purchase = Purchase::whereHas('items.ingredient', function($q) use ($pusat) {
+            $q->where('branch_id', $pusat->id);
+        })->with(['supplier', 'items.ingredient', 'payments'])->findOrFail($id);
         
         return view('admin.central-purchases.show', compact('purchase'));
     }
