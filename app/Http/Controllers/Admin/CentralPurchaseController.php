@@ -62,6 +62,7 @@ class CentralPurchaseController extends Controller
     {
         $pusat = $this->getPusatBranch();
         $suppliers = Supplier::orderBy('name')->get();
+        $branches = \App\Models\Branch::where('is_active', true)->orderBy('name')->get();
         
         // Ambil semua bahan baku dari semua cabang untuk referensi (unique by name)
         // Jika belum ada di Pusat, akan di-copy otomatis saat disimpan
