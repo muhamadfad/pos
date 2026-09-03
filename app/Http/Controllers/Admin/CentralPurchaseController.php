@@ -64,12 +64,42 @@ class CentralPurchaseController extends Controller
         $suppliers = Supplier::orderBy('name')->get();
         $branches = \App\Models\Branch::where('is_active', true)->orderBy('name')->get();
         
+        $branchCash = [];
+        foreach ($branches as $branch) {
+            $activeShift = \App\Models\CashierShift::where('branch_id', $branch->id)
+                ->where('status', 'open')
+                ->latest()
+                ->first();
+            
+            if ($activeShift) {
+                $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
+                  ->where('payment_method', 'cash')
+                  ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
+                
+                $totalExpense = \App\Models\Expense::where('branch_id', $branch->id)
+                  ->where('created_at', '>=', $activeShift->opened_at)
+                  ->sum('amount');
+                
+                $totalPurchase = \App\Models\Purchase::where('branch_id', $branch->id)
+                  ->where('payment_method', 'cash')
+                  ->where('created_at', '>=', $activeShift->opened_at)
+                  ->sum('total_paid');
+                  
+                $totalCash = $totalCashIncome - $totalExpense - $totalPurchase;
+                $expectedCash = $activeShift->opening_balance + $totalCash;
+                
+                $branchCash[$branch->id] = max(0, $expectedCash);
+            } else {
+                $branchCash[$branch->id] = 0;
+            }
+        }
+        
         // Ambil semua bahan baku dari semua cabang untuk referensi (unique by name)
         // Jika belum ada di Pusat, akan di-copy otomatis saat disimpan
         $allIngredients = Ingredient::with('unit')->where('is_active', true)->orderBy('name')->get();
         $ingredients = $allIngredients->unique('name')->values();
 
-        return view('admin.central-purchases.create', compact('suppliers', 'ingredients', 'branches', 'pusat'));
+        return view('admin.central-purchases.create', compact('suppliers', 'ingredients', 'branches', 'pusat', 'branchCash'));
     }
 
     public function store(Request $request, KasproService $kaspro)

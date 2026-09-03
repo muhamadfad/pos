@@ -23,9 +23,14 @@
 
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Sumber Dana / Kas</label>
-                    <select name="branch_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold" required>
+                <div x-data="{ selectedBranchId: '{{ $pusat->id }}' }">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex justify-between">
+                        <span>Sumber Dana / Kas</span>
+                        <span class="text-emerald-600 normal-case" x-show="window.__branchCash[selectedBranchId] !== undefined">
+                            Sisa Kasir: <span x-text="formatCurrency(window.__branchCash[selectedBranchId])"></span>
+                        </span>
+                    </label>
+                    <select name="branch_id" x-model="selectedBranchId" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold" required>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}" {{ $branch->id == $pusat->id ? 'selected' : '' }}>
                                 {{ $branch->name }}
@@ -220,6 +225,7 @@
 </div>
 
 <script>
+    window.__branchCash = {!! json_encode($branchCash) !!};
     window.__purchaseIngredients = {!! json_encode($ingredients->map(fn($p) => [
         'id'             => $p->id,
         'name'           => $p->name,
