@@ -127,11 +127,15 @@ class CentralPurchaseController extends Controller
             $paid  = $request->paid ?? 0;
 
             if ($paid > 0) {
+                $ingredientIds = collect($request->items)->pluck('ingredient_id');
+                $ingredientNames = \App\Models\Ingredient::whereIn('id', $ingredientIds)->pluck('name')->implode(', ');
+                $descText = 'Pembelian: ' . $ingredientNames . ($request->reference_number ? ' (' . $request->reference_number . ')' : '');
+
                 \App\Models\Expense::create([
                     'branch_id' => $request->branch_id,
                     'user_id' => auth()->id(),
                     'amount' => $paid,
-                    'description' => 'Pembelian Bahan Baku ' . ($request->reference_number ?: ''),
+                    'description' => $descText,
                     'category' => 'Pembelian Bahan Baku',
                     'date' => $request->date,
                 ]);

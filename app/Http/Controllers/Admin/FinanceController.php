@@ -219,7 +219,7 @@ class FinanceController extends Controller
                 return $item;
             });
 
-                $expenseQuery = Expense::where('category', '!=', 'Pembelian Bahan Baku');
+                $expenseQuery = Expense::query();
         if ($startDate && $endDate) {
             $expenseQuery->whereBetween('date', [$start, $end]);
         } else {
@@ -538,7 +538,7 @@ class FinanceController extends Controller
 
         
         $ordersQuery = \App\Models\Order::with(['customer', 'items.product'])->where('payment_status', 'paid');
-        $expensesQuery = \App\Models\Expense::where('category', '!=', 'Pembelian Bahan Baku');
+        $expensesQuery = \App\Models\Expense::query();
         $purchasesQuery = \App\Models\Purchase::with('supplier');
 
         if ($startDate && $endDate) {

@@ -38,6 +38,18 @@ class PurchasePaymentController extends Controller
                 throw new \Exception('Jumlah pembayaran melebihi sisa hutang.');
             }
 
+            $ingredientNames = $purchase->items->map(function($item) { return $item->ingredient->name ?? ''; })->filter()->implode(', ');
+            $descText = 'Pelunasan Pembelian: ' . $ingredientNames . ($purchase->reference_number ? ' (' . $purchase->reference_number . ')' : '');
+            
+            \App\Models\Expense::create([
+                'branch_id' => $purchase->branch_id,
+                'user_id' => auth()->id(),
+                'amount' => $request->amount,
+                'description' => $descText,
+                'category' => 'Pembelian Bahan Baku',
+                'date' => $request->payment_date,
+            ]);
+
             PurchasePayment::create([
                 'purchase_id'    => $purchase->id,
                 'payment_date'   => $request->payment_date,
@@ -75,6 +87,18 @@ class PurchasePaymentController extends Controller
             if ($request->amount > $purchase->remaining_debt) {
                 throw new \Exception('Jumlah pembayaran melebihi sisa hutang.');
             }
+
+            $ingredientNames = $purchase->items->map(function($item) { return $item->ingredient->name ?? ''; })->filter()->implode(', ');
+            $descText = 'Pelunasan Pembelian: ' . $ingredientNames . ($purchase->reference_number ? ' (' . $purchase->reference_number . ')' : '');
+            
+            \App\Models\Expense::create([
+                'branch_id' => $purchase->branch_id,
+                'user_id' => auth()->id(),
+                'amount' => $request->amount,
+                'description' => $descText,
+                'category' => 'Pembelian Bahan Baku',
+                'date' => $request->payment_date,
+            ]);
 
             PurchasePayment::create([
                 'purchase_id'    => $purchase->id,
