@@ -28,6 +28,11 @@ class Purchase extends Model
         'remaining_debt' => 'decimal:2',
     ];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
