@@ -124,7 +124,7 @@
                                                 <input type="text"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
                                                     :value="item.formatted_price"
-                                                    @input="formatInputPrice(item, `$event)"
+                                                    @input="formatInputPrice(item, $event)"
                                                     @focus="if(item.price === 0) item.formatted_price = ''"
                                                     @blur="if(!item.formatted_price) { item.price = 0; item.formatted_price = '0'; }">
                                                 <input type="hidden" :name="'items[' + index + '][purchase_price]'" x-model="item.price">
