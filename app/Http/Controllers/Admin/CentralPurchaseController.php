@@ -68,7 +68,7 @@ class CentralPurchaseController extends Controller
         $allIngredients = Ingredient::with('unit')->where('is_active', true)->orderBy('name')->get();
         $ingredients = $allIngredients->unique('name')->values();
 
-        return view('admin.central-purchases.create', compact('suppliers', 'ingredients'));
+        return view('admin.central-purchases.create', compact('suppliers', 'ingredients', 'branches', 'pusat'));
     }
 
     public function store(Request $request, KasproService $kaspro)
@@ -94,7 +94,7 @@ class CentralPurchaseController extends Controller
             $paid  = $request->paid ?? 0;
 
             $purchase = Purchase::create([
-                'branch_id'        => $pusat->id,
+                'branch_id'        => $request->branch_id,
                 'reference_number' => $request->reference_number,
                 'supplier_id'      => $supplier ? $supplier->id : null,
                 'date'             => $request->date,
