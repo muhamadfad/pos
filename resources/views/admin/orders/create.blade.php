@@ -96,9 +96,13 @@
                                                 <div
                                                     class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400 text-xs">
                                                     Rp</div>
-                                                <input type="number" :name="'items[' + index + '][selling_price]'" min="0"
+                                                <input type="text"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-emerald-600"
-                                                    x-model="item.price" required>
+                                                    x-model="item.formatted_price"
+                                                    @input="formatInputPrice(item, $event)"
+                                                    @focus="if(item.price === 0) item.formatted_price = ''"
+                                                    @blur="if(!item.formatted_price) { item.price = 0; item.formatted_price = '0'; }" required>
+                                                <input type="hidden" :name="'items[' + index + '][selling_price]'" x-model="item.price">
                                             </div>
                                         </td>
                                         <!-- Subtotal -->
@@ -155,9 +159,13 @@
                                     <div
                                         class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                         Rp</div>
-                                    <input type="number" name="paid" min="0"
+                                    <input type="text"
                                         class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-emerald-600"
-                                        x-model="paid_amount">
+                                        x-model="formatted_paid"
+                                        @input="formatInputPaid($event)"
+                                        @focus="if(paid_amount === 0) formatted_paid = ''"
+                                        @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
+                                    <input type="hidden" name="paid" x-model="paid_amount">
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-2 italic px-1 text-center">Biarkan 0 jika belum
                                     ada pembayaran</p>
@@ -219,7 +227,7 @@
         items: [
             { product_id: '', quantity: 1, price: 0, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
         ],
-        paid_amount: 0,
+        paid_amount: 0, formatted_paid: '0',
 
         addRow() {
             this.items.push({ product_id: '', quantity: 1, price: 0, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null });

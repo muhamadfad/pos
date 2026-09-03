@@ -91,9 +91,13 @@
                                                 <div
                                                     class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400 text-xs">
                                                     Rp</div>
-                                                <input type="number" :name="`items[${index}][purchase_price]`" min="0"
+                                                <input type="text"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                                    x-model="item.price">
+                                                    x-model="item.formatted_price"
+                                                    @input="formatInputPrice(item, $event)"
+                                                    @focus="if(item.price === 0) item.formatted_price = ''"
+                                                    @blur="if(!item.formatted_price) { item.price = 0; item.formatted_price = '0'; }">
+                                                <input type="hidden" :name="`items[${index}][purchase_price]`" x-model="item.price">
                                             </div>
                                         </td>
                                         <!-- Subtotal -->
@@ -141,9 +145,13 @@
                                     <div
                                         class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                         Rp</div>
-                                    <input type="number" name="paid" min="0"
+                                    <input type="text"
                                         class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-indigo-600"
-                                        x-model="paid_amount">
+                                        x-model="formatted_paid"
+                                        @input="formatInputPaid($event)"
+                                        @focus="if(paid_amount === 0) formatted_paid = ''"
+                                        @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
+                                    <input type="hidden" name="paid" x-model="paid_amount">
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-2 italic px-1">Isi 0 jika transaksi ini
                                     merupakan hutang penuh</p>
@@ -203,12 +211,12 @@
     return {
         _ingredients: window.__purchaseIngredients ?? [],
         items: [
-            { ingredient_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
+            { ingredient_id: '', quantity: 1, price: 0, formatted_price: '0', unit_name: '', _search: '', _open: false, _dropPos: null }
         ],
-        paid_amount: 0,
+        paid_amount: 0, formatted_paid: '0',
 
         addRow() {
-            this.items.push({ ingredient_id: '', quantity: 1, price: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
+            this.items.push({ ingredient_id: '', quantity: 1, price: 0, formatted_price: '0', unit_name: '', _search: '', _open: false, _dropPos: null });
         },
 
         removeRow(index) {
@@ -221,6 +229,28 @@
 
         formatCurrency(val) {
             return 'Rp ' + new Number(val).toLocaleString('id-ID');
+        },
+
+        formatInputPrice(item, event) {
+            let val = event.target.value.replace(/\D/g, '');
+            if (val === '') {
+                item.price = 0;
+                item.formatted_price = '';
+            } else {
+                item.price = parseInt(val);
+                item.formatted_price = new Number(val).toLocaleString('id-ID');
+            }
+        },
+
+        formatInputPaid(event) {
+            let val = event.target.value.replace(/\D/g, '');
+            if (val === '') {
+                this.paid_amount = 0;
+                this.formatted_paid = '';
+            } else {
+                this.paid_amount = parseInt(val);
+                this.formatted_paid = new Number(val).toLocaleString('id-ID');
+            }
         },
 
         handleFormSubmit(e) {
