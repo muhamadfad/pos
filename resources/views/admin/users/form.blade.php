@@ -123,7 +123,7 @@
                             <div class="flex items-center gap-4 py-2 border-t border-slate-100 mt-2">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" name="can_manage_pusat" class="sr-only peer" value="1" {{ old('can_manage_pusat', $user->can_manage_pusat ?? false) ? 'checked' : '' }}>
-                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500">
+                                    <div class="relative w-11 h-6 shrink-0 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500">
                                     </div>
                                     <div class="ml-3">
                                         <span class="block text-sm font-bold text-slate-700 tracking-tight">Beri Akses Kelola Logistik Pusat</span>
@@ -141,7 +141,7 @@
                                     <input type="checkbox" name="is_active" class="sr-only peer" {{ old('is_active',
                                         $user->is_active ?? true) ? 'checked' : '' }}>
                                     <div
-                                        class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500">
+                                        class="relative w-11 h-6 shrink-0 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500">
                                     </div>
                                     <span class="ml-3 text-sm font-bold text-slate-600 tracking-tight">Aktifkan
                                         Akses</span>
