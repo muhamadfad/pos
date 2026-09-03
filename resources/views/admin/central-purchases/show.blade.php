@@ -6,7 +6,7 @@
 <div x-data="{ 
     showPaymentModal: false, 
     amount: {{ $purchase->remaining_debt }}, 
-    formatted_amount: new Number({{ $purchase->remaining_debt }}).toLocaleString('id-ID'),
+    formatted_amount: parseInt({{ $purchase->remaining_debt }}).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
     formatAmount(event) {
         let val = event.target.value.replace(/\D/g, '');
         if (val === '') {
@@ -14,12 +14,12 @@
             this.formatted_amount = '';
         } else {
             this.amount = parseInt(val);
-            this.formatted_amount = new Number(val).toLocaleString('id-ID');
+            this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     }
 } else {
             this.amount = parseInt(val);
-            this.formatted_amount = new Number(val).toLocaleString('id-ID');
+            this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     }
 }" class="w-full mx-auto">
@@ -285,7 +285,7 @@
                                             Rp</div>
                                         <input type="text"
                                             class="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-lg font-black text-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                                            x-model="formatted_amount" @input="formatAmount($event)" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required>
+                                            :value="formatted_amount" @input="formatAmount($event)" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required>
                                         <input type="hidden" name="amount" x-model="amount">
                                     </div>
                                 </div>

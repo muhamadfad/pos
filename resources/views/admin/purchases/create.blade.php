@@ -93,7 +93,7 @@
                                                     Rp</div>
                                                 <input type="text"
                                                     class="w-full pl-7 pr-2 py-2 bg-white border border-slate-200 rounded-xl text-sm text-right focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                                    x-model="item.formatted_price"
+                                                    :value="item.formatted_price"
                                                     @input="formatInputPrice(item, $event)"
                                                     @focus="if(item.price === 0) item.formatted_price = ''"
                                                     @blur="if(!item.formatted_price) { item.price = 0; item.formatted_price = '0'; }">
@@ -147,7 +147,7 @@
                                         Rp</div>
                                     <input type="text"
                                         class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-indigo-600"
-                                        x-model="formatted_paid"
+                                        :value="formatted_paid"
                                         @input="formatInputPaid($event)"
                                         @focus="if(paid_amount === 0) formatted_paid = ''"
                                         @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
@@ -228,7 +228,7 @@
         },
 
         formatCurrency(val) {
-            return 'Rp ' + new Number(val).toLocaleString('id-ID');
+            return 'Rp ' + parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         },
 
         formatInputPrice(item, event) {
@@ -238,7 +238,7 @@
                 item.formatted_price = '';
             } else {
                 item.price = parseInt(val);
-                item.formatted_price = new Number(val).toLocaleString('id-ID');
+                item.formatted_price = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
         },
 
@@ -249,7 +249,7 @@
                 this.formatted_paid = '';
             } else {
                 this.paid_amount = parseInt(val);
-                this.formatted_paid = new Number(val).toLocaleString('id-ID');
+                this.formatted_paid = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
         },
 
