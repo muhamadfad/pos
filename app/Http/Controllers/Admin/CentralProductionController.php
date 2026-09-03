@@ -55,34 +55,34 @@ class CentralProductionController extends Controller
     {
         $pusat = $this->getPusatBranch();
         
+        $startDate = $request->start_date ?? \Carbon\Carbon::now()->startOfMonth()->toDateString();
+        $endDate = $request->end_date ?? \Carbon\Carbon::now()->endOfMonth()->toDateString();
+        
         // 1. Productions
-        $prodQuery = Production::with(['resultIngredient', 'items.ingredient'])
+        $productions = Production::with(['resultIngredient', 'items.ingredient'])
             ->where('branch_id', $pusat->id)
-            ->latest('date');
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $prodQuery->whereBetween('date', [$request->start_date, $request->end_date]);
-        }
-        $productions = $prodQuery->get();
+            ->whereBetween('date', [$startDate, $endDate])
+            ->latest('date')
+            ->get();
 
         // 2. Transfers (Distribusi)
-        $transQuery = \App\Models\StockTransfer::with(['toBranch', 'user', 'items.ingredient.unit'])
+        $transfers = \App\Models\StockTransfer::with(['toBranch', 'user', 'items.ingredient.unit'])
             ->where('from_branch_id', $pusat->id)
+            ->whereBetween('transfer_date', [$startDate, $endDate])
             ->orderBy('transfer_date', 'desc')
-            ->orderBy('id', 'desc');
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $transQuery->whereBetween('transfer_date', [$request->start_date, $request->end_date]);
-        }
-        $transfers = $transQuery->get();
+            ->orderBy('id', 'desc')
+            ->get();
 
         // 3. Returns (Return Cabang)
-        $returnQuery = \App\Models\StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
+        $returns = \App\Models\StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
             ->where('to_branch_id', $pusat->id)
+            ->whereBetween('transfer_date', [$startDate, $endDate])
             ->orderBy('transfer_date', 'desc')
-            ->orderBy('id', 'desc');
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $returnQuery->whereBetween('transfer_date', [$request->start_date, $request->end_date]);
-        }
-        $returns = $returnQuery->get();
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // Override request manually so the view uses the default date if not provided
+        $request->merge(['start_date' => $startDate, 'end_date' => $endDate]);
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request'))
             ->setPaper('a4', 'landscape');

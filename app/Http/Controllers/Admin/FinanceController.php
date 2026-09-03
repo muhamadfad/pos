@@ -353,19 +353,26 @@ class FinanceController extends Controller
         return view('admin.finance.monthly', compact('finance', 'start', 'end', 'topProducts', 'isSuperAdmin', 'branches', 'branchId', 'currentBranchName'));
     }
 
+    private $productHppCache = [];
+
     /**
      * Hitung HPP untuk satu produk berdasarkan resep (ingredients)
      */
     private function calculateProductHPP($productId)
     {
+        if (isset($this->productHppCache[$productId])) {
+            return $this->productHppCache[$productId];
+        }
+
         $recipeItems = RecipeItem::where('product_id', $productId)
             ->with('ingredient')
             ->get();
         
         if ($recipeItems->isEmpty()) {
-            // Jika tidak ada resep, gunakan purchase_price dari product
             $product = Product::find($productId);
-            return $product->purchase_price ?? 0;
+            $hpp = $product->purchase_price ?? 0;
+            $this->productHppCache[$productId] = $hpp;
+            return $hpp;
         }
         
         $totalCost = 0;
@@ -376,6 +383,7 @@ class FinanceController extends Controller
             }
         }
         
+        $this->productHppCache[$productId] = $totalCost;
         return $totalCost;
     }
 
@@ -421,7 +429,7 @@ class FinanceController extends Controller
         // Hanya order yang sudah lunas
         $orderQuery->where('payment_status', 'paid');
         
-        $orders = $orderQuery->get();
+        $orders = $orderQuery->with('items')->get();
         
         $totalIncome = 0;
         $totalIncomeCash = 0;
@@ -438,11 +446,7 @@ class FinanceController extends Controller
             }
             
             // Hitung HPP berdasarkan resep ingredients
-            $orderItems = DB::table('order_items')
-                ->where('order_id', $order->id)
-                ->get();
-            
-            foreach ($orderItems as $item) {
+            foreach ($order->items as $item) {
                 $hpp = $this->calculateProductHPP($item->product_id);
                 $totalHPP += $hpp * $item->quantity;
             }
