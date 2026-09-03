@@ -137,7 +137,7 @@
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">&times;</button>
         </div>
 
-        <form action="{{ route('admin.transactions.in.pay', $transaction->id) }}" method="POST">
+        <form x-data="{ amount: 0, formatted_amount: '' }" action="{{ route('admin.transactions.in.pay', $transaction->id) }}" method="POST">
             @csrf
 
             <div class="mb-4">
@@ -149,9 +149,8 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Bayar</label>
-                <input type="number" name="amount" min="1"
-                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Masukkan nominal" required>
+                <input type="text" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" x-model="formatted_amount" @input="let val = $event.target.value.replace(/\D/g, ''); if(val==='') { amount = 0; formatted_amount = ''; } else { amount = parseInt(val); formatted_amount = new Number(val).toLocaleString('id-ID'); }" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required placeholder="Masukkan nominal">
+                <input type="hidden" name="amount" x-model="amount">
             </div>
 
             <div class="mb-6">

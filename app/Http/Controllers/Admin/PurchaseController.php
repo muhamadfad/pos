@@ -132,6 +132,16 @@ class PurchaseController extends Controller
             $total = collect($request->items)->sum(fn($i) => $i['quantity'] * $i['purchase_price']);
             $paid  = $request->paid ?? 0;
 
+            if ($paid > 0) {
+                \App\Models\Expense::create([
+                    'branch_id' => $request->branch_id ?? auth()->user()->branch_id,
+                    'user_id' => auth()->id(),
+                    'amount' => $paid,
+                    'description' => 'Pembelian Bahan Baku ' . ($request->reference_number ?: ''),
+                    'category' => 'Pembelian Bahan Baku',
+                    'date' => $request->date,
+                ]);
+            }
             $purchase = Purchase::create([
                 'reference_number' => $request->reference_number,
                 'supplier_id'      => $supplier ? $supplier->id : null,

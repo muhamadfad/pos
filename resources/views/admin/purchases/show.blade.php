@@ -3,7 +3,26 @@
 @section('title', 'Detail Pembelian')
 
 @section('content')
-<div x-data="{ showPaymentModal: false }" class="w-full mx-auto">
+<div x-data="{ 
+    showPaymentModal: false, 
+    amount: {{ $purchase->remaining_debt }}, 
+    formatted_amount: new Number({{ $purchase->remaining_debt }}).toLocaleString('id-ID'),
+    formatAmount(event) {
+        let val = event.target.value.replace(/\D/g, '');
+        if (val === '') {
+            this.amount = 0;
+            this.formatted_amount = '';
+        } else {
+            this.amount = parseInt(val);
+            this.formatted_amount = new Number(val).toLocaleString('id-ID');
+        }
+    }
+} else {
+            this.amount = parseInt(val);
+            this.formatted_amount = new Number(val).toLocaleString('id-ID');
+        }
+    }
+}" class="w-full mx-auto">
 
     <!-- Actions Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -258,9 +277,10 @@
                                         <div
                                             class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                             Rp</div>
-                                        <input type="number" name="amount" min="1" max="{{ $purchase->remaining_debt }}"
+                                        <input type="text"
                                             class="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-lg font-black text-indigo-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                                            value="{{ $purchase->remaining_debt }}" required>
+                                            x-model="formatted_amount" @input="formatAmount($event)" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required>
+                                        <input type="hidden" name="amount" x-model="amount">
                                     </div>
                                 </div>
 

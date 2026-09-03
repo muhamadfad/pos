@@ -119,6 +119,7 @@ class FinanceController extends Controller
 
         // Rincian expenses per kategori
         $expenseQuery = Expense::select('category', DB::raw('SUM(amount) as total'))
+            ->where('category', '!=', 'Pembelian Bahan Baku')
             ->groupBy('category');
         if ($branchId) {
             $expenseQuery->where('branch_id', $branchId);
@@ -218,7 +219,7 @@ class FinanceController extends Controller
                 return $item;
             });
 
-                $expenseQuery = Expense::query();
+                $expenseQuery = Expense::where('category', '!=', 'Pembelian Bahan Baku');
         if ($startDate && $endDate) {
             $expenseQuery->whereBetween('date', [$start, $end]);
         } else {
@@ -455,7 +456,7 @@ class FinanceController extends Controller
         $profit = $totalIncome - $totalHPP;
         
         // Hitung expenses (biaya operasional)
-        $expenseQuery = Expense::query();
+        $expenseQuery = Expense::where('category', '!=', 'Pembelian Bahan Baku');
         if ($start && $end) {
             $expenseQuery->whereBetween('date', [
                 Carbon::parse($start)->startOfDay(),
@@ -537,7 +538,7 @@ class FinanceController extends Controller
 
         
         $ordersQuery = \App\Models\Order::with(['customer', 'items.product'])->where('payment_status', 'paid');
-        $expensesQuery = \App\Models\Expense::query();
+        $expensesQuery = \App\Models\Expense::where('category', '!=', 'Pembelian Bahan Baku');
         $purchasesQuery = \App\Models\Purchase::with('supplier');
 
         if ($startDate && $endDate) {
