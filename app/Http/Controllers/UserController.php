@@ -98,6 +98,8 @@ class UserController extends Controller
         $data = $request->only(['name', 'email', 'role']);
         $data['is_active'] = $request->has('is_active');
         $data['is_decoy'] = \Illuminate\Support\Str::contains(strtolower($request->name . ' ' . $request->email), ['report', 'laporan']);
+        $data['branch_id'] = in_array($request->role, ['admin', 'kasir']) ? $request->branch_id : null;
+        $data['can_manage_pusat'] = $request->role === 'admin' ? $request->boolean('can_manage_pusat') : false;
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
