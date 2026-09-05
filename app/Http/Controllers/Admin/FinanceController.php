@@ -430,27 +430,38 @@ class FinanceController extends Controller
         // Hanya order yang sudah lunas
         $orderQuery->where('payment_status', 'paid');
         
-        $orders = $orderQuery->with('items')->get();
+        $totalIncome = (clone $orderQuery)->sum('total_amount') ?? 0;
+        $totalIncomeTransfer = (clone $orderQuery)->where('payment_method', 'transfer')->sum('total_amount') ?? 0;
+        $totalIncomeCash = $totalIncome - $totalIncomeTransfer;
         
-        $totalIncome = 0;
-        $totalIncomeCash = 0;
-        $totalIncomeTransfer = 0;
+        $orderIdsQuery = clone $orderQuery;
+        // Optimization: instead of whereIn with query builder which can be slow for many records,
+        // we join order_items directly with orders
+        $itemQuantities = \Illuminate\Support\Facades\DB::table('order_items')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->where('orders.payment_status', 'paid');
+            
+        if ($start && $end) {
+            $itemQuantities->whereBetween('orders.date', [
+                \Carbon\Carbon::parse($start)->startOfDay(),
+                \Carbon\Carbon::parse($end)->endOfDay()
+            ]);
+        } elseif ($start) {
+            $itemQuantities->whereDate('orders.date', \Carbon\Carbon::parse($start));
+        }
+        
+        if ($branchId) {
+            $itemQuantities->where('orders.branch_id', $branchId);
+        }
+            
+        $itemQuantities = $itemQuantities->select('order_items.product_id', \Illuminate\Support\Facades\DB::raw('SUM(order_items.quantity) as total_qty'))
+            ->groupBy('order_items.product_id')
+            ->get();
+            
         $totalHPP = 0;
-        
-        foreach ($orders as $order) {
-            $totalIncome += $order->total_amount;
-            
-            if ($order->payment_method === 'transfer') {
-                $totalIncomeTransfer += $order->total_amount;
-            } else {
-                $totalIncomeCash += $order->total_amount;
-            }
-            
-            // Hitung HPP berdasarkan resep ingredients
-            foreach ($order->items as $item) {
-                $hpp = $this->calculateProductHPP($item->product_id);
-                $totalHPP += $hpp * $item->quantity;
-            }
+        foreach ($itemQuantities as $item) {
+            $hpp = $this->calculateProductHPP($item->product_id);
+            $totalHPP += $hpp * $item->total_qty;
         }
         
         $profit = $totalIncome - $totalHPP;
