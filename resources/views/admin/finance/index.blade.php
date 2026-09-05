@@ -31,7 +31,7 @@
             @endif
             
             
-            <a href="{{ route('admin.finance.export', ['period' => 'index', 'branch_id' => $branchId]) }}" class="whitespace-nowrap flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
+            <a href="{{ route('admin.finance.export', array_merge(request()->all(), ['period' => 'index', 'branch_id' => $branchId])) }}" class="whitespace-nowrap flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
                 <span class="iconify" data-icon="mdi:file-pdf-box"></span> Export PDF
             </a>
             <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">

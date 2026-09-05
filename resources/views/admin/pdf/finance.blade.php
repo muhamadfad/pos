@@ -130,8 +130,8 @@
             </tr>
             <tr class="total-row" style="font-size: 13px;">
                 <td>TOTAL KAS TUNAI (Pendapatan Tunai - Pengeluaran)</td>
-                <td class="text-right {{ ($finance['income_cash'] - $finance['expenses']) >= 0 ? 'net-positive' : 'net-negative' }}">
-                    {{ number_format($finance['income_cash'] - $finance['expenses'], 0, ',', '.') }}
+                <td class="text-right {{ ($finance['income_cash'] - ($finance['expenses'] + $finance['supplierPaid'])) >= 0 ? 'net-positive' : 'net-negative' }}">
+                    {{ number_format($finance['income_cash'] - ($finance['expenses'] + $finance['supplierPaid']), 0, ',', '.') }}
                 </td>
             </tr>
         </tbody>

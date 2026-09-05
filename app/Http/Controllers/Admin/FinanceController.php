@@ -509,20 +509,20 @@ class FinanceController extends Controller
             $branchId = $user->branch_id;
         }
 
-        $startDate = null;
-        $endDate = null;
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
         $title = "Laporan Keuangan";
 
         if ($period == 'daily') {
-            $startDate = \Carbon\Carbon::today()->format('Y-m-d');
+            $startDate = $startDate ?: \Carbon\Carbon::today()->format('Y-m-d');
             $title = "Laporan Keuangan Harian";
         } elseif ($period == 'weekly') {
-            $startDate = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
-            $endDate = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+            $startDate = $startDate ?: \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+            $endDate = $endDate ?: \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
             $title = "Laporan Keuangan Mingguan";
         } elseif ($period == 'monthly') {
-            $startDate = \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d');
-            $endDate = \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d');
+            $startDate = $startDate ?: \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate = $endDate ?: \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d');
             $title = "Laporan Keuangan Bulanan";
         } else {
             $title = "Laporan Keuangan Keseluruhan";
