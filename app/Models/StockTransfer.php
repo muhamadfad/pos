@@ -14,7 +14,9 @@ class StockTransfer extends Model
         'transfer_date',
         'notes',
         'status',
-    , 'source_ingredient_id', 'source_quantity'];
+        'source_ingredient_id',
+        'source_quantity'
+    ];
 
     public function fromBranch()
     {
