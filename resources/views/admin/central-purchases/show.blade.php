@@ -17,12 +17,7 @@
             this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     }
-} else {
-            this.amount = parseInt(val);
-            this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-    }
-}" class="w-full mx-auto">
+}" class="max-w-5xl mx-auto">
 
     <!-- Actions Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">

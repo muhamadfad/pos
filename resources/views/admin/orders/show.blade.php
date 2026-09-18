@@ -17,11 +17,6 @@
             this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     }
-} else {
-            this.amount = parseInt(val);
-            this.formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-    }
 }" class="w-full mx-auto">
 
     <!-- Actions Header -->
