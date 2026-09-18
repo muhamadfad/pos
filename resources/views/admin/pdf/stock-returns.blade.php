@@ -28,8 +28,9 @@
             <thead>
                 <tr>
                     <th>No. Ref & Tanggal</th>
-                    <th>Asal Cabang</th>
-                    <th>Total Olahan per Item</th>
+                                        <th>Asal Cabang</th>
+                    <th>Dikembalikan</th>
+                    <th>Hasil (Diterima Pusat)</th>
                     <th>Catatan</th>
                 </tr>
             </thead>
@@ -40,7 +41,14 @@
                         <div class="font-bold">{{ $return->reference_number ?: '-' }}</div>
                         <div style="font-size:10px; color:#718096;">{{ \Carbon\Carbon::parse($return->transfer_date)->format('d M Y') }}</div>
                     </td>
-                    <td>{{ $return->fromBranch->name }}</td>
+                                        <td>{{ $return->fromBranch->name }}</td>
+                    <td>
+                        @if($return->sourceIngredient)
+                            {{ $return->sourceIngredient->name }} ({{ floatval($return->source_quantity) }} {{ $return->sourceIngredient->unit->name ?? '' }})
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         <ul style="margin:0; padding-left:15px; font-size:10px;">
                             @forelse($return->items as $item)

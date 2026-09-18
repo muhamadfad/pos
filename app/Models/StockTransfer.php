@@ -14,7 +14,7 @@ class StockTransfer extends Model
         'transfer_date',
         'notes',
         'status',
-    ];
+    , 'source_ingredient_id', 'source_quantity'];
 
     public function fromBranch()
     {
@@ -34,5 +34,10 @@ class StockTransfer extends Model
     public function items()
     {
         return $this->hasMany(StockTransferItem::class);
+    }
+
+    public function sourceIngredient()
+    {
+        return $this->belongsTo(Ingredient::class, 'source_ingredient_id');
     }
 }
