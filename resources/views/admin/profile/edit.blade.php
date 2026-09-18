@@ -241,7 +241,7 @@
                                 aria-hidden="true">&#8203;</span>
 
                             <div x-cloak
-                                class="inline-block align-bottom bg-white rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-8 border border-slate-100">
+                                class="relative z-10 inline-block align-bottom bg-white rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-8 border border-slate-100">
 
                                 <div class="mb-6">
                                     <div
