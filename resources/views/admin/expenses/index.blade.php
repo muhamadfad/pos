@@ -212,7 +212,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <div
-                                class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                class="flex items-center justify-center gap-2">
                                 <a href="{{ route('admin.expenses.edit', $expense) }}"
                                     class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition-colors">
                                     <span class="iconify text-base" data-icon="mdi:pencil-outline"></span>
