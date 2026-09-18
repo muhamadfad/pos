@@ -27,7 +27,7 @@
     <!-- Actions Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.purchases.per-supplier', $purchase->supplier_id) }}"
+            <a href="{{ $purchase->supplier_id ? route('admin.purchases.per-supplier', $purchase->supplier_id) : route('admin.purchases.index') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-sm font-semibold shadow-sm">
                 <span class="iconify" data-icon="mdi:arrow-left"></span>
                 Kembali
@@ -89,10 +89,10 @@
             <div class="text-left md:text-right space-y-4">
                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Supplier</p>
                 <div>
-                    <h3 class="text-xl font-bold text-slate-900">{{ $purchase->supplier->name ?? 'Supplier Umum' }}</h3>
+                    <h3 class="text-xl font-bold text-slate-900">{{ $purchase->supplier?->name ?? 'Supplier Umum' }}</h3>
                     <p class="text-slate-500 text-sm max-w-xs md:ml-auto">
-                        {{ $purchase->supplier->address ?? '-' }}<br>
-                        {{ $purchase->supplier->phone ?? '-' }}
+                        {{ $purchase->supplier?->address ?? '-' }}<br>
+                        {{ $purchase->supplier?->phone ?? '-' }}
                     </p>
                 </div>
             </div>
