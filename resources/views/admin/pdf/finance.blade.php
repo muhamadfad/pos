@@ -200,7 +200,7 @@
                 <td style="vertical-align: top;">
                     <ul style="margin: 0; padding-left: 15px; font-size: 10px;">
                         @foreach($order->items as $item)
-                            <li>{{ $item->custom_name ?: ($item->product->name ?? 'Produk') }} (x{{ $item->quantity }})</li>
+                            <li>{{ $item->custom_name ?: ($item->product->name ?? 'Produk') }} (x{{ floatval($item->quantity) }})</li>
                         @endforeach
                     </ul>
                 </td>
@@ -249,7 +249,7 @@
                 <td style="vertical-align: top;">
                     <ul style="margin: 0; padding-left: 15px; font-size: 10px;">
                         @foreach($order->items as $item)
-                            <li>{{ $item->custom_name ?: ($item->product->name ?? 'Produk') }} (x{{ $item->quantity }})</li>
+                            <li>{{ $item->custom_name ?: ($item->product->name ?? 'Produk') }} (x{{ floatval($item->quantity) }})</li>
                         @endforeach
                     </ul>
                 </td>

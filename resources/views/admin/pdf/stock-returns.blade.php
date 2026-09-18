@@ -44,7 +44,7 @@
                     <td>
                         <ul style="margin:0; padding-left:15px; font-size:10px;">
                             @forelse($return->items as $item)
-                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ $item->quantity }} {{ $item->ingredient->unit->name ?? '' }})</li>
+                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
                             @empty
                                 <li>-</li>
                             @endforelse

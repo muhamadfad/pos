@@ -43,7 +43,7 @@
                     </td>
                     <td class="text-right">Rp {{ number_format($ing->unit_cost, 0, ',', '.') }}/{{ $ing->unit->name ?? 'kg' }}</td>
                     <td class="text-right">
-                        <span class="font-bold">{{ $ing->current_stock }}</span> <span style="font-size:10px; color:#718096;">{{ $ing->unit->name ?? 'kg' }}</span>
+                        <span class="font-bold">{{ floatval($ing->current_stock) }}</span> <span style="font-size:10px; color:#718096;">{{ $ing->unit->name ?? 'kg' }}</span>
                     </td>
                     <td class="text-right font-bold">
                         Rp {{ number_format($ing->current_stock * $ing->unit_cost, 0, ',', '.') }}

@@ -50,12 +50,12 @@
                     </td>
                     <td>
                         <div class="font-bold text-emerald">{{ $prod->resultIngredient->name ?? 'Dihapus' }}</div>
-                        <div style="font-size:10px;">{{ $prod->result_quantity }} {{ $prod->resultIngredient->unit->name ?? 'kg' }}</div>
+                        <div style="font-size:10px;">{{ floatval($prod->result_quantity) }} {{ $prod->resultIngredient->unit->name ?? 'kg' }}</div>
                     </td>
                     <td>
                         <ul style="margin:0; padding-left:15px; font-size:10px;">
                             @foreach($prod->items as $item)
-                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ $item->quantity }} {{ $item->ingredient->unit->name ?? 'kg' }})</li>
+                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? 'kg' }})</li>
                             @endforeach
                         </ul>
                     </td>
@@ -92,7 +92,7 @@
                     <td>
                         <ul style="margin:0; padding-left:15px; font-size:10px;">
                             @forelse($transfer->items as $item)
-                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ $item->quantity }} {{ $item->ingredient->unit->name ?? '' }})</li>
+                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
                             @empty
                                 <li>-</li>
                             @endforelse
@@ -129,7 +129,7 @@
                     <td>
                         <ul style="margin:0; padding-left:15px; font-size:10px;">
                             @forelse($return->items as $item)
-                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ $item->quantity }} {{ $item->ingredient->unit->name ?? '' }})</li>
+                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
                             @empty
                                 <li>-</li>
                             @endforelse
