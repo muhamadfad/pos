@@ -162,4 +162,20 @@ class StockReturnController extends Controller
         $return = StockTransfer::with(['fromBranch', 'user', 'items.ingredient'])->findOrFail($id);
         return view('admin.stock-returns.show', compact('return'));
     }
+
+    
+    public function storeDailySummary(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'summary_date' => 'required|date',
+            'summary_notes' => 'required|string',
+        ]);
+
+        \App\Models\DailyReturnSummary::updateOrCreate(
+            ['date' => $request->summary_date],
+            ['notes' => $request->summary_notes]
+        );
+
+        return redirect()->back()->with('success', 'Rekap pemisahan gabungan harian berhasil disimpan.');
+    }
 }

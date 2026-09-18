@@ -185,6 +185,7 @@ Route::middleware(['auth', 'admin'])
             Route::get('/download-pdf', [\App\Http\Controllers\Admin\StockReturnController::class, 'downloadPdf'])->name('download-pdf');
             Route::get('/create', [\App\Http\Controllers\Admin\StockReturnController::class, 'create'])->name('create');
             Route::post('/', [\App\Http\Controllers\Admin\StockReturnController::class, 'store'])->name('store');
+            Route::post('/daily-summary', [\App\Http\Controllers\Admin\StockReturnController::class, 'storeDailySummary'])->name('store-daily-summary');
             Route::get('/{id}', [\App\Http\Controllers\Admin\StockReturnController::class, 'show'])->name('show');
         });
         });

@@ -142,6 +142,27 @@
                 @endforelse
             </tbody>
         </table>
+        @if(isset($dailyReturnSummaries) && $dailyReturnSummaries->count() > 0)
+        <div style="margin-top: 30px; border-top: 1px solid #cbd5e0; padding-top: 15px;">
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #2d3748; text-transform: uppercase;">Rekap Pemisahan Return Gabungan</div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                <thead>
+                    <tr style="background-color: #f7fafc;">
+                        <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left; width: 15%;">Tanggal</th>
+                        <th style="padding: 8px; border: 1px solid #e2e8f0; text-align: left;">Rincian / Catatan Gabungan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($dailyReturnSummaries as $summary)
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #e2e8f0; vertical-align: top;">{{ \Carbon\Carbon::parse($summary->date)->format('d M Y') }}</td>
+                        <td style="padding: 8px; border: 1px solid #e2e8f0; white-space: pre-wrap; line-height: 1.4;">{{ $summary->notes }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
     </div>
 </body>
 </html>

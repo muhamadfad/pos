@@ -84,7 +84,12 @@ class CentralProductionController extends Controller
         // Override request manually so the view uses the default date if not provided
         $request->merge(['start_date' => $startDate, 'end_date' => $endDate]);
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request'))
+                // 4. Daily Return Summaries
+        $dailyReturnSummaries = \App\Models\DailyReturnSummary::whereBetween('date', [$startDate, $endDate])
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request', 'dailyReturnSummaries'))
             ->setPaper('a4', 'landscape');
             
         return $pdf->download("Laporan_Logistik_Lengkap.pdf");
