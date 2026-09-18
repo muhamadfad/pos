@@ -142,12 +142,6 @@
                 @endforelse
             </tbody>
         </table>
-        @if(request('ceo_notes'))
-        <div style="margin-top: 30px; border-top: 1px solid #cbd5e0; padding-top: 15px;">
-            <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #2d3748;">CATATAN / RINCIAN TAMBAHAN UNTUK CEO:</div>
-            <div style="font-size: 11px; color: #4a5568; line-height: 1.5; white-space: pre-wrap;">{{ request('ceo_notes') }}</div>
-        </div>
-        @endif
     </div>
 </body>
 </html>
