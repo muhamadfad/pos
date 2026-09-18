@@ -69,6 +69,12 @@
                             <span class="iconify text-lg" data-icon="lucide:eye"></span>
                         </a>
 
+                                                <button type="button" 
+                                @click="$dispatch('open-stock-modal', { id: {{ $ingredient->id }}, name: '{{ addslashes($ingredient->name) }}', current: {{ $ingredient->current_stock }}, unit: '{{ $ingredient->unit->name ?? 'pcs' }}' })"
+                                class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all" title="Ubah Stok Cepat (Opname)">
+                            <span class="iconify text-lg" data-icon="lucide:calculator"></span>
+                        </button>
+
                         <a href="{{ route('admin.ingredients.edit', $ingredient->id) }}" 
                            class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all" title="Edit">
                             <span class="iconify text-lg" data-icon="lucide:edit-3"></span>

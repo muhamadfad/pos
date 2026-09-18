@@ -242,4 +242,71 @@
     #tableContent::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     #tableContent::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
 </style>
+<!-- Modal Quick Update Stock -->
+<div x-data="{ 
+    open: false, 
+    id: '', 
+    name: '', 
+    current: 0,
+    unit: '',
+    url: ''
+}" 
+@open-stock-modal.window="
+    id = $event.detail.id;
+    name = $event.detail.name;
+    current = $event.detail.current;
+    unit = $event.detail.unit;
+    url = '{{ route('admin.ingredients.index') }}/' + id + '/quick-update-stock';
+    open = true;
+    setTimeout(() => $refs.stockInput.focus(), 100);
+"
+class="relative z-50">
+    <div x-show="open" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+        <div x-show="open" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" @click="open = false"></div>
+        <div x-show="open" 
+             x-transition.enter="transition ease-out duration-300"
+             x-transition.enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition.enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition.leave="transition ease-in duration-200"
+             x-transition.leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition.leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 z-10">
+            
+            <div class="px-6 py-4 border-b border-slate-100 bg-amber-50/50 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 shadow-sm">
+                        <span class="iconify text-xl" data-icon="lucide:calculator"></span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Opname Stok Cepat</h3>
+                        <p class="text-[11px] text-slate-500 font-medium" x-text="name"></p>
+                    </div>
+                </div>
+                <button @click="open = false" class="text-slate-400 hover:text-rose-500 transition-colors p-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <span class="iconify text-xl" data-icon="mdi:close"></span>
+                </button>
+            </div>
+
+            <form :action="url" method="POST">
+                @csrf
+                <div class="p-6">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Total Stok Nyata (Saat Ini)</label>
+                    <div class="relative flex items-center">
+                        <input type="number" name="current_stock" x-model="current" x-ref="stockInput" min="0" step="any" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-center">
+                        <span class="absolute right-4 text-slate-400 font-medium" x-text="unit"></span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-3 text-center">Masukkan angka sesuai jumlah fisik di gudang.</p>
+                </div>
+
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
+                    <button type="button" @click="open = false" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all text-sm">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-all text-sm shadow-md shadow-amber-200 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:check"></span> Simpan Stok
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

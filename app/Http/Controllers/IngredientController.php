@@ -350,4 +350,32 @@ class IngredientController extends Controller
             'old_stock' => $oldStock,
         ]);
     }
+
+    /**
+     * Quick adjust stock for opname.
+     */
+    public function quickUpdateStock(\Illuminate\Http\Request $request, $id)
+    {
+        $user = auth()->user();
+        $isSuperAdmin = $user->role === 'super_admin';
+        $userBranchId = $user->branch_id;
+        
+        $ingredient = \App\Models\Ingredient::findOrFail($id);
+        
+        $pusat = \App\Models\Branch::where('code', 'PUSAT')->first();
+        $isPusat = $ingredient->branch_id == $pusat?->id;
+        
+        if (!$isSuperAdmin && $ingredient->branch_id != $userBranchId && !($isPusat && $user->canManagePusat())) {
+            return response()->json(['error' => 'Anda tidak memiliki akses.'], 403);
+        }
+        
+        $request->validate([
+            'current_stock' => 'required|numeric|min:0',
+        ]);
+        
+        $ingredient->current_stock = $request->current_stock;
+        $ingredient->save();
+        
+        return redirect()->back()->with('success', "Stok {$ingredient->name} berhasil disesuaikan menjadi {$request->current_stock}");
+    }
 }

@@ -112,6 +112,7 @@ Route::middleware(['auth', 'admin'])
         // Ingredients (Bahan Baku)
         Route::resource('ingredients', IngredientController::class);
         Route::post('/ingredients/{ingredient}/adjust-stock', [IngredientController::class, 'adjustStock'])->name('ingredients.adjust-stock');
+        Route::post('/ingredients/{ingredient}/quick-update-stock', [IngredientController::class, 'quickUpdateStock'])->name('ingredients.quick-update-stock');
         
         // Recipes (Resep Menu)
         Route::resource('recipes', RecipeController::class);
