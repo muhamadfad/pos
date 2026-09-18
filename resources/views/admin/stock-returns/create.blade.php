@@ -72,10 +72,7 @@
                 <table class="w-full text-sm">
                     <thead class="bg-slate-100/50 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
                         <tr>
-                            <th class="px-6 py-3 text-left w-1/2">Bahan Baku (Cabang)</th>
-                            <th class="px-6 py-3 text-center">Sisa Stok Cabang</th>
-                            <th class="px-6 py-3 text-center">Jumlah Dikirim</th>
-                            <th class="px-6 py-3 text-center w-12">Hapus</th>
+                            <th class="px-6 py-3 text-left w-2/5">Bahan Baku (Cabang)</th><th class="px-6 py-3 text-center">Sisa Stok Cabang</th><th class="px-6 py-3 text-center">Jumlah Dikirim</th><th class="px-6 py-3 text-left">Catatan / Detail (Opsional)</th><th class="px-6 py-3 text-center w-12">Hapus</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -87,16 +84,7 @@
                                 <td class="px-4 py-3 text-center">
                                     <span class="font-medium text-slate-600" x-text="item.stock_available + ' ' + (item.unit_name || '')"></span>
                                 </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center justify-center gap-2">
-                                        <input type="number" :name="'items[' + index + '][quantity]'" min="0.1" step="any"
-                                            class="w-32 bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold"
-                                            x-model="item.quantity" :max="item.stock_available">
-                                        <span class="text-xs text-slate-400" x-text="item.unit_name || ''"></span>
-                                    </div>
-                                    <p x-show="item.quantity > item.stock_available" class="text-xs text-red-500 text-center mt-1">Melebihi stok!</p>
-                                </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3"><div class="flex items-center justify-center gap-2"><input type="number" :name="'items[' + index + '][quantity]'" min="0.1" step="any" class="w-32 bg-white border border-slate-200 rounded-xl px-2 py-2 text-sm text-center focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold" x-model="item.quantity" :max="item.stock_available"><span class="text-xs text-slate-400" x-text="item.unit_name || ''"></span></div><p x-show="item.quantity > item.stock_available" class="text-xs text-red-500 text-center mt-1">Melebihi stok!</p></td><td class="px-4 py-3"><input type="text" :name="'items[' + index + '][notes]'" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all placeholder:text-slate-300" x-model="item.notes" placeholder="Cth: Paru 2kg, Hati 1kg"></td><td class="px-4 py-3 text-center">
                                     <button type="button" @click="removeRow(index)"
                                         class="text-slate-300 hover:text-red-500 transition-colors p-1">
                                         <span class="iconify text-xl" data-icon="mdi:trash-can-outline"></span>
@@ -142,11 +130,11 @@
                 return window.__purchaseIngredients.filter(i => i.branch_id == this.from_branch_id);
             },
             items: [
-                { ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null }
+                { ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', notes: '', _search: '', _open: false, _dropPos: null }
             ],
 
             addRow() {
-                this.items.push({ ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', _search: '', _open: false, _dropPos: null });
+                this.items.push({ ingredient_id: '', quantity: 1, stock_available: 0, unit_name: '', notes: '', _search: '', _open: false, _dropPos: null });
             },
 
             removeRow(index) {

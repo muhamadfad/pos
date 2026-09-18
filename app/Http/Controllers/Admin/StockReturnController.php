@@ -93,6 +93,7 @@ class StockReturnController extends Controller
             'items' => 'required|array|min:1',
             'items.*.ingredient_id' => 'required|exists:ingredients,id',
             'items.*.quantity' => 'required|numeric|min:0.1',
+            'items.*.notes' => 'nullable|string',
         ]);
 
         $pusat = $this->getPusatBranch();
@@ -148,6 +149,7 @@ class StockReturnController extends Controller
                     'stock_transfer_id' => $transfer->id,
                     'ingredient_id' => $branchIngredient->id, // source ingredient
                     'quantity' => $item['quantity'],
+                    'notes' => $item['notes'] ?? null,
                 ]);
             }
         });
