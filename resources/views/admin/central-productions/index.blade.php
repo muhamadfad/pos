@@ -3,7 +3,7 @@
 @section('title', 'Produksi (Olah Bahan)')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div x-data="{ showNotesModal: false }" class="max-w-7xl mx-auto space-y-6">
     <!-- Header Section -->
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 p-8 sm:p-10 text-white shadow-xl shadow-indigo-200/50">
         <!-- Decorative elements -->
@@ -26,11 +26,11 @@
                 </p>
             </div>
             <div class="shrink-0 flex items-center gap-3">
-                <a href="{{ route('admin.central-productions.download-combined-pdf', request()->all()) }}" target="_blank"
-                   class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 text-emerald-600 font-bold text-sm rounded-2xl hover:bg-emerald-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-emerald-200" title="PDF Lengkap (Produksi, Distribusi, Return)">
+                                <button type="button" @click="showNotesModal = true"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 text-emerald-600 font-bold text-sm rounded-2xl hover:bg-emerald-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-emerald-200" title="PDF Lengkap (Produksi, Distribusi, Return)">
                     <span class="iconify text-xl" data-icon="mdi:file-pdf-box-multiple"></span>
                     PDF Lengkap
-                </a>
+                </button>
                 <a href="{{ route('admin.central-productions.download-pdf', request()->all()) }}" target="_blank"
                    class="inline-flex items-center justify-center gap-2 px-4 py-3.5 bg-rose-50 text-rose-600 font-bold text-sm rounded-2xl hover:bg-rose-100 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ring-1 ring-rose-200">
                     <span class="iconify text-xl" data-icon="mdi:file-pdf-box"></span>
@@ -162,6 +162,62 @@
                 {{ $productions->links() }}
             </div>
         @endif
+    </div>
+    <!-- Modal Catatan Laporan -->
+    <div x-show="showNotesModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0" style="display: none;">
+        <div x-show="showNotesModal" x-transition.opacity class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" @click="showNotesModal = false"></div>
+        <div x-show="showNotesModal" 
+             x-transition.enter="transition ease-out duration-300"
+             x-transition.enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition.enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition.leave="transition ease-in duration-200"
+             x-transition.leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition.leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             class="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100">
+            
+            <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <span class="iconify text-xl" data-icon="mdi:file-pdf-box"></span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Cetak Laporan CEO</h3>
+                        <p class="text-xs text-slate-500 font-medium">Laporan Logistik Pusat Gabungan</p>
+                    </div>
+                </div>
+                <button @click="showNotesModal = false" class="text-slate-400 hover:text-rose-500 transition-colors p-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <span class="iconify text-xl" data-icon="mdi:close"></span>
+                </button>
+            </div>
+
+            <form action="{{ route('admin.central-productions.download-combined-pdf') }}" method="GET" target="_blank" @submit="setTimeout(() => showNotesModal = false, 500)">
+                @foreach(request()->all() as $key => $value)
+                    @if(is_array($value))
+                        @foreach($value as $v)
+                            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endforeach
+                
+                <div class="p-8 space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Catatan Tambahan (Opsional)</label>
+                        <p class="text-[11px] text-slate-500 mb-3">Gunakan kolom ini jika Anda ingin mencatat Rincian Pemisahan Return dari semua cabang (Misal: Hati 1kg, Paru 2kg, Daging 5kg). Catatan ini akan dicetak di lembar laporan PDF.</p>
+                        <textarea name="ceo_notes" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:text-slate-300" placeholder="Ketik rincian return atau pesan khusus untuk CEO di sini..."></textarea>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                    <button type="button" @click="showNotesModal = false" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all text-sm shadow-sm">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 active:scale-95 transition-all text-sm shadow-md shadow-emerald-100 flex items-center gap-2">
+                        <span class="iconify text-lg" data-icon="mdi:download"></span>
+                        Download Laporan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
