@@ -46,8 +46,8 @@
                         open: false,
                         search: '',
                         get filteredIngredients() {
-                            if (!this.search) return _sourceIngredients;
-                            return _sourceIngredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
+                            if (!this.search) return window.__ingredients;
+                            return window.__ingredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
                         },
                         selectIngredient(i) {
                             source_ingredient_id = i.id;
@@ -157,8 +157,8 @@
                                         open: false,
                                         search: '',
                                         get filtered() {
-                                            if (!this.search) return window.__sourceIngredients;
-                                            return window.__sourceIngredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
+                                            if (!this.search) return window.__ingredients;
+                                            return window.__ingredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
                                         },
                                         selectItem(i) {
                                             item.ingredient_id = i.id;
@@ -216,25 +216,16 @@
 </div>
 
 <script>
-    // Cabang ingredients
-    window.__sourceIngredients = {!! json_encode($ingredients->map(fn($p) => [
+    window.__ingredients = {!! json_encode($ingredients->map(fn($p) => [
         'id'             => $p->id,
         'name'           => $p->name,
-        'branch_id'      => $p->branch_id,
+        'dummy'          => 0,
         'stock'          => (float) $p->current_stock,
-        'unit_name'      => $p->unit->name ?? 'pcs',
-    ])->values()) !!};
-
-    // Pusat ingredients
-    window.__sourceIngredients = {!! json_encode($pusatIngredients->map(fn($p) => [
-        'id'             => $p->id,
-        'name'           => $p->name,
         'unit_name'      => $p->unit->name ?? 'pcs',
     ])->values()) !!};
 
     function returnForm() {
         return {
-            
             init() {
                 
             },
@@ -245,15 +236,15 @@
             source_stock_available: 0,
             source_unit_name: '',
             
-            get _sourceIngredients() { return window.__sourceIngredients; },
+            
 
             // Target Items
             items: [
-                { ingredient_id: '', quantity: 1, unit_name: '', notes: '' }
+                { ingredient_id: '', quantity: 1, unit_name: '', notes: '', _search: '', _open: false, _dropPos: null }
             ],
 
             addRow() {
-                this.items.push({ ingredient_id: '', quantity: 1, unit_name: '', notes: '' });
+                this.items.push({ ingredient_id: '', quantity: 1, unit_name: '', notes: '', _search: '', _open: false, _dropPos: null });
             },
 
             removeRow(index) {
