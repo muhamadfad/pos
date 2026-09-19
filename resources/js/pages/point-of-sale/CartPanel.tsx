@@ -449,9 +449,7 @@ export default function CartPanel({
                                                 <span className="text-gray-700 truncate flex-1 mr-2">
                                                     {item.name}
                                                 </span>
-                                                <span className="text-gray-400 shrink-0 text-xs mr-2">
-                                                    ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â{item.qty}
-                                                </span>
+                                                <span className="text-gray-400 shrink-0 text-xs mr-2">x {item.qty}</span>
                                                 <span className="font-semibold text-gray-800 shrink-0">
                                                     {formatRupiah(
                                                         item.price * item.qty,

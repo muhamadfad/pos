@@ -103,7 +103,7 @@
                             Stok Minimal <span class="text-rose-500">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">âš ï¸</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">⚠️</span>
                             <input type="number" 
                                    step="0.01" 
                                    name="min_stock" 
@@ -123,7 +123,7 @@
                             Harga Beli
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">ðŸ’°</span>
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">💰</span>
                             <input type="number" 
                                    step="0.01" 
                                    name="unit_cost" 
