@@ -48,13 +48,6 @@
                         get filteredIngredients() {
                             if (!this.search) return window.__ingredients;
                             return window.__ingredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
-                        },
-                        selectIngredient(i) {
-                            source_ingredient_id = i.id;
-                            source_stock_available = i.stock;
-                            source_unit_name = i.unit_name;
-                            this.search = i.name;
-                            this.open = false;
                         }
                     }">
                         <!-- Hidden input for form submission -->
@@ -92,7 +85,7 @@
                                 </div>
 
                                 <template x-for="i in filteredIngredients" :key="i.id">
-                                    <button type="button" @click="selectIngredient(i)"
+                                    <button type="button" @click="source_ingredient_id = i.id; source_stock_available = i.stock; source_unit_name = i.unit_name; search = i.name; open = false;"
                                         class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group">
                                         <div>
                                             <div class="font-medium text-slate-700 group-hover:text-indigo-600 transition-colors" x-text="i.name"></div>
@@ -113,7 +106,7 @@
                         <input type="number" name="source_quantity" x-model="source_quantity" min="0.1" step="any" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold" required>
                         <span class="text-sm font-semibold text-slate-500" x-text="source_unit_name"></span>
                     </div>
-                    <p x-show="source_quantity > source_stock_available" class="text-xs text-red-500 mt-1">Melebihi sisa stok (<span x-text="source_stock_available"></span>)!</p>
+                    
                 </div>
 
                 <div class="md:col-span-2">
@@ -252,7 +245,7 @@
             },
 
             isValid() {
-                const hasSource = this.source_ingredient_id && this.source_quantity > 0 && this.source_quantity <= this.source_stock_available;
+                const hasSource = this.source_ingredient_id && this.source_quantity > 0 ;
                 const validTargets = this.items.filter(item => item.ingredient_id && item.quantity > 0);
                 return hasSource && validTargets.length > 0;
             },

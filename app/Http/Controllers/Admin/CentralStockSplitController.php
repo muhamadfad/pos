@@ -55,8 +55,15 @@ class CentralStockSplitController extends Controller
         return view('admin.central-splits.create', compact('ingredients'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
+        // Filter out empty items before validation
+        if ($request->has('items') && is_array($request->items)) {
+            $filteredItems = array_filter($request->items, function($item) {
+                return !empty($item['ingredient_id']);
+            });
+            $request->merge(['items' => array_values($filteredItems)]);
+        }
         $request->validate([
             'date' => 'required|date',
             'source_ingredient_id' => 'required|exists:ingredients,id',
@@ -76,9 +83,7 @@ class CentralStockSplitController extends Controller
             return back()->with('error', 'Bahan baku sumber tidak valid.');
         }
 
-        if ($sourceIngredient->current_stock < $request->source_quantity) {
-            return back()->with('error', 'Stok bahan baku sumber tidak mencukupi. (Sisa: ' . $sourceIngredient->current_stock . ')');
-        }
+        
 
         try {
             DB::beginTransaction();
