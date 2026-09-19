@@ -78,108 +78,88 @@ class StockReturnController extends Controller
             $branches = Branch::where('id', $user->branch_id)->get();
             $ingredients = Ingredient::with('unit')->where('branch_id', $user->branch_id)->orderBy('name')->get();
         }
-        
-        $pusatIngredients = Ingredient::with('unit')->where('branch_id', $pusat->id)->orderBy('name')->get();
 
-        return view('admin.stock-returns.create', compact('branches', 'ingredients', 'pusatIngredients', 'pusat'));
+        return view('admin.stock-returns.create', compact('branches', 'ingredients', 'pusat'));
     }
 
-        public function store(\Illuminate\Http\Request $request)
+    public function store(Request $request)
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
         $pusat = $this->getPusatBranch();
-        
         $request->validate([
             'from_branch_id' => 'required|exists:branches,id',
             'transfer_date' => 'required|date',
             'notes' => 'nullable|string',
-            'source_ingredient_id' => 'required|exists:ingredients,id',
-            'source_quantity' => 'required|numeric|min:0.1',
             'items' => 'required|array|min:1',
             'items.*.ingredient_id' => 'required|exists:ingredients,id',
             'items.*.quantity' => 'required|numeric|min:0.1',
+            'items.*.notes' => 'nullable|string',
         ]);
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $pusat) {
-            // 1. Kurangi stok bahan baku dari cabang
-            $sourceIngredient = \App\Models\Ingredient::findOrFail($request->source_ingredient_id);
-            if ($sourceIngredient->current_stock < $request->source_quantity) {
-                throw new \Exception("Stok cabang tidak mencukupi untuk return.");
-            }
-            $sourceIngredient->decrement('current_stock', $request->source_quantity);
+        $pusat = $this->getPusatBranch();
 
-            // 2. Buat record transfer
-            $transfer = \App\Models\StockTransfer::create([
+        DB::transaction(function () use ($request, $pusat) {
+            // Create return record (from branch to pusat)
+            $transfer = StockTransfer::create([
                 'reference_number' => 'RET-' . date('Ymd') . '-' . rand(1000, 9999),
                 'from_branch_id' => $request->from_branch_id,
                 'to_branch_id' => $pusat->id,
-                'user_id' => \Illuminate\Support\Facades\Auth::id(),
+                'user_id' => Auth::id(),
                 'transfer_date' => $request->transfer_date,
                 'notes' => $request->notes,
                 'status' => 'completed',
-                'source_ingredient_id' => $request->source_ingredient_id,
-                'source_quantity' => $request->source_quantity,
             ]);
 
-            // 3. Tambah stok hasil pemisahan ke pusat
             foreach ($request->items as $item) {
-                $targetIngredient = \App\Models\Ingredient::findOrFail($item['ingredient_id']);
+                // Kurangi stok cabang
+                $branchIngredient = Ingredient::where('id', $item['ingredient_id'])->where('branch_id', $request->from_branch_id)->firstOrFail();
                 
-                // Cari atau buat bahan baku yang sama di Gudang Pusat
-                $pusatIngredient = \App\Models\Ingredient::firstOrCreate(
+                if ($branchIngredient->current_stock < $item['quantity']) {
+                    throw new \Exception("Stok {$branchIngredient->name} di cabang tidak mencukupi. (Sisa: {$branchIngredient->current_stock})");
+                }
+
+                $branchIngredient->decrement('current_stock', $item['quantity']);
+
+                // Tambahkan stok ke Gudang Pusat (Cari atau buat Ingredient di gudang pusat dengan nama yang sama)
+                $pusatIngredient = Ingredient::firstOrCreate(
                     [
-                        'name' => $targetIngredient->name,
+                        'name' => $branchIngredient->name,
                         'branch_id' => $pusat->id
                     ],
                     [
-                        'unit_id' => $targetIngredient->unit_id,
+                        'unit_id' => $branchIngredient->unit_id,
                         'current_stock' => 0,
-                        'min_stock' => $targetIngredient->min_stock ?? 0,
-                        'unit_cost' => $targetIngredient->unit_cost ?? 0,
+                        'min_stock' => $branchIngredient->min_stock,
+                        'unit_cost' => $branchIngredient->unit_cost,
                     ]
                 );
 
-                // Update unit_cost rata-rata di pusat (opsional/disederhanakan)
-                $oldTotalValue = $pusatIngredient->current_stock * $pusatIngredient->unit_cost;
-                $newTotalValue = $item['quantity'] * $targetIngredient->unit_cost;
-                $newStock = $pusatIngredient->current_stock + $item['quantity'];
-                $averagePrice = $newStock > 0 ? ($oldTotalValue + $newTotalValue) / $newStock : $pusatIngredient->unit_cost;
+                // Update rata-rata harga (Moving Average)
+                $oldTotal = $pusatIngredient->current_stock * ($pusatIngredient->unit_cost ?? 0);
+                $newTotal = $item['quantity'] * ($branchIngredient->unit_cost ?? 0);
                 
+                $totalQty = $pusatIngredient->current_stock + $item['quantity'];
+                $averagePrice = $totalQty > 0 ? ($oldTotal + $newTotal) / $totalQty : 0;
+
                 $pusatIngredient->increment('current_stock', $item['quantity']);
                 $pusatIngredient->update(['unit_cost' => $averagePrice]);
 
-                // Record mutasi ke items
-                \App\Models\StockTransferItem::create([
+                // Record detail mutasi
+                StockTransferItem::create([
                     'stock_transfer_id' => $transfer->id,
-                    'ingredient_id' => $targetIngredient->id, // target ingredient
+                    'ingredient_id' => $branchIngredient->id, // source ingredient
                     'quantity' => $item['quantity'],
                     'notes' => $item['notes'] ?? null,
                 ]);
             }
         });
 
-        return redirect()->route('admin.stock-returns.index')->with('success', 'Berhasil mencatat pemisahan return dari cabang ke pusat!');
+        return redirect()->route('admin.stock-returns.index')->with('success', 'Berhasil melakukan return stok dari cabang ke pusat!');
     }
 
     public function show($id)
     {
         $return = StockTransfer::with(['fromBranch', 'user', 'items.ingredient'])->findOrFail($id);
         return view('admin.stock-returns.show', compact('return'));
-    }
-
-    
-    public function storeDailySummary(\Illuminate\Http\Request $request)
-    {
-        $request->validate([
-            'summary_date' => 'required|date',
-            'summary_notes' => 'required|string',
-        ]);
-
-        \App\Models\DailyReturnSummary::updateOrCreate(
-            ['date' => $request->summary_date],
-            ['notes' => $request->summary_notes]
-        );
-
-        return redirect()->back()->with('success', 'Rekap pemisahan gabungan harian berhasil disimpan.');
     }
 }

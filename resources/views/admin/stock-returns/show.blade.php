@@ -54,23 +54,8 @@
         @endif
 
         <div class="p-0 sm:p-8">
-                            @if($return->sourceIngredient)
-                <div class="mb-8 p-6 bg-amber-50 border border-amber-100 rounded-2xl flex items-center justify-between">
-                    <div>
-                        <div class="text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-1">Bahan Baku Asal (Dikembalikan dari Cabang)</div>
-                        <div class="text-lg font-bold text-amber-900">{{ $return->sourceIngredient->name }}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-1">Jumlah</div>
-                        <div class="text-xl font-black text-amber-700">{{ floatval($return->source_quantity) }} <span class="text-sm font-medium">{{ $return->sourceIngredient->unit->name ?? 'pcs' }}</span></div>
-                    </div>
-                </div>
-                
-                <h4 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 px-4">Hasil Pemisahan Diterima Gudang Pusat</h4>
-                @endif
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
                     <thead>
                         <tr class="text-slate-400 font-bold text-[11px] uppercase tracking-widest border-b border-slate-100">
                             <th class="px-4 py-4 text-left">Nama Bahan Baku</th>

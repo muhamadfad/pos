@@ -3,14 +3,12 @@
 @section('title', 'Return Cabang')
 
 @section('content')
-<div x-data="{ showSummaryModal: false }">
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
         <h1 class="text-2xl font-bold text-slate-800">Return Cabang</h1>
         <p class="text-slate-500 text-sm mt-1">Kelola pengiriman stok dari cabang ke Gudang Pusat.</p>
     </div>
     <div class="flex items-center gap-3">
-        
         <a href="{{ route('admin.stock-returns.download-pdf', request()->all()) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-semibold rounded-xl transition-all">
             <span class="iconify text-lg" data-icon="mdi:file-pdf-box"></span>
             Download PDF
@@ -48,20 +46,6 @@
                             <span class="font-medium text-slate-700">{{ $return->fromBranch->name }}</span>
                         </div>
                     </td>
-                                        <td class="px-6 py-4">
-                        @if($return->sourceIngredient)
-                            <div class="font-bold text-slate-700">{{ $return->sourceIngredient->name }} <span class="text-xs font-normal text-slate-500">({{ floatval($return->source_quantity) }} {{ $return->sourceIngredient->unit->name ?? '' }})</span></div>
-                            <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Hasil Pemisahan:</div>
-                        @endif
-                        <ul class="list-disc pl-4 text-xs text-slate-600 mt-0.5">
-                            @foreach($return->items as $item)
-                                <li>{{ $item->ingredient->name ?? '-' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
-                            @endforeach
-                        </ul>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-xs text-slate-500">{{ $return->notes ?: '-' }}</span>
-                    </td>
                     <td class="px-6 py-4">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Selesai
@@ -75,7 +59,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                    <td colspan="4" class="px-6 py-12 text-center text-slate-500">
                         Belum ada riwayat Return Dari Cabang.
                     </td>
                 </tr>
@@ -89,8 +73,5 @@
         {{ $returns->links() }}
     </div>
     @endif
-</div>
-    
-</div>
 </div>
 @endsection
