@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="iconify text-slate-400" data-icon="mdi:call-split"></span>
@@ -147,7 +147,7 @@
                 </button>
             </div>
 
-            <div class="overflow-x-auto font-sans">
+            <div class="overflow-visible font-sans min-h-[250px]">
                 <table class="w-full text-sm">
                     <thead class="bg-slate-100/50 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
                         <tr>
