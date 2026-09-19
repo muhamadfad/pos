@@ -97,7 +97,7 @@
                                                     @input="formatInputPrice(item, $event)"
                                                     @focus="if(item.price === 0) item.formatted_price = ''"
                                                     @blur="if(!item.formatted_price) { item.price = 0; item.formatted_price = '0'; }">
-                                                <input type="hidden" :name="`items[${index}][purchase_price]`" x-model="item.price">
+                                                <input type="hidden" :name="`items[${index}][purchase_price]`" :value="item.price">
                                             </div>
                                         </td>
                                         <!-- Subtotal -->
@@ -151,7 +151,7 @@
                                         @input="formatInputPaid($event)"
                                         @focus="if(paid_amount === 0) formatted_paid = ''"
                                         @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
-                                    <input type="hidden" name="paid" x-model="paid_amount">
+                                    <input type="hidden" name="paid" :value="paid_amount">
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-2 italic px-1">Isi 0 jika transaksi ini
                                     merupakan hutang penuh</p>

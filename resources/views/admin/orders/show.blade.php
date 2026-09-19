@@ -273,7 +273,7 @@
                                         <input type="text"
                                             class="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-lg font-black text-emerald-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                                             :value="formatted_amount" @input="formatAmount($event)" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required>
-                                        <input type="hidden" name="amount" x-model="amount">
+                                        <input type="hidden" name="amount" :value="amount">
                                     </div>
                                 </div>
 

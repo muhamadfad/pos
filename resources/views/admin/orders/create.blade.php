@@ -165,7 +165,7 @@
                                         @input="formatInputPaid($event)"
                                         @focus="if(paid_amount === 0) formatted_paid = ''"
                                         @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
-                                    <input type="hidden" name="paid" x-model="paid_amount">
+                                    <input type="hidden" name="paid" :value="paid_amount">
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-2 italic px-1 text-center">Biarkan 0 jika belum
                                     ada pembayaran</p>

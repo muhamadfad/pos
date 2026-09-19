@@ -152,7 +152,7 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Diterima</label>
                 <input type="text" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" :value="formatted_amount" @input="let val = $event.target.value.replace(/\D/g, ''); if(val==='') { amount = 0; formatted_amount = ''; } else { amount = parseInt(val); formatted_amount = parseInt(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }" @focus="if(amount === 0) formatted_amount = ''" @blur="if(!formatted_amount) { amount = 0; formatted_amount = '0'; }" required placeholder="Masukkan nominal">
-                <input type="hidden" name="amount" x-model="amount">
+                <input type="hidden" name="amount" :value="amount">
             </div>
 
             <div class="mb-6">
