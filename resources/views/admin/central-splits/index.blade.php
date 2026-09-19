@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Return Cabang')
+@section('title', 'Pemisahan Bahan (Pusat)')
 
 @section('content')
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
-        <h1 class="text-2xl font-bold text-slate-800">Return Cabang</h1>
+        <h1 class="text-2xl font-bold text-slate-800">Pemisahan Bahan (Pusat)</h1>
         <p class="text-slate-500 text-sm mt-1">Riwayat pemisahan bahan baku di Gudang Pusat.</p>
     </div>
     <div class="flex items-center gap-3">
