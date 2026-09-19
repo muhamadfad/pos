@@ -161,6 +161,8 @@ Route::middleware(['auth', 'admin'])
             Route::get('/{id}', [\App\Http\Controllers\Admin\CentralPurchaseController::class, 'show'])->name('show');
         });
 
+                Route::resource('central-splits', \App\Http\Controllers\Admin\CentralStockSplitController::class)->except(['edit', 'update', 'destroy']);
+        
         Route::prefix('central-productions')->name('central-productions.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\CentralProductionController::class, 'index'])->name('index');
             Route::get('/download-pdf', [\App\Http\Controllers\Admin\CentralProductionController::class, 'downloadPdf'])->name('download-pdf');
