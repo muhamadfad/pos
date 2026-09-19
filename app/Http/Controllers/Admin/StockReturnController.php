@@ -37,7 +37,7 @@ class StockReturnController extends Controller
             ->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc');
 
-        if ($user->role !== 'super_admin' && $user->branch_id !== $pusat->id) {
+        if (!$user->canManagePusat()) {
             $query->where('from_branch_id', $user->branch_id);
         }
 
@@ -55,7 +55,7 @@ class StockReturnController extends Controller
             ->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc');
 
-        if ($user->role !== 'super_admin' && $user->branch_id !== $pusat->id) {
+        if (!$user->canManagePusat()) {
             $query->where('from_branch_id', $user->branch_id);
         }
 
@@ -70,7 +70,7 @@ class StockReturnController extends Controller
         $user = Auth::user();
         
         // Jika user adalah admin pusat / super admin, bisa bantu inputkan untuk cabang
-        if ($user->role === 'super_admin' || $user->branch_id === $pusat->id) {
+        if ($user->canManagePusat()) {
             $branches = Branch::where('id', '!=', $pusat->id)->where('is_active', true)->orderBy('name')->get();
             $ingredients = Ingredient::with('unit')->where('branch_id', '!=', $pusat->id)->orderBy('name')->get();
         } else {
