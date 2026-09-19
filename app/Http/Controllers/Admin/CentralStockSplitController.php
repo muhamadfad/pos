@@ -26,7 +26,7 @@ class CentralStockSplitController extends Controller
         $query = StockTransfer::with(['items.ingredient', 'user'])
             ->where('from_branch_id', $pusat->id)
             ->where('to_branch_id', $pusat->id)
-            ->where('status', 'split')
+            ->whereNotNull('source_ingredient_id')
             ->orderBy('transfer_date', 'desc')
             ->orderBy('created_at', 'desc');
 
@@ -130,7 +130,7 @@ class CentralStockSplitController extends Controller
         $split = StockTransfer::with(['items.ingredient.unit', 'user', 'sourceIngredient.unit'])
             ->where('from_branch_id', $pusat->id)
             ->where('to_branch_id', $pusat->id)
-            ->where('status', 'split')
+            ->whereNotNull('source_ingredient_id')
             ->findOrFail($id);
 
         return view('admin.central-splits.show', compact('split'));

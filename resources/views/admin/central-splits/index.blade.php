@@ -3,6 +3,20 @@
 @section('title', 'Pemisahan Bahan (Pusat)')
 
 @section('content')
+@if(session('success'))
+<div class="mb-6 bg-green-50 border border-green-200 rounded-2xl p-4 flex items-start gap-3">
+    <span class="iconify text-green-500 text-xl shrink-0" data-icon="mdi:check-circle"></span>
+    <p class="text-sm text-green-700">{{ session('success') }}</p>
+</div>
+@endif
+
+@if(session('error'))
+<div class="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+    <span class="iconify text-red-500 text-xl shrink-0" data-icon="mdi:alert-circle"></span>
+    <p class="text-sm text-red-700">{{ session('error') }}</p>
+</div>
+@endif
+
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
         <h1 class="text-2xl font-bold text-slate-800">Pemisahan Bahan (Pusat)</h1>
