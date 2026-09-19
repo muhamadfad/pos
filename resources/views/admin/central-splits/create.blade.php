@@ -152,12 +152,6 @@
                                         get filtered() {
                                             if (!this.search) return window.__ingredients;
                                             return window.__ingredients.filter(i => i.name.toLowerCase().includes(this.search.toLowerCase()));
-                                        },
-                                        selectItem(i) {
-                                            item.ingredient_id = i.id;
-                                            item.unit_name = i.unit_name;
-                                            this.search = i.name;
-                                            this.open = false;
                                         }
                                     }">
                                         <input type="hidden" :name="'items[' + index + '][ingredient_id]'" x-model="item.ingredient_id">
@@ -166,7 +160,7 @@
                                             <div x-show="open" class="absolute z-[60] mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto py-1" style="display: none;">
                                                 <div x-show="filtered.length === 0" class="px-4 py-2 text-xs text-slate-500">Tidak ditemukan</div>
                                                 <template x-for="i in filtered" :key="i.id">
-                                                    <button type="button" @click="selectItem(i)" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50" x-text="i.name"></button>
+                                                    <button type="button" @click="item.ingredient_id = i.id; item.unit_name = i.unit_name; search = i.name; open = false;" class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50" x-text="i.name"></button>
                                                 </template>
                                             </div>
                                         </div>
