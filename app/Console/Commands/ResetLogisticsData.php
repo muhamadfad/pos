@@ -36,7 +36,7 @@ class ResetLogisticsData extends Command
         $this->info('Data produksi dihapus.');
 
         // 2. Inventory / Stock
-        DB::table('branch_stocks')->truncate();
+        DB::table('branch_stock')->truncate();
         DB::table('stock_transfer_items')->truncate();
         DB::table('stock_transfers')->truncate();
         $this->info('Data inventory dan transfer/stock dihapus.');
