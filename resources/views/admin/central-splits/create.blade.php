@@ -85,7 +85,7 @@
                                 </div>
 
                                 <template x-for="i in filteredIngredients" :key="i.id">
-                                    <button type="button" @click="source_ingredient_id = i.id; source_stock_available = i.stock; source_unit_name = i.unit_name; source_search = i.name; open = false;"
+                                    <button type="button" @click="source_ingredient_id = i.id; source_stock_available = i.stock; source_unit_name = i.unit_name; search = i.name; open = false;"
                                         class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 transition-colors flex items-center justify-between group">
                                         <div>
                                             <div class="font-medium text-slate-700 group-hover:text-indigo-600 transition-colors" x-text="i.name"></div>
