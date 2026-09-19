@@ -16,6 +16,13 @@
     </div>
 
     <!-- Error Alerts -->
+    @if(session('error'))
+    <div class="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+        <span class="iconify text-red-500 text-xl shrink-0" data-icon="mdi:alert-circle"></span>
+        <p class="text-sm text-red-700">{{ session('error') }}</p>
+    </div>
+    @endif
+
     @if($errors->any())
     <div class="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
         <span class="iconify text-red-500 text-xl shrink-0" data-icon="mdi:alert-circle"></span>

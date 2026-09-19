@@ -95,7 +95,7 @@ class CentralStockSplitController extends Controller
                 'user_id' => auth()->id(),
                 'transfer_date' => $request->date,
                 'notes' => $request->notes,
-                'status' => 'split',
+                'status' => 'completed',
                 'source_ingredient_id' => $request->source_ingredient_id,
                 'source_quantity' => $request->source_quantity,
             ]);
