@@ -46,6 +46,16 @@
                             <span class="font-medium text-slate-700">{{ $return->fromBranch->name }}</span>
                         </div>
                     </td>
+                                        <td class="px-6 py-4">
+                        <ul class="list-disc pl-4 text-xs text-slate-600">
+                            @foreach($return->items as $item)
+                                <li>{{ $item->ingredient->name ?? '-' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs text-slate-500">{{ $return->notes ?: '-' }}</span>
+                    </td>
                     <td class="px-6 py-4">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Selesai
@@ -59,7 +69,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
                         Belum ada riwayat Return Dari Cabang.
                     </td>
                 </tr>
