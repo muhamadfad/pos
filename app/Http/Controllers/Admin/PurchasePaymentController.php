@@ -42,7 +42,7 @@ class PurchasePaymentController extends Controller
             $descText = 'Pelunasan Pembelian: ' . $ingredientNames . ($purchase->reference_number ? ' (' . $purchase->reference_number . ')' : '');
             
             \App\Models\Expense::create([
-                'branch_id' => $purchase->branch_id,
+                'branch_id' => auth()->user()->branch_id,
                 'user_id' => auth()->id(),
                 'amount' => $request->amount,
                 'description' => $descText,
@@ -92,7 +92,7 @@ class PurchasePaymentController extends Controller
             $descText = 'Pelunasan Pembelian: ' . $ingredientNames . ($purchase->reference_number ? ' (' . $purchase->reference_number . ')' : '');
             
             \App\Models\Expense::create([
-                'branch_id' => $purchase->branch_id,
+                'branch_id' => auth()->user()->branch_id,
                 'user_id' => auth()->id(),
                 'amount' => $request->amount,
                 'description' => $descText,

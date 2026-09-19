@@ -138,7 +138,7 @@ class PurchaseController extends Controller
                 $descText = 'Pembelian: ' . $ingredientNames . ($request->reference_number ? ' (' . $request->reference_number . ')' : '');
 
                 \App\Models\Expense::create([
-                    'branch_id' => $request->branch_id ?? auth()->user()->branch_id,
+                    'branch_id' => auth()->user()->branch_id,
                     'user_id' => auth()->id(),
                     'amount' => $paid,
                     'description' => $descText,
