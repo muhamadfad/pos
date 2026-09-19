@@ -68,6 +68,7 @@ class CentralProductionController extends Controller
         // 2. Transfers (Distribusi)
         $transfers = \App\Models\StockTransfer::with(['toBranch', 'user', 'items.ingredient.unit'])
             ->where('from_branch_id', $pusat->id)
+            ->where('to_branch_id', '!=', $pusat->id)
             ->whereBetween('transfer_date', [$startDate, $endDate])
             ->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc')
@@ -76,6 +77,7 @@ class CentralProductionController extends Controller
         // 3. Returns (Return Cabang)
         $returns = \App\Models\StockTransfer::with(['fromBranch', 'user', 'items.ingredient.unit'])
             ->where('to_branch_id', $pusat->id)
+            ->where('from_branch_id', '!=', $pusat->id)
             ->whereBetween('transfer_date', [$startDate, $endDate])
             ->orderBy('transfer_date', 'desc')
             ->orderBy('id', 'desc')
@@ -89,7 +91,17 @@ class CentralProductionController extends Controller
             ->orderBy('date', 'asc')
             ->get();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request', 'dailyReturnSummaries'))
+                // 5. Splits (Pemisahan Bahan)
+        $splits = \App\Models\StockTransfer::with(['items.ingredient.unit', 'user', 'sourceIngredient.unit'])
+            ->where('from_branch_id', $pusat->id)
+            ->where('to_branch_id', $pusat->id)
+            ->whereNotNull('source_ingredient_id')
+            ->whereBetween('transfer_date', [$startDate, $endDate])
+            ->orderBy('transfer_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.central-logistics-combined', compact('productions', 'transfers', 'returns', 'pusat', 'request', 'dailyReturnSummaries', 'splits'))
             ->setPaper('a4', 'landscape');
             
         return $pdf->download("Laporan_Logistik_Lengkap.pdf");

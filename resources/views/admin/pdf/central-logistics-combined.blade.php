@@ -163,6 +163,46 @@
             </table>
         </div>
         @endif
+        <div style="page-break-after: always;"></div>
+
+        <div class="section-title">4. Pemisahan Bahan Baku (Pusat)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>No. Ref & Tanggal</th>
+                    <th>Bahan Baku Sumber</th>
+                    <th>Total Olahan per Item</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($splits ?? [] as $split)
+                <tr>
+                    <td>
+                        <div class="font-bold">{{ $split->reference_number ?: '-' }}</div>
+                        <div style="font-size:10px; color:#718096;">{{ \Carbon\Carbon::parse($split->transfer_date)->format('d M Y') }}</div>
+                    </td>
+                    <td>
+                        <div class="font-bold text-emerald">{{ $split->sourceIngredient->name ?? 'Dihapus' }}</div>
+                        <div style="font-size:10px;">{{ floatval($split->source_quantity) }} {{ $split->sourceIngredient->unit->name ?? 'kg' }}</div>
+                    </td>
+                    <td>
+                        <ul style="margin:0; padding-left:15px; font-size:10px;">
+                            @forelse($split->items as $item)
+                                <li>{{ $item->ingredient->name ?? 'Dihapus' }} ({{ floatval($item->quantity) }} {{ $item->ingredient->unit->name ?? '' }})</li>
+                            @empty
+                                <li>-</li>
+                            @endforelse
+                        </ul>
+                    </td>
+                    <td>{{ $split->notes ?: '-' }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="4" class="text-center">Tidak ada data pemisahan bahan.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+
     </div>
 </body>
 </html>
