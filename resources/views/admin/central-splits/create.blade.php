@@ -35,8 +35,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tanggal Return</label>
-                    <input type="date" name="transfer_date" value="{{ date('Y-m-d') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold" required>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tanggal Pemisahan</label>
+                    <input type="date" name="date" value="{{ date('Y-m-d') }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold" required>
                 </div>
                 
                 <!-- Source Item -->
@@ -209,7 +209,7 @@
                 class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 disabled:bg-slate-400 disabled:cursor-not-allowed"
                 :disabled="!isValid()">
                 <span class="iconify text-xl" data-icon="mdi:send-check-outline"></span>
-                Proses Return Pemisahan
+                Proses Pemisahan
             </button>
         </div>
     </form>
