@@ -147,7 +147,7 @@
                                 class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer @error('branch_id') border-rose-500 @enderror">
                             <option value="">Pilih Cabang (Pusat jika kosong)</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                <option value="{{ $branch->id }}" {{ old('branch_id', request('branch_id')) == $branch->id ? 'selected' : '' }}>
                                     {{ $branch->name }}
                                 </option>
                             @endforeach
