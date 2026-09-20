@@ -69,9 +69,19 @@ class User extends Authenticatable
         return $this->role === 'kasir';
     }
 
-    public function canManagePusat(): bool
+        public function canManagePusat(): bool
     {
-        return $this->isSuperAdmin() || ($this->isAdmin() && $this->can_manage_pusat);
+        if ($this->isSuperAdmin()) return true;
+        if (!$this->isAdmin()) return false;
+        if ($this->can_manage_pusat) return true;
+        
+        // Auto allow if admin is assigned to PUSAT branch
+        $branch = \App\Models\Branch::find($this->branch_id);
+        if ($branch && strtoupper($branch->code) === 'PUSAT') {
+            return true;
+        }
+        
+        return false;
     }
 
     public function canAccessBranch($branchId): bool
