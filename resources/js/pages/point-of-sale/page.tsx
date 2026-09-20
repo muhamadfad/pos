@@ -340,6 +340,7 @@ function updateQty(productId: number, qty: number) {
                         ...localActiveShift,
                         total_sales: (localActiveShift.total_sales || 0) + totalPrice,
                         total_transfer: (localActiveShift.total_transfer || 0) + (paymentMethod === 'transfer' ? totalPrice : 0),
+                        total_cash_income: (localActiveShift.total_cash_income || 0) + (paymentMethod === 'cash' ? Math.min(totalPrice, Number(actualPaid || totalPrice)) : 0),
                     });
                 }
                 
