@@ -41,7 +41,7 @@ class PointOfSaleController extends Controller
             ->where('payment_method', 'cash')
             ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
 
-        $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
+        $totalExpense = \App\Models\Expense::where('branch_id', $branchId)
             ->where('branch_id', $branchId)
             ->where('created_at', '>=', $activeShift->opened_at)
             ->sum('amount');
@@ -279,7 +279,7 @@ class PointOfSaleController extends Controller
                 ->where('payment_method', 'cash')
                 ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
                 
-            $totalExpenseShift = \App\Models\Expense::where('user_id', Auth::id())
+            $totalExpenseShift = \App\Models\Expense::where('branch_id', $branchId)
                 ->where('branch_id', $branchId)
                 ->where('created_at', '>=', $activeShift->opened_at)
                 ->sum('amount');
