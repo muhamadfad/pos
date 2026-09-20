@@ -135,7 +135,7 @@
                         <div class="flex flex-col sm:flex-row gap-4 p-5 border border-slate-200 rounded-2xl bg-slate-50/50 relative group hover:border-amber-200 hover:bg-amber-50/30 transition-all">
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Pilih Bahan Mentah</label>
-                                <select x-model="item.ingredient_id" :name="'items['+index+'][ingredient_id]'" required class="w-full bg-white border border-slate-200 text-slate-800 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 px-4 py-3 appearance-none shadow-sm">
+                                <select x-model="item.ingredient_id" :name="'items['+index+'][ingredient_id]'" required class="w-full bg-white border border-slate-200 text-slate-800 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 px-4 py-3 appearance-none shadow-sm" x-init="$nextTick(() => { $($el).select2({width: '100%'}); $($el).on('change', function(){ item.ingredient_id = $(this).val(); }); $watch('item.ingredient_id', val => { if($($el).val() !== val) $($el).val(val).trigger('change.select2'); }) })">
                                     <option value="">-- Pilih Bahan --</option>
                                     @foreach($ingredients as $ing)
                                         <option value="{{ $ing->id }}">{{ $ing->name }} (Modal: Rp {{ number_format($ing->unit_cost,0,',','.') }}/{{ $ing->unit->name ?? 'kg' }})</option>
@@ -197,6 +197,10 @@
 
 @push('scripts')
 <script>
+    $(document).ready(function() {
+        $('.searchable-select').select2({ width: '100%' });
+    });
+    
     function productionForm() {
         return {
             items: [

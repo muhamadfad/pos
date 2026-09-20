@@ -17,6 +17,32 @@
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <style>
+        /* Custom Tailwind styles for Select2 */
+        .select2-container--default .select2-selection--single {
+            height: 46px;
+            border-radius: 0.75rem;
+            border-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #1e293b;
+            font-weight: 500;
+            padding-left: 1rem;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 44px;
+            right: 10px;
+        }
+        .select2-dropdown {
+            border-color: #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
 
     <style>
         [x-cloak] { display: none !important; }

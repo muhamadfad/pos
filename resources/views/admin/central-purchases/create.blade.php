@@ -40,7 +40,7 @@
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Supplier (Opsional)</label>
-                    <select name="supplier_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold">
+                    <select name="supplier_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-semibold searchable-select">
                         <option value="">-- Tanpa Supplier --</option>
                         @foreach($suppliers as $sup)
                             <option value="{{ $sup->id }}">{{ $sup->name }}</option>
@@ -181,7 +181,7 @@
                                         @input="formatInputPaid($event)"
                                         @focus="if(paid_amount === 0) formatted_paid = ''"
                                         @blur="if(!formatted_paid) { paid_amount = 0; formatted_paid = '0'; }">
-                                    <input type="hidden" name="paid" :value="paid_amount">
+                                    <input type="number" name="paid" x-model="paid_amount" style="display:none;">
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-2 italic px-1">Isi 0 jika transaksi ini
                                     merupakan hutang penuh</p>
