@@ -209,7 +209,7 @@ export default function CartPanel({
                                     Total Tunai
                                 </div>
                                 <div className="font-semibold text-gray-800">
-                                    {formatRupiah((activeShift.opening_balance || 0) + (activeShift.total_cash_income || 0) - (activeShift.total_expense || 0))}
+                                    {formatRupiah((activeShift.total_cash_income || 0) - (activeShift.total_expense || 0))}
                                 </div>
                             </div>
                             <div>
