@@ -80,7 +80,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                                 <div>
                                     <label class="block text-sm font-bold text-indigo-900 mb-2">Pilih Barang Jadi <span class="text-rose-500">*</span></label>
-                                    <select name="result_ingredient_id" required class="w-full bg-white border border-indigo-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 px-4 py-3 shadow-sm font-medium appearance-none">
+                                    <select name="result_ingredient_id" required class="w-full bg-white border border-indigo-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 px-4 py-3 shadow-sm font-medium appearance-none" x-tomselect>
                                         <option value="">-- Pilih Barang Jadi --</option>
                                         @foreach($ingredients as $ing)
                                             <option value="{{ $ing->id }}" {{ old('result_ingredient_id') == $ing->id ? 'selected' : '' }}>
