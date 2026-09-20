@@ -27,8 +27,7 @@ class CashierShiftController extends Controller
             $totalCashIncome = \App\Models\Order::where('cashier_shift_id', $activeShift->id)
                 ->where('payment_method', 'cash')
                 ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
-            $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
-                ->where('branch_id', $branchId)
+            $totalExpense = \App\Models\Expense::where('branch_id', $branchId)
                 ->where('created_at', '>=', $activeShift->opened_at)
                 ->sum('amount');
             $totalCash = $totalCashIncome - $totalExpense;
@@ -214,8 +213,7 @@ class CashierShiftController extends Controller
             ->where('payment_method', 'cash')
             ->selectRaw('SUM(LEAST(total_amount, total_paid)) as val')->value('val') ?? 0;
             
-        $totalExpense = \App\Models\Expense::where('user_id', Auth::id())
-            ->where('branch_id', $branchId)
+        $totalExpense = \App\Models\Expense::where('branch_id', $branchId)
             ->where('created_at', '>=', $shift->opened_at)
             ->sum('amount');
             
