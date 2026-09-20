@@ -389,3 +389,8 @@ Route::get('/pos-images/{path}', function ($path) {
 Route::fallback(function () {
     return view('errors.404');
 });
+Route::get('/debug-info', function () {
+    \ = \App\Models\CashierShift::latest()->first();
+    \ = \App\Models\Expense::where('branch_id', \->branch_id)->latest()->take(10)->get();
+    return response()->json(['shift' => \, 'expenses' => \]);
+});
