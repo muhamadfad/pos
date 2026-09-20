@@ -69,12 +69,9 @@ class User extends Authenticatable
         return $this->role === 'kasir';
     }
 
-            public function canManagePusat(): bool
+    public function canManagePusat(): bool
     {
         return $this->isSuperAdmin() || ($this->isAdmin() && $this->can_manage_pusat);
-    }
-        
-        return false;
     }
 
     public function canAccessBranch($branchId): bool
