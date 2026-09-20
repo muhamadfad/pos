@@ -151,9 +151,16 @@ class IngredientController extends Controller
         
         $data = $request->all();
         
-        // Jika bukan super admin, set branch_id ke cabang user
+                // Jika bukan super admin, set branch_id ke cabang user
         if (!$isSuperAdmin) {
-            $data['branch_id'] = $userBranchId;
+            if ($user->canManagePusat() && isset($data['branch_id'])) {
+                $pusat = Branch::where('code', 'PUSAT')->first();
+                if ($data['branch_id'] != $pusat?->id && $data['branch_id'] != $userBranchId) {
+                    $data['branch_id'] = $userBranchId;
+                }
+            } else {
+                $data['branch_id'] = $userBranchId;
+            }
         }
         
         $data['unit_cost'] = $data['unit_cost'] ?? 0;
@@ -260,9 +267,16 @@ class IngredientController extends Controller
         
         $data = $request->all();
         
-        // Jika bukan super admin, branch_id tidak boleh berubah
+                // Jika bukan super admin, branch_id tidak boleh berubah ke cabang lain
         if (!$isSuperAdmin) {
-            unset($data['branch_id']);
+            if ($user->canManagePusat() && isset($data['branch_id'])) {
+                $pusat = Branch::where('code', 'PUSAT')->first();
+                if ($data['branch_id'] != $pusat?->id && $data['branch_id'] != $userBranchId) {
+                    unset($data['branch_id']);
+                }
+            } else {
+                unset($data['branch_id']);
+            }
         }
         
         $data['unit_cost'] = $data['unit_cost'] ?? 0;
