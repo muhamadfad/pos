@@ -319,7 +319,10 @@
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td>{{ \Carbon\Carbon::parse($purchase->date)->format('d/m/Y') }}</td>
                 <td>{{ $purchase->supplier->name ?? '-' }}</td>
-                <td>Status: {{ ucfirst($purchase->payment_status) }}</td>
+                <td>
+                    {{ $purchase->items->map(function($item) { return ($item->ingredient->name ?? 'Bahan Baku') . ' (' . $item->quantity . ')'; })->implode(', ') }}
+                    <br><small>Status: {{ ucfirst($purchase->payment_status) }}</small>
+                </td>
                 <td class="text-right">{{ number_format($purchase->total_paid, 0, ',', '.') }}</td>
             </tr>
             @empty

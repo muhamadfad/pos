@@ -550,7 +550,7 @@ class FinanceController extends Controller
         
         $ordersQuery = \App\Models\Order::with(['customer', 'items.product'])->where('payment_status', 'paid');
         $expensesQuery = \App\Models\Expense::query();
-        $purchasesQuery = \App\Models\Purchase::with('supplier');
+        $purchasesQuery = \App\Models\Purchase::with(['supplier', 'items.ingredient']);
 
         if ($startDate && $endDate) {
             $ordersQuery->whereBetween('date', [\Carbon\Carbon::parse($startDate)->startOfDay(), \Carbon\Carbon::parse($endDate)->endOfDay()]);
