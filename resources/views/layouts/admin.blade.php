@@ -17,32 +17,43 @@
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <style>
-        /* Custom Tailwind styles for Select2 */
-        .select2-container--default .select2-selection--single {
-            height: 46px;
-            border-radius: 0.75rem;
-            border-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #1e293b;
-            font-weight: 500;
-            padding-left: 1rem;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 44px;
-            right: 10px;
-        }
-        .select2-dropdown {
-            border-color: #e2e8f0;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
+        .ts-control { border-radius: 0.75rem; padding: 0.75rem 1rem; border-color: #e2e8f0; font-size: 0.875rem; font-weight: 500; color: #1e293b; min-height: 46px; }
+        .ts-wrapper.single .ts-control:after { right: 1rem; }
+        .ts-dropdown { border-radius: 0.75rem; border-color: #e2e8f0; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-top: 4px; }
+        .ts-dropdown .option { padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .ts-dropdown .option.active { background-color: #f1f5f9; color: #1e293b; }
     </style>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.directive('tomselect', (el, { expression }, { evaluate, cleanup }) => {
+                let options = expression ? evaluate(expression) : {};
+                let instance = new TomSelect(el, {
+                    create: false,
+                    sortField: { field: 'text', direction: 'asc' },
+                    ...options
+                });
+                cleanup(() => { instance.destroy(); });
+            });
+        });
+        
+        // Fallback for non-alpine usage
+        document.addEventListener('turbo:load', () => {
+            document.querySelectorAll('.searchable-select:not([x-tomselect])').forEach(el => {
+                if(!el.tomselect) new TomSelect(el, { create: false });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.searchable-select:not([x-tomselect])').forEach(el => {
+                if(!el.tomselect) new TomSelect(el, { create: false });
+            });
+        });
+    </script>
+    
+    
+    
 
     <style>
         [x-cloak] { display: none !important; }
