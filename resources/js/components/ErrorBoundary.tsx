@@ -54,24 +54,24 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] p-4">
           <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center">
             <div className="w-20 h-20 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-black text-slate-800 mb-2">Oops, Aplikasi Terhenti!</h1>
-            <p className="text-slate-500 mb-8">
+            <h1 className="text-2xl font-black text-[rgba(0,0,0,0.88)] mb-2">Oops, Aplikasi Terhenti!</h1>
+            <p className="text-[rgba(0,0,0,0.45)] mb-8">
               Terjadi kesalahan pada sistem atau data memori lokal Anda tidak sinkron. Silakan lakukan reset aplikasi untuk memperbaikinya.
             </p>
             <button
               onClick={this.handleReset}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-indigo-200"
+              className="w-full bg-[#1677ff] hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-[0_6px_16px_0_rgba(0,0,0,0.08),0_3px_6px_-4px_rgba(0,0,0,0.12),0_9px_28px_8px_rgba(0,0,0,0.05)] shadow-indigo-200"
             >
               Reset & Muat Ulang Aplikasi
             </button>
-            <p className="text-xs text-slate-400 mt-4 font-mono break-words bg-slate-50 p-2 rounded-lg">
+            <p className="text-xs text-white/65 mt-4 font-mono break-words bg-[#f5f5f5] p-2 rounded-lg">
               {this.state.error?.message}
             </p>
           </div>

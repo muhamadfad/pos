@@ -8,25 +8,25 @@
     <!-- Header -->
     <div class="flex items-center gap-4">
         <a href="{{ route('admin.categories.index') }}"
-            class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition shadow-sm">
+            class="inline-flex items-center justify-center w-9 h-9 rounded-md bg-gray-50 border border-gray-200 text-gray-500 hover:bg-white hover:text-black transition shadow-sm">
             <span class="iconify" data-icon="mdi:arrow-left"></span>
         </a>
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">
+            <h1 class="text-2xl font-bold text-black">
                 {{ isset($category) ? 'Edit Kategori' : 'Tambah Kategori' }}
             </h1>
-            <p class="text-sm text-slate-500 mt-0.5">
+            <p class="text-sm text-gray-500 mt-0.5">
                 {{ isset($category) ? 'Perbarui nama kategori' : 'Buat kategori produk baru' }}
             </p>
         </div>
     </div>
 
     <!-- Card Form -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+    <div class="bg-gray-50 rounded-md border border-gray-200 shadow-sm p-6">
 
         @if ($errors->any())
         <div
-            class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-5 text-sm">
+            class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-md px-4 py-3 mb-5 text-sm">
             <span class="iconify mt-0.5 shrink-0 text-red-500" data-icon="mdi:alert-circle-outline"></span>
             <span>{{ implode(', ', $errors->all()) }}</span>
         </div>
@@ -47,12 +47,12 @@
                     <span class="text-red-500 ml-0.5">*</span>
                 </label>
                 <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-500">
                         <span class="iconify" data-icon="mdi:shape-outline"></span>
                     </div>
                     <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}"
-                        placeholder="Contoh: Makanan, Minuman" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-xl transition
-                               {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-slate-300 focus:ring-indigo-200 focus:border-indigo-400' }}
+                        placeholder="Contoh: Makanan, Minuman" autofocus class="w-full pl-10 pr-4 py-2.5 text-sm border rounded-md transition
+                               {{ $errors->has('name') ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-slate-300 focus:ring-black/5 focus:border-gray-200' }}
                                focus:outline-none focus:ring-2">
                 </div>
                 @error('name')
@@ -66,12 +66,12 @@
             <!-- Actions -->
             <div class="flex items-center justify-between pt-2">
                 <a href="{{ route('admin.categories.index') }}"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 bg-slate-100 hover:bg-slate-200 rounded-md transition">
                     <span class="iconify" data-icon="mdi:arrow-left"></span>
                     Kembali
                 </a>
                 <button type="submit"
-                    class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-md shadow-indigo-100">
+                    class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-black hover:bg-gray-800 rounded-md transition shadow-sm">
                     <span class="iconify" data-icon="mdi:content-save-outline"></span>
                     {{ isset($category) ? 'Update' : 'Simpan' }}
                 </button>

@@ -21,28 +21,28 @@
         
         <!-- Decorative blobs -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute -top-[30%] -left-[20%] w-[60%] h-[60%] bg-indigo-200/30 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-[30%] -right-[20%] w-[60%] h-[60%] bg-purple-200/30 rounded-full blur-3xl"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-indigo-100/20 rounded-full blur-3xl"></div>
+            <div class="absolute -top-[30%] -left-[20%] w-[60%] h-[60%] bg-indigo-200/30 rounded-md blur-3xl"></div>
+            <div class="absolute -bottom-[30%] -right-[20%] w-[60%] h-[60%] bg-purple-200/30 rounded-md blur-3xl"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gray-50/20 rounded-md blur-3xl"></div>
         </div>
 
         <div class="relative z-10">
             <a href="/" class="flex flex-col items-center gap-3 group transition-all duration-300 hover:scale-105">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl shadow-lg flex items-center justify-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-md shadow-sm flex items-center justify-center">
                     <span class="iconify text-white text-3xl" data-icon="mdi:storefront"></span>
                 </div>
                 <div class="text-center">
-                    <h1 class="text-xl font-black text-slate-800 tracking-tight">AnoaPOS</h1>
-                    <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mt-0.5">Point of Sale System</p>
+                    <h1 class="text-xl font-semibold text-black tracking-tight">AnoaPOS</h1>
+                    <p class="text-[10px] font-bold text-black uppercase tracking-wider mt-0.5">Point of Sale System</p>
                 </div>
             </a>
         </div>
 
-        <div class="relative z-10 w-full sm:max-w-md mt-8 px-8 py-8 bg-white/90 backdrop-blur-xl border border-white/60 shadow-xl sm:rounded-2xl">
+        <div class="relative z-10 w-full sm:max-w-md mt-8 px-8 py-8 bg-gray-50/90 backdrop-blur-xl border border-white/60 shadow-sm sm:rounded-md">
             {{ $slot }}
         </div>
 
-        <p class="relative z-10 mt-8 text-xs text-slate-400 font-medium">
+        <p class="relative z-10 mt-8 text-xs text-gray-500 font-medium">
             &copy; {{ date('Y') }} {{ config('app.name', 'AnoaPOS') }}
         </p>
     </div>

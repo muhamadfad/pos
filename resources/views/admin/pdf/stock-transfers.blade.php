@@ -19,7 +19,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="company">Resto Coto Makasar</div>
+            <div class="company">Kopi Selera Rakyat</div>
             <div class="report-title">Laporan Distribusi Cabang</div>
             <div style="font-size: 10px; margin-top: 4px;">Periode: {{ request('period') == 'today' ? 'Hari Ini' : (request('period') == 'this_week' ? 'Minggu Ini' : (request('period') == 'this_month' ? 'Bulan Ini' : 'Semua Waktu')) }}</div>
             <div style="font-size: 10px; margin-top: 4px;">Dicetak pada: {{ \Carbon\Carbon::now()->format('d M Y H:i') }}</div>

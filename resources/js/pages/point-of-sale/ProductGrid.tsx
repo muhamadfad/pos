@@ -42,7 +42,7 @@ export default function ProductGrid({
             {onAddManualItem && (
                 <button
                     onClick={onAddManualItem}
-                    className="flex flex-col items-center justify-center p-6 bg-white border-2 border-dashed border-orange-300 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all group"
+                    className="flex flex-col items-center justify-center p-6 bg-white border-2 border-dashed border-orange-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all group"
                 >
                     <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                         <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

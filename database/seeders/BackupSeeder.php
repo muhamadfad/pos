@@ -17,78 +17,12 @@ class BackupSeeder extends Seeder
   array (
     'id' => 1,
     'code' => 'CBG001',
-    'name' => 'Cabang Sao Sao',
-    'address' => 'Jl. Ahmad Yani No. 123, Makassar',
+    'name' => 'Cabang Utama',
+    'address' => 'Jl. Kopi No. 1',
     'phone' => '081234567890',
     'is_active' => 1,
     'created_at' => '2026-05-17 07:58:45',
     'updated_at' => '2026-06-14 20:15:42',
-  ),
-  1 => 
-  array (
-    'id' => 2,
-    'code' => 'CBG002',
-    'name' => 'Cabang 2',
-    'address' => 'Jl. Boulevard No. 45, Panakkukang, Makassar',
-    'phone' => '081234567891',
-    'is_active' => 1,
-    'created_at' => '2026-05-17 07:58:45',
-    'updated_at' => '2026-06-14 20:15:42',
-  ),
-  2 => 
-  array (
-    'id' => 3,
-    'code' => 'CBG003',
-    'name' => 'Cabang 3',
-    'address' => 'Jl. Sultan Alauddin No. 78, Makassar',
-    'phone' => '081234567892',
-    'is_active' => 1,
-    'created_at' => '2026-05-17 07:58:45',
-    'updated_at' => '2026-06-14 20:15:42',
-  ),
-  3 => 
-  array (
-    'id' => 4,
-    'code' => 'CBG004',
-    'name' => 'Cabang 4',
-    'address' => NULL,
-    'phone' => NULL,
-    'is_active' => 1,
-    'created_at' => '2026-06-14 20:15:43',
-    'updated_at' => '2026-06-14 20:15:43',
-  ),
-  4 => 
-  array (
-    'id' => 5,
-    'code' => 'CBG005',
-    'name' => 'Cabang 5',
-    'address' => NULL,
-    'phone' => NULL,
-    'is_active' => 1,
-    'created_at' => '2026-06-14 20:15:43',
-    'updated_at' => '2026-06-14 20:15:43',
-  ),
-  5 => 
-  array (
-    'id' => 6,
-    'code' => 'CBG006',
-    'name' => 'Cabang 6',
-    'address' => NULL,
-    'phone' => NULL,
-    'is_active' => 1,
-    'created_at' => '2026-06-14 20:15:44',
-    'updated_at' => '2026-06-14 20:15:44',
-  ),
-  6 => 
-  array (
-    'id' => 7,
-    'code' => 'CBG007',
-    'name' => 'Cabang 7',
-    'address' => NULL,
-    'phone' => NULL,
-    'is_active' => 1,
-    'created_at' => '2026-06-14 20:15:45',
-    'updated_at' => '2026-06-14 20:15:45',
   ),
 ));
 
@@ -98,25 +32,27 @@ class BackupSeeder extends Seeder
     'id' => 1,
     'branch_id' => 1,
     'name' => 'Admin Utama',
-    'email' => 'superadmin@resto.com',
+    'email' => 'superadmin@kopi.com',
     'email_verified_at' => '2026-05-17 07:58:45',
-    'password' => '$2y$12$pjrs4Zl2MNkI7Tjdokb7O.m0AGhZ6SU9hz55FuR.NoIOouIp3Tl0u',
+    'password' => '$2y$12$OTVnWz5Kek15Yu9kOqx1iuZxwmb2BOI0rPf7aS8iGv6wnRo1AybAK',
     'role' => 'super_admin',
+    'can_manage_pusat' => 0,
     'is_decoy' => 0,
     'is_active' => 1,
     'remember_token' => NULL,
     'created_at' => '2026-05-17 07:58:46',
-    'updated_at' => '2026-05-17 07:58:46',
+    'updated_at' => '2026-09-26 22:18:59',
   ),
   1 => 
   array (
     'id' => 2,
     'branch_id' => 1,
-    'name' => 'Admin Cabang Sao Sao',
-    'email' => 'admincabangsaosao@resto.com',
+    'name' => 'Admin Cabang Utama',
+    'email' => 'admincabangsaosao@kopi.com',
     'email_verified_at' => '2026-05-17 07:58:46',
     'password' => '$2y$12$2Vl1kyUIdKwZisZtZ2bBj.sGUaqrOGvYun3ywbFneV0JoiReFyYz.',
     'role' => 'admin',
+    'can_manage_pusat' => 0,
     'is_decoy' => 0,
     'is_active' => 1,
     'remember_token' => NULL,
@@ -127,11 +63,12 @@ class BackupSeeder extends Seeder
   array (
     'id' => 3,
     'branch_id' => 1,
-    'name' => 'Kasir Cabang Sao Sao',
-    'email' => 'kasircabangsaosao@resto.com',
+    'name' => 'Kasir Cabang Utama',
+    'email' => 'kasircabangsaosao@kopi.com',
     'email_verified_at' => '2026-05-17 07:58:46',
     'password' => '$2y$12$pgcrCfYda8emBMWxn0QMge.qpK3znE05SFhLCvaYmLsxr6MklGejO',
     'role' => 'kasir',
+    'can_manage_pusat' => 0,
     'is_decoy' => 0,
     'is_active' => 1,
     'remember_token' => NULL,
@@ -140,228 +77,51 @@ class BackupSeeder extends Seeder
   ),
   3 => 
   array (
-    'id' => 4,
-    'branch_id' => 2,
-    'name' => 'Admin Cabang 2',
-    'email' => 'admincabang2@resto.com',
-    'email_verified_at' => '2026-05-17 07:58:46',
-    'password' => '$2y$12$IyDgs3C3RmRBVV.7CE1FkOjpno3wHCG2sNvrvP.xdlrewAyh6sMEm',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-05-17 07:58:47',
-    'updated_at' => '2026-06-14 20:15:42',
-  ),
-  4 => 
-  array (
-    'id' => 5,
-    'branch_id' => 2,
-    'name' => 'Kasir Cabang 2',
-    'email' => 'kasircabang2@resto.com',
-    'email_verified_at' => '2026-05-17 07:58:47',
-    'password' => '$2y$12$MfKc808lNzDItxlTia5L.O5uXWEb1KMPP96WPSsW4SexP5jABbYha',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-05-17 07:58:47',
-    'updated_at' => '2026-06-14 20:15:42',
-  ),
-  5 => 
-  array (
     'id' => 6,
     'branch_id' => NULL,
     'name' => 'Admin Tanpa Cabang',
-    'email' => 'admin.no.branch@resto.com',
+    'email' => 'admin.no.branch@kopi.com',
     'email_verified_at' => '2026-05-17 07:58:47',
     'password' => '$2y$12$QmCLMNyjxDVUjZZA3trjfON6FI7n6zddOfOKCrgFakwcW2Gh25qZy',
     'role' => 'admin',
+    'can_manage_pusat' => 0,
     'is_decoy' => 0,
     'is_active' => 1,
     'remember_token' => NULL,
     'created_at' => '2026-05-17 07:58:47',
     'updated_at' => '2026-05-17 07:58:47',
   ),
-  6 => 
+  4 => 
   array (
     'id' => 7,
     'branch_id' => NULL,
     'name' => 'Owner Report',
-    'email' => 'owner_report@resto.com',
+    'email' => 'owner_report@kopi.com',
     'email_verified_at' => NULL,
     'password' => '$2y$12$43oA5f13WJ5nASbAt8ttveUQ0sKES9PqEc1d5UhsCoSwsbmdnjm/i',
     'role' => 'super_admin',
+    'can_manage_pusat' => 0,
     'is_decoy' => 1,
     'is_active' => 1,
     'remember_token' => NULL,
     'created_at' => '2026-06-14 20:06:07',
     'updated_at' => '2026-06-14 20:19:32',
   ),
-  7 => 
+  5 => 
   array (
     'id' => 8,
     'branch_id' => 1,
     'name' => 'Cabang Sao Sao Report',
-    'email' => 'cabangsaosao_report@resto.com',
+    'email' => 'cabangsaosao_report@kopi.com',
     'email_verified_at' => NULL,
     'password' => '$2y$12$91YuW.nWjckrUsaigCZB6.gxqZBER2apWxfWjYO8sgnc/9CyOxcCa',
     'role' => 'admin',
+    'can_manage_pusat' => 0,
     'is_decoy' => 1,
     'is_active' => 1,
     'remember_token' => NULL,
     'created_at' => '2026-06-14 20:06:08',
     'updated_at' => '2026-06-14 20:19:32',
-  ),
-  8 => 
-  array (
-    'id' => 9,
-    'branch_id' => 3,
-    'name' => 'Admin Cabang 3',
-    'email' => 'admincabang3@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$zaMtq1YNbMaog1xfB.EeBOWEQAZ34nHvuSIl/aKvAC.4LNuftDYVC',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:42',
-    'updated_at' => '2026-06-14 20:15:42',
-  ),
-  9 => 
-  array (
-    'id' => 10,
-    'branch_id' => 3,
-    'name' => 'Kasir Cabang 3',
-    'email' => 'kasircabang3@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$WWly0nvFzBn46nrkb5BQOOxGfGaehggR2d4Zn3kEtkW6mG/iq.4Se',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:43',
-    'updated_at' => '2026-06-14 20:15:43',
-  ),
-  10 => 
-  array (
-    'id' => 11,
-    'branch_id' => 4,
-    'name' => 'Admin Cabang 4',
-    'email' => 'admincabang4@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$ViKCPHJl2yd1RowmqXWUFOv2tUyfCkX44093UGZp6t/du.x9u9Qvq',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:43',
-    'updated_at' => '2026-06-14 20:15:43',
-  ),
-  11 => 
-  array (
-    'id' => 12,
-    'branch_id' => 4,
-    'name' => 'Kasir Cabang 4',
-    'email' => 'kasircabang4@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$PKFNh.RotdtcnPoiFS6VFezeKqXgbw.Umql9kHug8vhqBRSVsWcjG',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:43',
-    'updated_at' => '2026-06-14 20:15:43',
-  ),
-  12 => 
-  array (
-    'id' => 13,
-    'branch_id' => 5,
-    'name' => 'Admin Cabang 5',
-    'email' => 'admincabang5@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$0.ix4eESaYwRPOUzfijtG.7SCzf9OL/smeY/HJI8w.mB8fG7nts7W',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:44',
-    'updated_at' => '2026-06-14 20:15:44',
-  ),
-  13 => 
-  array (
-    'id' => 14,
-    'branch_id' => 5,
-    'name' => 'Kasir Cabang 5',
-    'email' => 'kasircabang5@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$Y15B/RODv27/ghFckrGvcekZTvY8JY8lVqQb7HAe.fSkf0/644hGC',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:44',
-    'updated_at' => '2026-06-14 20:15:44',
-  ),
-  14 => 
-  array (
-    'id' => 15,
-    'branch_id' => 6,
-    'name' => 'Admin Cabang 6',
-    'email' => 'admincabang6@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$Vi.LZ2Ao1EiRrm02g1yAq.8FGusvfPMqOfJxeRXUK4tz6N3f7KT1C',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:44',
-    'updated_at' => '2026-06-14 20:15:44',
-  ),
-  15 => 
-  array (
-    'id' => 16,
-    'branch_id' => 6,
-    'name' => 'Kasir Cabang 6',
-    'email' => 'kasircabang6@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$m5l1A21bDGAmU.Ow6TQRx.VhEgVQr2PJmDg2j4C3Y6jemMajHhQ5K',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:45',
-    'updated_at' => '2026-06-14 20:15:45',
-  ),
-  16 => 
-  array (
-    'id' => 17,
-    'branch_id' => 7,
-    'name' => 'Admin Cabang 7',
-    'email' => 'admincabang7@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$tWvHzyEyX136f5Y4vqPbeOlD5joSBEfTR4L2liwhaenF8yJjiLBxC',
-    'role' => 'admin',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:45',
-    'updated_at' => '2026-06-14 20:15:45',
-  ),
-  17 => 
-  array (
-    'id' => 18,
-    'branch_id' => 7,
-    'name' => 'Kasir Cabang 7',
-    'email' => 'kasircabang7@resto.com',
-    'email_verified_at' => NULL,
-    'password' => '$2y$12$V57dDjfz3sYTqq5p53iqlOltMvcX4pLJPlPpuy9aQD347dg0/Qyu.',
-    'role' => 'kasir',
-    'is_decoy' => 0,
-    'is_active' => 1,
-    'remember_token' => NULL,
-    'created_at' => '2026-06-14 20:15:45',
-    'updated_at' => '2026-06-14 20:15:45',
   ),
 ));
 
@@ -534,7 +294,7 @@ class BackupSeeder extends Seeder
   array (
     'id' => 1,
     'barcode' => 'P001',
-    'name' => 'Coto Makassar Daging',
+    'name' => 'Espresso',
     'image' => 'products/8mRm9JdRZIXcY4A9NA9KtWIgfo5xKTXKtE0VUBbo.webp',
     'category_id' => 1,
     'unit_id' => 1,
@@ -550,7 +310,7 @@ class BackupSeeder extends Seeder
   array (
     'id' => 2,
     'barcode' => 'P002',
-    'name' => 'Coto Makassar Campur',
+    'name' => 'Cappuccino',
     'image' => 'products/EksVtuvUERr8qR1m1CnqXKZ7hqBMDktzEVqpSaAH.webp',
     'category_id' => 1,
     'unit_id' => 1,
@@ -616,7 +376,7 @@ class BackupSeeder extends Seeder
   0 => 
   array (
     'id' => 1,
-    'name' => 'Daging Sapi',
+    'name' => 'Biji Kopi Arabica',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '10.000000',
@@ -630,7 +390,7 @@ class BackupSeeder extends Seeder
   1 => 
   array (
     'id' => 2,
-    'name' => 'Daging Sapi',
+    'name' => 'Biji Kopi Arabica',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '10.000000',
@@ -644,7 +404,7 @@ class BackupSeeder extends Seeder
   2 => 
   array (
     'id' => 3,
-    'name' => 'Kacang Tanah',
+    'name' => 'Susu Segar',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -658,7 +418,7 @@ class BackupSeeder extends Seeder
   3 => 
   array (
     'id' => 4,
-    'name' => 'Bawang Merah',
+    'name' => 'Gula Aren',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -672,7 +432,7 @@ class BackupSeeder extends Seeder
   4 => 
   array (
     'id' => 5,
-    'name' => 'Bawang Putih',
+    'name' => 'Sirup Karamel',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -714,7 +474,7 @@ class BackupSeeder extends Seeder
   7 => 
   array (
     'id' => 8,
-    'name' => 'Daging Sapi',
+    'name' => 'Biji Kopi Arabica',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '10.000000',
@@ -728,7 +488,7 @@ class BackupSeeder extends Seeder
   8 => 
   array (
     'id' => 9,
-    'name' => 'Kacang Tanah',
+    'name' => 'Susu Segar',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -742,7 +502,7 @@ class BackupSeeder extends Seeder
   9 => 
   array (
     'id' => 10,
-    'name' => 'Bawang Merah',
+    'name' => 'Gula Aren',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -756,7 +516,7 @@ class BackupSeeder extends Seeder
   10 => 
   array (
     'id' => 11,
-    'name' => 'Bawang Putih',
+    'name' => 'Sirup Karamel',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '5.000000',
@@ -798,7 +558,7 @@ class BackupSeeder extends Seeder
   13 => 
   array (
     'id' => 14,
-    'name' => 'Royco',
+    'name' => 'Biji Kopi Robusta',
     'unit_id' => 6,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -812,7 +572,7 @@ class BackupSeeder extends Seeder
   14 => 
   array (
     'id' => 15,
-    'name' => 'Miwon',
+    'name' => 'Sirup Vanilla',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -826,7 +586,7 @@ class BackupSeeder extends Seeder
   15 => 
   array (
     'id' => 16,
-    'name' => 'Jintan',
+    'name' => 'Susu Kental Manis',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -840,7 +600,7 @@ class BackupSeeder extends Seeder
   16 => 
   array (
     'id' => 17,
-    'name' => 'Ketumbar',
+    'name' => 'Cokelat Bubuk',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -854,7 +614,7 @@ class BackupSeeder extends Seeder
   17 => 
   array (
     'id' => 18,
-    'name' => 'Sere',
+    'name' => 'Matcha Powder',
     'unit_id' => 7,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -868,7 +628,7 @@ class BackupSeeder extends Seeder
   18 => 
   array (
     'id' => 19,
-    'name' => 'Lengkuas',
+    'name' => 'Krimmer',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -882,7 +642,7 @@ class BackupSeeder extends Seeder
   19 => 
   array (
     'id' => 20,
-    'name' => 'Minyak',
+    'name' => 'Whipped Cream',
     'unit_id' => 8,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -896,7 +656,7 @@ class BackupSeeder extends Seeder
   20 => 
   array (
     'id' => 21,
-    'name' => 'Lombok Besar',
+    'name' => 'Oat Milk',
     'unit_id' => 4,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',
@@ -910,7 +670,7 @@ class BackupSeeder extends Seeder
   21 => 
   array (
     'id' => 22,
-    'name' => 'Giling Bumbu',
+    'name' => 'Sirup Hazelnut',
     'unit_id' => 9,
     'current_stock' => '0.000000',
     'min_stock' => '0.000000',

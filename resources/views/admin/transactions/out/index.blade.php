@@ -3,25 +3,25 @@
 @section('title', 'Barang Keluar')
 
 @section('content')
-<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+<div class="bg-gray-50 p-6 rounded-md shadow-sm border border-gray-200">
 
     <div class="flex items-center justify-between mb-6">
         <div>
             <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                <span class="iconify text-blue-600" data-icon="mdi:package-variant-closed-remove"></span>
+                <span class="iconify text-black" data-icon="mdi:package-variant-closed-remove"></span>
                 Transaksi Barang Keluar
             </h2>
             <p class="text-sm text-gray-500 mt-1">Semua transaksi penjualan barang</p>
         </div>
         <a href="{{ route('admin.transactions.out.selectCustomer') }}"
-            class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2">
+            class="px-5 py-2.5 bg-black text-white text-white rounded-md hover:bg-gray-800 transition font-medium flex items-center gap-2">
             <span class="iconify" data-icon="mdi:plus"></span>
             Transaksi Baru
         </a>
     </div>
 
     <div class="overflow-x-auto border rounded overflow-hidden border-gray-200">
-        <table class="min-w-full text-sm text-left ">
+        <table class="min-w-full text-sm text-left">
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                     <th class="px-4 py-3">Tanggal</th>
@@ -39,14 +39,14 @@
                     <td class="px-4 py-3 font-semibold">Rp {{ number_format($entry->total_amount, 0, ',', '.') }}</td>
                     <td class="px-4 py-3">
                         <span
-                            class="px-3 py-1 rounded-full text-xs font-medium
-                            {{ $entry->payment_status === 'LUNAS' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                            class="px-3 py-1 rounded-md text-xs font-medium
+                            {{ $entry->payment_status === 'LUNAS' ? 'bg-gray-50 border border-gray-200 text-black' : 'bg-yellow-100 text-yellow-700' }}">
                             {{ strtoupper($entry->payment_status) }}
                         </span>
                     </td>
                     <td class="px-4 py-3 text-center">
                         <a href="{{ route('admin.transactions.out.show', $entry->id) }}"
-                            class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                            class="text-black hover:text-black text-sm font-medium">
                             Detail
                         </a>
                     </td>

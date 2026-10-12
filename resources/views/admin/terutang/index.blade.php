@@ -3,12 +3,12 @@
 @section('title', 'Terutang')
 
 @section('content')
-<div class="bg-white p-6 rounded-xl shadow-sm border">
+<div class="bg-gray-50 p-6 rounded-md shadow-sm border">
 
     <h2 class="text-xl font-semibold text-gray-800 mb-6">📄 Daftar Terutang</h2>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border rounded-lg overflow-hidden">
+        <table class="min-w-full text-sm text-left border rounded-md overflow-hidden">
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                     <th class="px-4 py-3">Tanggal</th>
@@ -33,7 +33,7 @@
                     </td>
                     <td class="px-4 py-3">
                         @if ($item->status === 'lunas')
-                        <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700">Lunas</span>
+                        <span class="px-2 py-1 text-xs rounded bg-gray-50 border border-gray-200 text-black">Lunas</span>
                         @else
                         <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-700">Belum Lunas</span>
                         @endif
@@ -47,7 +47,7 @@
                             <input type="hidden" name="status" value="lunas">
                             <button type="button"
                                 onclick="confirmAction('lunas-form-{{ $item->id }}', 'Tandai hutang ini sebagai lunas?')"
-                                class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700">
+                                class="px-3 py-1 text-xs bg-black text-white text-white rounded hover:bg-gray-800">
                                 Tandai Lunas
                             </button>
                         </form>

@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'super_admin' => SuperAdminMiddleware::class,
             'admin' => AdminMiddleware::class,
             'kasir' => KasirMiddleware::class,
+            'pos_unlocked' => \App\Http\Middleware\EnsurePosUnlocked::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             'api/pos/sync',

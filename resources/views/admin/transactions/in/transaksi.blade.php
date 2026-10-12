@@ -6,8 +6,8 @@
 <div x-data="transactionPage()" class="max-w-7xl mx-auto space-y-6">
 
     <!-- Header Stat -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600
-                text-white p-6 rounded-2xl shadow-lg">
+    <div class="bg-gray-50 border border-gray-200
+                text-white p-6 rounded-md shadow-sm">
 
         <h2 class="text-lg font-medium">
             Transaksi Barang Masuk
@@ -26,9 +26,9 @@
     <div class="flex justify-end gap-2">
 
         <!-- Tambah Transaksi -->
-        <a href="{{ route('admin.transactions.in.create', $supplier->id) }}" class="flex items-center gap-2 px-4 py-2 bg-blue-600
-              text-white text-sm rounded-lg shadow
-              hover:bg-blue-700 transition whitespace-nowrap">
+        <a href="{{ route('admin.transactions.in.create', $supplier->id) }}" class="flex items-center gap-2 px-4 py-2 bg-black text-white
+              text-white text-sm rounded-md shadow
+              hover:bg-gray-800 transition whitespace-nowrap">
 
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -43,7 +43,7 @@
             `&filter=` + filter +
             `&start_date=` + start_date +
             `&end_date=` + end_date" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-red-600
-              text-white text-sm rounded-lg shadow
+              text-white text-sm rounded-md shadow
               hover:bg-red-700 transition whitespace-nowrap">
 
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -60,17 +60,17 @@
 
 
     <!-- FILTER BAR -->
-    <div class="mt-4 bg-white p-4 rounded-2xl shadow-sm border">
+    <div class="mt-4 bg-gray-50 p-4 rounded-md shadow-sm border">
 
         <div class="flex flex-wrap items-center gap-3">
 
             <!-- Search -->
             <input type="text" x-model="search" @input.debounce.500ms="fetchData()" placeholder="Cari nama barang..."
-                class="px-4 py-2 text-sm border rounded-lg w-64">
+                class="px-4 py-2 text-sm border rounded-md w-64">
 
             <!-- Quick Filter -->
             <select x-model="filter" @change="start_date=''; end_date=''; fetchData()"
-                class="px-4 py-2 text-sm border rounded-lg w-44">
+                class="px-4 py-2 text-sm border rounded-md w-44">
                 <option value="">Semua Periode</option>
                 <option value="today">Hari Ini</option>
                 <option value="month">Bulan Ini</option>
@@ -78,12 +78,12 @@
 
             <!-- Date Range -->
             <input type="date" x-model="start_date" @change="filter=''; fetchData()"
-                class="px-3 py-2 text-sm border rounded-lg">
+                class="px-3 py-2 text-sm border rounded-md">
 
             <span class="text-gray-400 text-sm">s/d</span>
 
             <input type="date" x-model="end_date" @change="filter=''; fetchData()"
-                class="px-3 py-2 text-sm border rounded-lg">
+                class="px-3 py-2 text-sm border rounded-md">
 
         </div>
 
@@ -109,7 +109,7 @@
 
         fetchData(pageUrl = null) {
 
-            let baseUrl = "{{ route('admin.transactions.in.perSupplier', $supplier->id) }}";
+            let baseUrl ="{{ route('admin.transactions.in.perSupplier', $supplier->id) }}";
 
             let url = pageUrl ? pageUrl : baseUrl +
                 '?search=' + this.search +

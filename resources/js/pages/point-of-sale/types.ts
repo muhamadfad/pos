@@ -30,6 +30,7 @@ export interface CartItem {
     stock?: number;
     image?: string | null;
     is_custom?: boolean;
+    notes?: string;
 }
 
 export interface CashierShift {

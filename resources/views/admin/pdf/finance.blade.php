@@ -35,7 +35,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Coto Makassar Selera Rakyat</h1>
+        <h1>Kopi Selera Rakyat</h1>
         <p>{{ $title }}</p>
     </div>
 

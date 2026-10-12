@@ -21,9 +21,9 @@
 
             :root,
             :host {
-                --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-                --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-                --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+                --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+                --font-serif: ui-serif, Georgia, Cambria,"Times New Roman", Times, serif;
+                --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;
                 --color-red-50: oklch(.971 .013 17.38);
                 --color-red-100: oklch(.936 .032 17.717);
                 --color-red-200: oklch(.885 .062 18.334);
@@ -344,19 +344,19 @@
                 --shadow-2xs: 0 1px #0000000d;
                 --shadow-xs: 0 1px 2px 0 #0000000d;
                 --shadow-sm: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
-                --shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
-                --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
-                --shadow-xl: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
-                --shadow-2xl: 0 25px 50px -12px #00000040;
+                --shadow-sm: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+                --shadow-sm: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+                --shadow-sm: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+                --shadow-sm: 0 25px 50px -12px #00000040;
                 --inset-shadow-2xs: inset 0 1px #0000000d;
                 --inset-shadow-xs: inset 0 1px 1px #0000000d;
                 --inset-shadow-sm: inset 0 2px 4px #0000000d;
                 --drop-shadow-xs: 0 1px 1px #0000000d;
                 --drop-shadow-sm: 0 1px 2px #00000026;
-                --drop-shadow-md: 0 3px 3px #0000001f;
-                --drop-shadow-lg: 0 4px 4px #00000026;
-                --drop-shadow-xl: 0 9px 7px #0000001a;
-                --drop-shadow-2xl: 0 25px 25px #00000026;
+                --drop-shadow-sm: 0 3px 3px #0000001f;
+                --drop-shadow-sm: 0 4px 4px #00000026;
+                --drop-shadow-sm: 0 9px 7px #0000001a;
+                --drop-shadow-sm: 0 25px 25px #00000026;
                 --ease-in: cubic-bezier(.4, 0, 1, 1);
                 --ease-out: cubic-bezier(0, 0, .2, 1);
                 --ease-in-out: cubic-bezier(.4, 0, .2, 1);
@@ -413,7 +413,7 @@
                 -moz-tab-size: 4;
                 tab-size: 4;
                 line-height: 1.5;
-                font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+                font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji");
                 font-feature-settings: var(--default-font-feature-settings, normal);
                 font-variation-settings: var(--default-font-variation-settings, normal);
                 -webkit-tap-highlight-color: transparent
@@ -459,7 +459,7 @@
             kbd,
             samp,
             pre {
-                font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+                font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace);
                 font-feature-settings: var(--default-mono-font-feature-settings, normal);
                 font-variation-settings: var(--default-mono-font-variation-settings, normal);
                 font-size: 1em
@@ -859,7 +859,7 @@
                 overflow: hidden
             }
 
-            .rounded-full {
+            .rounded-md {
                 border-radius: 3.40282e38px
             }
 
@@ -917,7 +917,7 @@
                 background-color: #fff2f2
             }
 
-            .bg-white {
+            .bg-gray-50 {
                 background-color: var(--color-white)
             }
 
@@ -1256,7 +1256,7 @@
                         border-color: var(--color-white)
                     }
 
-                    .dark\:hover\:bg-white:hover {
+                    .dark\:hover\:bg-gray-50:hover {
                         background-color: var(--color-white)
                     }
                 }
@@ -1319,225 +1319,225 @@
         }
 
         @property --tw-translate-x {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0
         }
 
         @property --tw-translate-y {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0
         }
 
         @property --tw-translate-z {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0
         }
 
         @property --tw-rotate-x {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: rotateX(0)
         }
 
         @property --tw-rotate-y {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: rotateY(0)
         }
 
         @property --tw-rotate-z {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: rotateZ(0)
         }
 
         @property --tw-skew-x {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: skewX(0)
         }
 
         @property --tw-skew-y {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: skewY(0)
         }
 
         @property --tw-space-x-reverse {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0
         }
 
         @property --tw-border-style {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: solid
         }
 
         @property --tw-leading {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-font-weight {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0 0 #0000
         }
 
         @property --tw-shadow-color {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-inset-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0 0 #0000
         }
 
         @property --tw-inset-shadow-color {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-ring-color {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-ring-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0 0 #0000
         }
 
         @property --tw-inset-ring-color {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-inset-ring-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0 0 #0000
         }
 
         @property --tw-ring-inset {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-ring-offset-width {
-            syntax: "<length>";
+            syntax:"<length>";
             inherits: false;
             initial-value: 0
         }
 
         @property --tw-ring-offset-color {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: #fff
         }
 
         @property --tw-ring-offset-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
             initial-value: 0 0 #0000
         }
 
         @property --tw-blur {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-brightness {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-contrast {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-grayscale {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-hue-rotate {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-invert {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-opacity {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-saturate {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-sepia {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-drop-shadow {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-duration {
-            syntax: "*";
+            syntax:"*";
             inherits: false
         }
 
         @property --tw-content {
-            syntax: "*";
+            syntax:"*";
             inherits: false;
-            initial-value: ""
+            initial-value:""
         }
     </style>
     @endif
 </head>
 
 <body
-    class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    class="bg-gray-50 dark:bg-[#0a0a0a] text-black flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
     <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
         @if (Route::has('login'))
         <nav class="flex items-center justify-end gap-4">
             @auth
             <a href="{{ url('/dashboard') }}"
-                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                class="inline-block px-5 py-1.5 dark:text-black border-[#19140035] hover:border-[#1915014a] border text-black dark:border-gray-200 dark:hover:border-gray-200 rounded-sm text-sm leading-normal">
                 Dashboardd
             </a>
             @else
             <a href="{{ route('login') }}"
-                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal">
+                class="inline-block px-5 py-1.5 dark:text-black text-black border border-transparent hover:border-[#19140035] dark:hover:border-gray-200 rounded-sm text-sm leading-normal">
                 Log in
             </a>
 
             @if (Route::has('register'))
             <a href="{{ route('register') }}"
-                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                class="inline-block px-5 py-1.5 dark:text-black border-[#19140035] hover:border-[#1915014a] border text-black dark:border-gray-200 dark:hover:border-gray-200 rounded-sm text-sm leading-normal">
                 Register
             </a>
             @endif
@@ -1549,23 +1549,23 @@
         class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
         <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
             <div
-                class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
+                class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-gray-50 dark:bg-[#161615] dark:text-black shadow-sm dark:shadow-sm rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
                 <h1 class="mb-1 font-medium">Let's get started</h1>
-                <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Laravel has an incredibly rich ecosystem. <br>We
+                <p class="mb-2 text-black dark:text-black">Laravel has an incredibly rich ecosystem. <br>We
                     suggest starting with the following.</p>
                 <ul class="flex flex-col mb-4 lg:mb-6">
                     <li
-                        class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
-                        <span class="relative py-1 bg-white dark:bg-[#161615]">
+                        class="flex items-center gap-4 py-2 relative before:border-l before:border-gray-200 dark:before:border-gray-200 before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
+                        <span class="relative py-1 bg-gray-50 dark:bg-[#161615]">
                             <span
-                                class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
-                                <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                                class="flex items-center justify-center rounded-md bg-gray-50 dark:bg-[#161615] shadow-sm w-3.5 h-3.5 border dark:border-gray-200 border-gray-200">
+                                <span class="rounded-md bg-white dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
                             </span>
                         </span>
                         <span>
                             Read the
                             <a href="https://laravel.com/docs" target="_blank"
-                                class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-black dark:text-black ml-1">
                                 <span>Documentation</span>
                                 <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
                                     xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5">
@@ -1576,17 +1576,17 @@
                         </span>
                     </li>
                     <li
-                        class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1/2 before:top-0 before:left-[0.4rem] before:absolute">
-                        <span class="relative py-1 bg-white dark:bg-[#161615]">
+                        class="flex items-center gap-4 py-2 relative before:border-l before:border-gray-200 dark:before:border-gray-200 before:bottom-1/2 before:top-0 before:left-[0.4rem] before:absolute">
+                        <span class="relative py-1 bg-gray-50 dark:bg-[#161615]">
                             <span
-                                class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
-                                <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                                class="flex items-center justify-center rounded-md bg-gray-50 dark:bg-[#161615] shadow-sm w-3.5 h-3.5 border dark:border-gray-200 border-gray-200">
+                                <span class="rounded-md bg-white dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
                             </span>
                         </span>
                         <span>
                             Watch video tutorials at
                             <a href="https://laracasts.com" target="_blank"
-                                class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-black dark:text-black ml-1">
                                 <span>Laracasts</span>
                                 <svg width="10" height="11" viewBox="0 0 10 11" fill="none"
                                     xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5">
@@ -1600,16 +1600,16 @@
                 <ul class="flex gap-3 text-sm leading-normal">
                     <li>
                         <a href="https://cloud.laravel.com" target="_blank"
-                            class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
+                            class="inline-block dark:bg-gray-50 dark:border-gray-200 dark:text-black dark:hover:bg-gray-50 dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
                             Deploy now
                         </a>
                     </li>
                 </ul>
             </div>
             <div
-                class="bg-[#fff2f2] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden">
+                class="bg-gray-50 dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden">
                 {{-- Laravel Logo --}}
-                <svg class="w-full text-[#F53003] dark:text-[#F61500] transition-all translate-y-0 opacity-100 max-w-none duration-750 starting:opacity-0 starting:translate-y-6"
+                <svg class="w-full text-black dark:text-black transition-all translate-y-0 opacity-100 max-w-none duration-750 starting:opacity-0 starting:translate-y-6"
                     viewBox="0 0 438 104" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.2036 -3H0V102.197H49.5189V86.7187H17.2036V-3Z" fill="currentColor" />
                     <path
@@ -1966,7 +1966,7 @@
                     </g>
                 </svg>
                 <div
-                    class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+                    class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg shadow-sm dark:shadow-sm">
                 </div>
             </div>
         </main>

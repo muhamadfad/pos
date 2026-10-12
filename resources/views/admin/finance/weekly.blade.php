@@ -8,19 +8,19 @@
     <!-- Branding & Range -->
     <div class="flex flex-col md:flex-row flex-wrap md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center gap-3">
-                <span class="p-2 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
+            <h1 class="text-3xl font-semibold text-black tracking-tight flex items-center gap-3">
+                <span class="p-2 bg-black text-white rounded-md shadow-sm">
                     <span class="iconify" data-icon="mdi:calendar-week"></span>
                 </span>
                 Laporan Mingguan
             </h1>
-            <p class="text-slate-500 font-medium">{{ $start->translatedFormat('d M Y') }} - {{ $end->translatedFormat('d M Y') }}</p>
+            <p class="text-gray-500 font-medium">{{ $start->translatedFormat('d M Y') }} - {{ $end->translatedFormat('d M Y') }}</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
             <!-- Branch Filter (Hanya untuk Super Admin) -->
             @if($isSuperAdmin ?? false)
-            <select id="branchFilter" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500">
+            <select id="branchFilter" class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-[#1677ff]">
                 <option value="">Semua Cabang</option>
                 @foreach($branches ?? [] as $branch)
                 <option value="{{ $branch->id }}" {{ ($branchId ?? '') == $branch->id ? 'selected' : '' }}>
@@ -31,31 +31,31 @@
             @endif
             
             
-            <a href="{{ route('admin.finance.export', array_merge(request()->all(), ['period' => 'weekly', 'branch_id' => $branchId])) }}" class="whitespace-nowrap flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-sm font-bold hover:bg-red-100 transition-all">
+            <a href="{{ route('admin.finance.export', array_merge(request()->all(), ['period' => 'weekly', 'branch_id' => $branchId])) }}" class="whitespace-nowrap flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-md text-sm font-bold hover:bg-red-100 transition-all">
                 <span class="iconify" data-icon="mdi:file-pdf-box"></span> Export PDF
             </a>
-            <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-2xl">
+            <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-md">
                 <a href="{{ route('admin.finance.index') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Ringkasan</a>
+                    class="px-4 py-2 rounded-md text-xs font-bold transition-all {{ request()->routeIs('admin.finance.index') ? 'bg-gray-50 text-black shadow-sm' : 'text-gray-500 hover:text-slate-700' }}">Ringkasan</a>
                 <a href="{{ route('admin.finance.daily') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Harian</a>
+                    class="px-4 py-2 rounded-md text-xs font-bold transition-all {{ request()->routeIs('admin.finance.daily') ? 'bg-gray-50 text-black shadow-sm' : 'text-gray-500 hover:text-slate-700' }}">Harian</a>
                 <a href="{{ route('admin.finance.weekly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Mingguan</a>
+                    class="px-4 py-2 rounded-md text-xs font-bold transition-all {{ request()->routeIs('admin.finance.weekly') ? 'bg-gray-50 text-black shadow-sm' : 'text-gray-500 hover:text-slate-700' }}">Mingguan</a>
                 <a href="{{ route('admin.finance.monthly') . ($branchId ? '?branch_id=' . $branchId : '') }}"
-                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">Bulanan</a>
+                    class="px-4 py-2 rounded-md text-xs font-bold transition-all {{ request()->routeIs('admin.finance.monthly') ? 'bg-gray-50 text-black shadow-sm' : 'text-gray-500 hover:text-slate-700' }}">Bulanan</a>
             </div>
         </div>
     </div>
     
     <!-- Info Cabang -->
     @if(isset($currentBranchName))
-    <div class="bg-indigo-50 rounded-2xl p-3 px-5 flex items-center justify-between">
+    <div class="bg-gray-50 rounded-md p-3 px-5 flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <span class="iconify text-indigo-600" data-icon="mdi:store"></span>
+            <span class="iconify text-black" data-icon="mdi:store"></span>
             <span class="text-sm font-semibold text-indigo-800">Cabang: {{ $currentBranchName }}</span>
         </div>
         @if(($isSuperAdmin ?? false) && ($branchId ?? false))
-        <a href="{{ route('admin.finance.weekly') }}" class="text-xs text-indigo-600 hover:text-indigo-800">Reset Filter</a>
+        <a href="{{ route('admin.finance.weekly') }}" class="text-xs text-black hover:text-black">Reset Filter</a>
         @endif
     </div>
     @endif
@@ -64,56 +64,56 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Income Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Total Pendapatan</p>
+        <div class="relative overflow-hidden bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-sm transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white border border-gray-200 rounded-md opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.2em] mb-3 relative">Total Pendapatan</p>
             <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-emerald-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['income'], 0, ',', '.') }}</span>
+                <span class="text-sm font-bold text-black">Rp</span>
+                <span class="text-3xl font-semibold text-black tracking-tight">{{ number_format($finance['income'], 0, ',', '.') }}</span>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-black bg-white border border-gray-200 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:trending-up"></span>
                 Penjualan Bersih
             </div>
         </div>
 
         <!-- HPP Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">HPP (Cost of Goods Sold)</p>
+        <div class="relative overflow-hidden bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-sm transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-50 rounded-md opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.2em] mb-3 relative">HPP (Cost of Goods Sold)</p>
             <div class="flex items-baseline gap-1 relative">
                 <span class="text-sm font-bold text-orange-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['cost'], 0, ',', '.') }}</span>
+                <span class="text-3xl font-semibold text-black tracking-tight">{{ number_format($finance['cost'], 0, ',', '.') }}</span>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:package-variant"></span>
                 Modal Bahan Baku
             </div>
         </div>
 
         <!-- Expense Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Biaya Operasional</p>
+        <div class="relative overflow-hidden bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-sm transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-50 rounded-md opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.2em] mb-3 relative">Biaya Operasional</p>
             <div class="flex items-baseline gap-1 relative">
                 <span class="text-sm font-bold text-rose-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['expenses'], 0, ',', '.') }}</span>
+                <span class="text-3xl font-semibold text-black tracking-tight">{{ number_format($finance['expenses'], 0, ',', '.') }}</span>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:cash-remove"></span>
                 Listrik, Gaji, dll
             </div>
         </div>
 
         <!-- Pembayaran Supplier Card -->
-        <div class="relative overflow-hidden bg-white p-7 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 relative">Pembayaran Supplier</p>
+        <div class="relative overflow-hidden bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-sm transition-all group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white border border-gray-200 rounded-md opacity-50 group-hover:scale-110 transition-transform"></div>
+            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.2em] mb-3 relative">Pembayaran Supplier</p>
             <div class="flex items-baseline gap-1 relative">
-                <span class="text-sm font-bold text-purple-500">Rp</span>
-                <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($finance['supplierPaid'], 0, ',', '.') }}</span>
+                <span class="text-sm font-bold text-black">Rp</span>
+                <span class="text-3xl font-semibold text-black tracking-tight">{{ number_format($finance['supplierPaid'], 0, ',', '.') }}</span>
             </div>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-black bg-white border border-gray-200 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:truck-outline"></span>
                 Pembelian Stok
             </div>
@@ -125,17 +125,17 @@
         
         @if($isSuperAdmin)
 <!-- PROFIT Card (Keuntungan Bersih) -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-7 rounded-[2rem] shadow-xl group">
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full opacity-30 group-hover:scale-110 transition-transform"></div>
+        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-5 rounded-lg shadow-sm group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-gray-50/20 rounded-md opacity-30 group-hover:scale-110 transition-transform"></div>
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-md bg-gray-50/20 flex items-center justify-center">
                     <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
                 </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
+                <p class="text-[11px] font-semibold text-white/60 uppercase tracking-widest">Keuntungan Bersih</p>
             </div>
-            <p class="text-3xl font-black text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
+            <p class="text-3xl font-semibold text-white tracking-tight">Rp {{ number_format($finance['profit'], 0, ',', '.') }}</p>
             <p class="text-xs text-white/60 mt-2">Pendapatan - HPP - Biaya Operasional</p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-indigo-100 bg-white/20 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[11px] font-medium text-gray-700 bg-gray-50/20 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:chart-line"></span>
                 Laba Bersih Minggu Ini
             </div>
@@ -146,24 +146,24 @@
 
         <!-- Net Cashflow Card -->
         @php $isPositive = $finance['netCashflow'] >= 0; @endphp
-        <div class="relative overflow-hidden {{ $isPositive ? 'bg-emerald-600 shadow-emerald-100' : 'bg-rose-600 shadow-rose-100' }} p-7 rounded-[2rem] shadow-xl group">
+        <div class="relative overflow-hidden {{ $isPositive ? 'bg-black text-white ' : 'bg-rose-600 ' }} p-5 rounded-lg shadow-sm group">
             <div class="absolute right-0 bottom-0 opacity-10">
                 <span class="iconify text-9xl text-white" data-icon="{{ $isPositive ? 'mdi:safe' : 'mdi:alert-circle' }}"></span>
             </div>
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-md bg-gray-50/20 flex items-center justify-center">
                     <span class="iconify text-white text-xl" data-icon="mdi:currency-usd"></span>
                 </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Arus Kas Bersih</p>
+                <p class="text-[11px] font-semibold text-white/60 uppercase tracking-widest">Arus Kas Bersih</p>
             </div>
             <div class="flex items-baseline gap-1">
                 <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
+                <span class="text-3xl font-semibold text-white tracking-tight">{{ number_format($finance['netCashflow'], 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
                 Pendapatan - (Pembayaran Supplier + Operasional)
             </p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-gray-50/20 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="{{ $isPositive ? 'mdi:trending-up' : 'mdi:trending-down' }}"></span>
                 {{ $isPositive ? 'Surplus Kas' : 'Defisit Kas' }}
             </div>
@@ -173,69 +173,69 @@
             $netCash = $finance['income_cash'] - ($finance['expenses'] + $finance['supplierPaid']);
             $isCashPositive = $netCash >= 0;
             $cashBgColor = $isCashPositive ? 'bg-gradient-to-br from-teal-500 to-emerald-600' : 'bg-gradient-to-br from-rose-500 to-red-600';
-            $cashShadowColor = $isCashPositive ? 'shadow-emerald-500/30' : 'shadow-rose-500/30';
+            $cashShadowColor = $isCashPositive ? '' : '';
         @endphp
-        <div class="{{$cashBgColor}} rounded-[2rem] p-7 text-white shadow-xl {{$cashShadowColor}} relative overflow-hidden group">
-            <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500"></div>
+        <div class="{{$cashBgColor}} rounded-lg p-5 text-white shadow-sm {{$cashShadowColor}} relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-gray-50/10 rounded-md blur-2xl group-hover:bg-gray-50/20 transition-colors duration-500"></div>
             <div class="absolute right-4 bottom-4 opacity-10">
                 <span class="iconify text-8xl" data-icon="mdi:cash-fast"></span>
             </div>
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-md bg-gray-50/20 flex items-center justify-center">
                     <span class="iconify text-white text-xl" data-icon="mdi:cash-multiple"></span>
                 </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Total Kas Tunai</p>
+                <p class="text-[11px] font-semibold text-white/60 uppercase tracking-widest">Total Kas Tunai</p>
             </div>
             <div class="flex items-baseline gap-1">
                 <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($netCash, 0, ',', '.') }}</span>
+                <span class="text-3xl font-semibold text-white tracking-tight">{{ number_format($netCash, 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
                 Pendapatan Tunai - Biaya Operasional
             </p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-gray-50/20 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:wallet"></span>
                 Uang Fisik Untuk Disetor
             </div>
         </div>
         <!-- Total Kas Transfer -->
-        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[2rem] p-7 text-white shadow-xl shadow-blue-500/30 relative overflow-hidden group">
-            <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors duration-500"></div>
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg p-5 text-white shadow-sm  relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-32 h-32 bg-gray-50/10 rounded-md blur-2xl group-hover:bg-gray-50/20 transition-colors duration-500"></div>
             <div class="absolute right-4 bottom-4 opacity-10">
                 <span class="iconify text-8xl" data-icon="mdi:bank-transfer"></span>
             </div>
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-md bg-gray-50/20 flex items-center justify-center">
                     <span class="iconify text-white text-xl" data-icon="mdi:bank-transfer"></span>
                 </div>
-                <p class="text-[11px] font-black text-white/60 uppercase tracking-widest">Total Kas Transfer</p>
+                <p class="text-[11px] font-semibold text-white/60 uppercase tracking-widest">Total Kas Transfer</p>
             </div>
             <div class="flex items-baseline gap-1">
                 <span class="text-sm font-bold text-white/70">Rp</span>
-                <span class="text-3xl font-black text-white tracking-tight">{{ number_format($finance['income_transfer'], 0, ',', '.') }}</span>
+                <span class="text-3xl font-semibold text-white tracking-tight">{{ number_format($finance['income_transfer'], 0, ',', '.') }}</span>
             </div>
             <p class="text-white/50 text-[10px] mt-2 font-medium">
                 Total Pendapatan via Transfer
             </p>
-            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-white/20 px-3 py-1 rounded-full w-fit">
+            <div class="mt-4 flex items-center gap-2 text-[10px] font-bold text-white/80 bg-gray-50/20 px-3 py-1 rounded-md w-fit">
                 <span class="iconify" data-icon="mdi:bank"></span>
                 Masuk ke Rekening
             </div>
         </div>
     </div>
     <!-- Chart Section -->
-    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm p-8">
+    <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm p-8">
         <div class="flex items-center justify-between mb-8">
-            <h3 class="text-lg font-black text-slate-800 tracking-tight uppercase text-sm">Produk Terlaris Minggu Ini</h3>
+            <h3 class="text-lg font-semibold text-black tracking-tight uppercase text-sm">Produk Terlaris Minggu Ini</h3>
             <span class="iconify text-slate-300 text-xl" data-icon="mdi:chart-bar"></span>
         </div>
         <div style="height: {{ max(400, $topProducts->count() * 40) }}px; min-height: 400px; position: relative;">
             @if($topProducts->count() > 0)
             <canvas id="weeklyChart"></canvas>
             @else
-            <div class="flex flex-col items-center justify-center h-full text-slate-400">
+            <div class="flex flex-col items-center justify-center h-full text-gray-500">
                 <span class="iconify text-5xl mb-2" data-icon="mdi:database-off"></span>
-                <p class="text-[10px] font-black uppercase tracking-widest">Tidak ada data penjualan</p>
+                <p class="text-[10px] font-semibold uppercase tracking-widest">Tidak ada data penjualan</p>
             </div>
             @endif
         </div>

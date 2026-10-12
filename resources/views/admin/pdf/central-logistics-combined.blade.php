@@ -21,7 +21,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="company">Resto Coto Makasar</div>
+            <div class="company">Kopi Selera Rakyat</div>
             <div class="report-title">Laporan Lengkap Logistik Pusat (Produksi, Distribusi, Return)</div>
             @if($request->has('start_date') && $request->has('end_date'))
                 <div style="font-size: 10px; margin-top: 4px;">Periode: {{ \Carbon\Carbon::parse($request->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($request->end_date)->format('d M Y') }}</div>

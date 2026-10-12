@@ -3,25 +3,25 @@
 @section('title', 'Daftar Pembelian')
 
 @section('content')
-<div class="max-w-[1400px] mx-auto p-6 bg-[#F9FAFB] min-h-screen font-sans antialiased text-slate-900">
+<div class="max-w-[1400px] mx-auto p-6 bg-gray-50 min-h-screen font-sans antialiased text-black">
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
-                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Inventory Management</span>
+                <span class="w-2 h-2 rounded-md bg-black animate-pulse"></span>
+                <span class="text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">Inventory Management</span>
             </div>
-            <h1 class="text-3xl font-black tracking-tighter text-slate-900 uppercase italic">Purchasing</h1>
+            <h1 class="text-3xl font-semibold tracking-tighter text-black uppercase italic">Purchasing</h1>
         </div>
 
         <div class="flex items-center gap-2">
             <div class="relative group">
-                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="lucide:search"></span>
+                <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" data-icon="lucide:search"></span>
                 <input type="text" x-model="search" placeholder="Quick Search..." 
-                    class="h-10 w-64 pl-10 pr-4 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 transition-all placeholder:text-slate-300 shadow-sm">
+                    class="h-10 w-64 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-md text-xs font-bold focus:ring-4 focus:ring-black/5 focus:border-gray-200 transition-all placeholder:text-slate-300 shadow-sm">
             </div>
             <a href="{{ route('admin.purchases.select-supplier') }}"
-                class="h-10 px-6 bg-slate-900 text-white text-[11px] font-black rounded-xl hover:bg-indigo-600 flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200 uppercase tracking-widest">
+                class="h-10 px-6 bg-[#001529] text-white text-[11px] font-semibold rounded-md hover:bg-black flex items-center gap-2 transition-all active:scale-95 shadow-sm  uppercase tracking-widest">
                 <span class="iconify text-lg" data-icon="lucide:plus"></span>
                 Add Purchase
             </a>
@@ -29,35 +29,35 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] group hover:border-indigo-100 transition-all">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Volume</p>
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm group hover:border-gray-200 transition-all">
+            <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Volume</p>
             <div class="flex items-baseline gap-2 mt-1">
-                <p class="text-3xl font-black text-slate-900 tracking-tighter">{{ $stats['total'] }}</p>
+                <p class="text-3xl font-semibold text-black tracking-tighter">{{ $stats['total'] }}</p>
                 <span class="text-[10px] font-bold text-slate-300 uppercase">Transactions</span>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] group hover:border-emerald-100 transition-all border-b-4 border-b-emerald-500">
-            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Cleared</p>
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm group hover:border-gray-200 transition-all border-b-4 border-b-emerald-500">
+            <p class="text-[10px] font-semibold text-black uppercase tracking-widest">Cleared</p>
             <div class="flex items-baseline gap-2 mt-1">
-                <p class="text-3xl font-black text-slate-900 tracking-tighter">{{ $stats['paid'] }}</p>
+                <p class="text-3xl font-semibold text-black tracking-tighter">{{ $stats['paid'] }}</p>
                 <span class="text-[10px] font-bold text-slate-300 uppercase">Paid in Full</span>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-[0_2px_15_15px_-3px_rgba(0,0,0,0.07)] group hover:border-orange-100 transition-all border-b-4 border-b-orange-500">
-            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest">Liability</p>
+        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm group hover:border-orange-100 transition-all border-b-4 border-b-orange-500">
+            <p class="text-[10px] font-semibold text-orange-500 uppercase tracking-widest">Liability</p>
             <div class="flex items-baseline gap-2 mt-1">
-                <p class="text-3xl font-black text-slate-900 tracking-tighter">{{ $stats['debt'] }}</p>
+                <p class="text-3xl font-semibold text-black tracking-tighter">{{ $stats['debt'] }}</p>
                 <span class="text-[10px] font-bold text-slate-300 uppercase text-orange-400">Pending Pay</span>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.04)] overflow-hidden">
-        <div class="px-8 py-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">Master Ledger</span>
+    <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-8 py-5 border-b border-slate-50 bg-white flex items-center justify-between">
+            <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500 italic">Master Ledger</span>
             <div class="flex gap-2">
-                <div class="w-2 h-2 rounded-full bg-slate-200"></div>
-                <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                <div class="w-2 h-2 rounded-md bg-slate-200"></div>
+                <div class="w-2 h-2 rounded-md bg-slate-200"></div>
             </div>
         </div>
         

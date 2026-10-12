@@ -243,7 +243,7 @@
 <script>
 function confirmDelete(id) {
     let form = document.getElementById('deleteForm');
-    form.action = "{{ route('inventory.branch-stock.index') }}/" + id;
+    form.action ="{{ route('inventory.branch-stock.index') }}/" + id;
     $('#deleteModal').modal('show');
 }
 
@@ -251,7 +251,7 @@ function adjustStock(id, name, stock) {
     document.getElementById('ingredientName').innerText = name;
     document.getElementById('currentStock').innerText = stock;
     let form = document.getElementById('adjustForm');
-    form.action = "{{ url('inventory/branch-stock') }}/" + id + "/adjust";
+    form.action ="{{ url('inventory/branch-stock') }}/" + id +"/adjust";
     $('#adjustModal').modal('show');
 }
 

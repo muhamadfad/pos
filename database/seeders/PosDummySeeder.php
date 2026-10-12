@@ -10,15 +10,15 @@ class PosDummySeeder extends Seeder
     public function run(): void
     {
         // 1. Seed Units
-        $unitPorsi = DB::table('units')->insertGetId([
-            'name' => 'Porsi',
-            'abbreviation' => 'prs',
+        $unitCup = DB::table('units')->insertGetId([
+            'name' => 'Cup',
+            'abbreviation' => 'cup',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         
-        $unitGelas = DB::table('units')->insertGetId([
-            'name' => 'Gelas',
+        $unitGlass = DB::table('units')->insertGetId([
+            'name' => 'Glass',
             'abbreviation' => 'gls',
             'created_at' => now(),
             'updated_at' => now(),
@@ -32,16 +32,16 @@ class PosDummySeeder extends Seeder
         ]);
 
         // 2. Seed Categories
-        $catMakanan = DB::table('categories')->insertGetId([
-            'name' => 'Makanan',
-            'description' => 'Menu utama dan pendamping',
+        $catPastry = DB::table('categories')->insertGetId([
+            'name' => 'Pastry',
+            'description' => 'Makanan ringan dan roti',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        $catMinuman = DB::table('categories')->insertGetId([
-            'name' => 'Minuman',
-            'description' => 'Minuman dingin dan panas',
+        $catCoffee = DB::table('categories')->insertGetId([
+            'name' => 'Coffee',
+            'description' => 'Minuman kopi',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -50,60 +50,60 @@ class PosDummySeeder extends Seeder
         DB::table('products')->insert([
             [
                 'barcode' => 'P001',
-                'name' => 'Coto Makassar Daging',
-                'category_id' => $catMakanan,
-                'unit_id' => $unitPorsi,
-                'selling_price' => 35000,
-                'purchase_price' => 20000,
-                'min_stock' => 10,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'barcode' => 'P002',
-                'name' => 'Coto Makassar Campur',
-                'category_id' => $catMakanan,
-                'unit_id' => $unitPorsi,
-                'selling_price' => 30000,
-                'purchase_price' => 18000,
-                'min_stock' => 10,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'barcode' => 'P003',
-                'name' => 'Ketupat / Burasa',
-                'category_id' => $catMakanan,
-                'unit_id' => $unitPcs,
-                'selling_price' => 3000,
-                'purchase_price' => 1500,
+                'name' => 'Espresso',
+                'category_id' => $catCoffee,
+                'unit_id' => $unitCup,
+                'selling_price' => 15000,
+                'purchase_price' => 5000,
                 'min_stock' => 50,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'barcode' => 'P002',
+                'name' => 'Cappuccino',
+                'category_id' => $catCoffee,
+                'unit_id' => $unitCup,
+                'selling_price' => 25000,
+                'purchase_price' => 8000,
+                'min_stock' => 50,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'barcode' => 'P003',
+                'name' => 'Croissant',
+                'category_id' => $catPastry,
+                'unit_id' => $unitPcs,
+                'selling_price' => 20000,
+                'purchase_price' => 10000,
+                'min_stock' => 30,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'barcode' => 'P004',
-                'name' => 'Es Teh Manis',
-                'category_id' => $catMinuman,
-                'unit_id' => $unitGelas,
-                'selling_price' => 5000,
-                'purchase_price' => 2000,
-                'min_stock' => 20,
+                'name' => 'Americano',
+                'category_id' => $catCoffee,
+                'unit_id' => $unitCup,
+                'selling_price' => 18000,
+                'purchase_price' => 6000,
+                'min_stock' => 50,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'barcode' => 'P005',
-                'name' => 'Es Jeruk',
-                'category_id' => $catMinuman,
-                'unit_id' => $unitGelas,
-                'selling_price' => 10000,
-                'purchase_price' => 4000,
-                'min_stock' => 20,
+                'name' => 'Caramel Macchiato',
+                'category_id' => $catCoffee,
+                'unit_id' => $unitCup,
+                'selling_price' => 30000,
+                'purchase_price' => 12000,
+                'min_stock' => 30,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

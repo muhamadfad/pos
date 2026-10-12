@@ -11,7 +11,7 @@
 <body class="bg-gray-100 flex">
 
     {{-- Sidebar --}}
-    <aside class="w-64 bg-white shadow min-h-screen p-4">
+    <aside class="w-64 bg-gray-50 shadow min-h-screen p-4">
         <h1 class="font-bold text-xl mb-6">ADMIN</h1>
         <nav class="space-y-2">
             <a href="{{ route('admin.dashboard') }}" class="block p-2 rounded hover:bg-gray-100">Dashboard</a>

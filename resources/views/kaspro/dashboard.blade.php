@@ -15,15 +15,15 @@
     
     <div class="flex justify-between items-start">
         <div>
-            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">KasPro Intelligence</h1>
-            <p class="text-slate-500 text-sm font-medium">Monitor dan prediksi kesehatan keuangan bisnis Anda</p>
+            <h1 class="text-2xl font-semibold text-black tracking-tight">KasPro Intelligence</h1>
+            <p class="text-gray-500 text-sm font-medium">Monitor dan prediksi kesehatan keuangan bisnis Anda</p>
         </div>
         <div class="flex gap-3 items-center">
              <form action="{{ route('kaspro.dashboard') }}" method="GET" class="flex gap-2 items-center">
-                 <input type="date" name="start_date" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value="{{ request('start_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['start_date'])->format('Y-m-d')) }}">
-                 <span class="text-xs text-slate-500 font-medium">s/d</span>
-                 <input type="date" name="end_date" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" value="{{ request('end_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['end_date'])->format('Y-m-d')) }}">
-                 <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-sm hover:bg-blue-700 transition-colors">Filter</button>
+                 <input type="date" name="start_date" class="px-3 py-1.5 text-xs border border-gray-200 rounded-md text-gray-600 focus:outline-none focus:border-gray-200 focus:ring-1 focus:ring-black/5" value="{{ request('start_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['start_date'])->format('Y-m-d')) }}">
+                 <span class="text-xs text-gray-500 font-medium">s/d</span>
+                 <input type="date" name="end_date" class="px-3 py-1.5 text-xs border border-gray-200 rounded-md text-gray-600 focus:outline-none focus:border-gray-200 focus:ring-1 focus:ring-black/5" value="{{ request('end_date', \Carbon\Carbon::createFromFormat('d/m/Y', $cashFlow['end_date'])->format('Y-m-d')) }}">
+                 <button type="submit" class="px-3 py-1.5 bg-black text-white text-white text-xs font-bold rounded-md shadow-sm hover:bg-gray-800 transition-colors">Filter</button>
              </form>
         </div>
     </div>
@@ -32,22 +32,22 @@
         <div class="card-premium p-6 lg:col-span-2">
             <div class="flex flex-col md:flex-row justify-between gap-6">
                 <div class="space-y-1">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Saldo Kas Saat Ini</p>
-                    <h2 class="text-4xl font-extrabold text-slate-900 text-numeric">{{ $survival['current_cash_formatted'] }}</h2>
-                    <p class="text-sm text-slate-500 pt-2">
+                    <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Saldo Kas Saat Ini</p>
+                    <h2 class="text-4xl font-semibold text-black text-numeric">{{ $survival['current_cash_formatted'] }}</h2>
+                    <p class="text-sm text-gray-500 pt-2">
                         Rata-rata pengeluaran harian: <span class="font-bold text-slate-700">{{ $survival['avg_daily_expense_formatted'] }}</span>
                     </p>
                 </div>
-                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 min-w-[240px]">
+                <div class="bg-white rounded-md p-5 border border-gray-200 min-w-[240px]">
                     <div class="flex justify-between items-center mb-2">
-                        <p class="text-[11px] font-bold text-slate-500 uppercase">Estimasi Runway</p>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-{{ $survival['status_color'] }}-100 text-{{ $survival['status_color'] }}-700 uppercase">
+                        <p class="text-[11px] font-bold text-gray-500 uppercase">Estimasi Runway</p>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-gray-50 border border-gray-200 text-gray-700 uppercase">
                             {{ $survival['status'] }}
                         </span>
                     </div>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-4xl font-black text-{{ $survival['status_color'] }}-600">{{ $survival['days_to_survive'] }}</span>
-                        <span class="text-sm font-bold text-slate-400">Hari Bertahan</span>
+                        <span class="text-3xl font-semibold text-black">{{ $survival['days_to_survive'] }}</span>
+                        <span class="text-sm font-bold text-gray-500">Hari Bertahan</span>
                     </div>
                 </div>
             </div>
@@ -56,31 +56,31 @@
         <div class="card-premium p-6">
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                    <p class="text-[10px] font-bold uppercase mb-1 text-emerald-600">Pemasukan</p>
-                    <p class="text-xl font-bold text-slate-900">Rp {{ number_format($cashFlow['total_income'], 0, ',', '.') }}</p>
+                    <p class="text-[10px] font-bold uppercase mb-1 text-black">Pemasukan</p>
+                    <p class="text-lg font-semibold text-black">Rp {{ number_format($cashFlow['total_income'], 0, ',', '.') }}</p>
                 </div>
                 <div>
                     <p class="text-[10px] font-bold uppercase mb-1 text-rose-600">Pengeluaran</p>
-                    <p class="text-xl font-bold text-slate-900">Rp {{ number_format($cashFlow['total_expense'], 0, ',', '.') }}</p>
+                    <p class="text-lg font-semibold text-black">Rp {{ number_format($cashFlow['total_expense'], 0, ',', '.') }}</p>
                 </div>
             </div>
             
             <div class="space-y-3">
-                <div class="flex justify-between text-[10px] font-bold text-slate-500">
+                <div class="flex justify-between text-[10px] font-bold text-gray-500">
                     <span>STOK: Rp {{ number_format($cashFlow['expense_breakdown']['stok'], 0, ',', '.') }}</span>
                     <span>OPS: Rp {{ number_format($cashFlow['expense_breakdown']['operasional'], 0, ',', '.') }}</span>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-2 flex overflow-hidden">
+                <div class="w-full bg-slate-100 rounded-md h-2 flex overflow-hidden">
                     @php
                         $totalExp = $cashFlow['total_expense'] ?: 1;
                         $stokPct = ($cashFlow['expense_breakdown']['stok'] / $totalExp) * 100;
                     @endphp
-                    <div class="bg-indigo-500 h-full" style="width: {{ $stokPct }}%"></div>
+                    <div class="bg-black h-full" style="width: {{ $stokPct }}%"></div>
                     <div class="bg-slate-300 h-full" style="width: {{ 100 - $stokPct }}%"></div>
                 </div>
                 <div class="pt-4 border-t border-slate-50 flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-500">NET CASH FLOW:</span>
-                    <span class="text-lg font-black {{ $cashFlow['net_cash_flow'] >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                    <span class="text-xs font-bold text-gray-500">NET CASH FLOW:</span>
+                    <span class="text-lg font-semibold {{ $cashFlow['net_cash_flow'] >= 0 ? 'text-black' : 'text-rose-600' }}">
                         Rp {{ number_format($cashFlow['net_cash_flow'], 0, ',', '.') }}
                     </span>
                 </div>
@@ -90,13 +90,13 @@
 
     <div class="card-premium p-8 min-w-0 overflow-hidden">
         <div class="flex justify-between items-center mb-8">
-            <h3 class="text-lg font-bold text-slate-900 italic">Historical Flow (12 Months)</h3>
+            <h3 class="text-base font-semibold text-black italic">Historical Flow (12 Months)</h3>
             <div class="flex gap-4">
-                <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span> INFLOW
+                <div class="flex items-center gap-2 text-[10px] font-bold text-gray-500">
+                    <span class="w-3 h-3 rounded-md bg-white border border-gray-2000"></span> INFLOW
                 </div>
-                <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                    <span class="w-3 h-3 rounded-full bg-rose-500"></span> OUTFLOW
+                <div class="flex items-center gap-2 text-[10px] font-bold text-gray-500">
+                    <span class="w-3 h-3 rounded-md bg-rose-500"></span> OUTFLOW
                 </div>
             </div>
         </div>
@@ -105,30 +105,30 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8 card-premium overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Prediksi 3 Bulan Mendatang</h3>
+            <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center bg-white">
+                <h3 class="text-sm font-bold text-black uppercase tracking-wider">Prediksi 3 Bulan Mendatang</h3>
                 @if(isset($prediction['growth_rate']))
-                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">GROWTH: {{ number_format(($prediction['growth_rate'] - 1) * 100, 1) }}%</span>
+                    <span class="text-[10px] font-bold text-black bg-gray-50 px-2 py-1 rounded">GROWTH: {{ number_format(($prediction['growth_rate'] - 1) * 100, 1) }}%</span>
                 @endif
             </div>
             <div class="p-6">
                 @if(!empty($prediction['predictions']))
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     @foreach($prediction['predictions'] as $pred)
-                    <div class="border border-slate-100 rounded-xl p-4 bg-white hover:shadow-md transition">
-                        <p class="text-xs font-black text-slate-400 uppercase mb-3">{{ $pred['month_name'] }}</p>
+                    <div class="border border-gray-200 rounded-md p-4 bg-gray-50 hover:shadow-sm transition">
+                        <p class="text-xs font-semibold text-gray-500 uppercase mb-3">{{ $pred['month_name'] }}</p>
                         <div class="space-y-2">
-                            <div class="flex justify-between text-[11px] font-medium text-slate-500">
+                            <div class="flex justify-between text-[11px] font-medium text-gray-500">
                                 <span>Pemasukan</span>
-                                <span class="text-emerald-600 font-bold">Rp{{ number_format($pred['predicted_income']/1000,0) }}k</span>
+                                <span class="text-black font-bold">Rp{{ number_format($pred['predicted_income']/1000,0) }}k</span>
                             </div>
-                            <div class="flex justify-between text-[11px] font-medium text-slate-500">
+                            <div class="flex justify-between text-[11px] font-medium text-gray-500">
                                 <span>Pengeluaran</span>
                                 <span class="text-rose-500 font-bold">Rp{{ number_format($pred['predicted_expense']/1000,0) }}k</span>
                             </div>
                             <div class="pt-2 border-t border-slate-50 flex justify-between items-baseline">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase">Net</span>
-                                <span class="text-md font-extrabold {{ $pred['predicted_net'] >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                <span class="text-[10px] font-bold text-gray-500 uppercase">Net</span>
+                                <span class="text-md font-semibold {{ $pred['predicted_net'] >= 0 ? 'text-black' : 'text-rose-600' }}">
                                     Rp{{ number_format($pred['predicted_net'], 0, ',', '.') }}
                                 </span>
                             </div>
@@ -137,14 +137,14 @@
                     @endforeach
                 </div>
                 @else
-                    <p class="text-center py-10 text-slate-400 text-sm italic">Data historis tidak mencukupi untuk prediksi AI.</p>
+                    <p class="text-center py-10 text-gray-500 text-sm italic">Data historis tidak mencukupi untuk prediksi AI.</p>
                 @endif
                 
                 @if(!empty($prediction['recommendations']))
-                <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-4 items-start">
+                <div class="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200 flex gap-4 items-start">
                     <span class="text-xl">ðŸ’¡</span>
                     <div>
-                        <h4 class="text-xs font-bold text-amber-800 uppercase mb-1 tracking-widest">KasPro Strategy Insight</h4>
+                        <h4 class="text-xs font-bold text-black uppercase mb-1 tracking-widest">KasPro Strategy Insight</h4>
                         @foreach($prediction['recommendations'] as $rec)
                             <p class="text-sm text-amber-900/80 leading-relaxed">â€¢ {{ $rec }}</p>
                         @endforeach
@@ -155,35 +155,35 @@
         </div>
 
         <div class="lg:col-span-4 card-premium flex flex-col">
-            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Peringatan Terbaru</h3>
+            <div class="px-4 py-2 border-b border-gray-200 bg-white">
+                <h3 class="text-sm font-bold text-black uppercase tracking-wider">Peringatan Terbaru</h3>
             </div>
-            <div class="divide-y divide-slate-100 overflow-y-auto max-h-[400px]">
+            <div class="divide-y divide-gray-200 overflow-y-auto max-h-[400px]">
                 @forelse($recentAlerts as $alert)
-                <div class="p-4 hover:bg-slate-50 transition group">
+                <div class="p-4 hover:bg-white transition group">
                     <div class="flex justify-between items-start mb-1">
                         @php
                             $colors = [
                                 'emergency' => 'bg-red-100 text-red-700',
                                 'critical' => 'bg-orange-100 text-orange-700',
-                                'warning' => 'bg-amber-100 text-amber-700',
-                                'info' => 'bg-blue-100 text-blue-700'
+                                'warning' => 'bg-gray-50 text-black',
+                                'info' => 'bg-gray-50 border border-gray-200 text-black'
                             ];
                             $color = $colors[$alert->severity] ?? $colors['info'];
                         @endphp
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ $color }}">
                             {{ $alert->severity }}
                         </span>
-                        <span class="text-[10px] font-medium text-slate-400">{{ $alert->created_at->diffForHumans() }}</span>
+                        <span class="text-[10px] font-medium text-gray-500">{{ $alert->created_at->diffForHumans() }}</span>
                     </div>
-                    <h5 class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition">{{ $alert->title }}</h5>
-                    <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ $alert->message }}</p>
+                    <h5 class="text-sm font-bold text-black group-hover:text-black transition">{{ $alert->title }}</h5>
+                    <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{{ $alert->message }}</p>
                 </div>
                 @empty
-                <p class="p-8 text-center text-slate-400 text-sm italic">Tidak ada peringatan sistem.</p>
+                <p class="p-8 text-center text-gray-500 text-sm italic">Tidak ada peringatan sistem.</p>
                 @endforelse
             </div>
-            <a href="{{ route('kaspro.alerts') }}" class="mt-auto p-4 text-center border-t border-slate-100 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition">
+            <a href="{{ route('kaspro.alerts') }}" class="mt-auto p-4 text-center border-t border-gray-200 text-xs font-bold text-black hover:bg-gray-50 transition">
                 LIHAT SEMUA NOTIFIKASI â†’
             </a>
         </div>
@@ -217,12 +217,10 @@
                     fontFamily: 'Inter, sans-serif',
                     animations: { enabled: true }
                 },
-                colors: ['#10b981', '#f43f5e'],
+                colors: ['#000000', '#9ca3af'],
                 stroke: { curve: 'smooth', width: 2 },
                 fill: { 
-                    type: 'gradient', 
-                    gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } 
-                },
+                    type: 'solid',
                 dataLabels: { enabled: false },
                 xaxis: { 
                     categories: months, 

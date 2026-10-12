@@ -9,20 +9,20 @@
     
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <nav class="flex mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">
+            <nav class="flex mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <span>Inventory</span>
                 <span class="mx-2">/</span>
                 <span>Recipes</span>
                 <span class="mx-2">/</span>
-                <span class="text-indigo-600">Create</span>
+                <span class="text-black">Create</span>
             </nav>
-            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Tambah Resep Baru</h1>
-            <p class="text-sm text-slate-500 mt-1">Tambahkan komposisi bahan baku untuk menu</p>
+            <h1 class="text-3xl font-bold text-black tracking-tight">Tambah Resep Baru</h1>
+            <p class="text-sm text-gray-500 mt-1">Tambahkan komposisi bahan baku untuk menu</p>
         </div>
         
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.recipes.index') }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-50 border border-gray-200 text-slate-700 text-sm font-semibold rounded-md hover:bg-white transition-all shadow-sm active:scale-95">
                 <span class="iconify text-lg" data-icon="lucide:arrow-left"></span>
                 Kembali
             </a>
@@ -30,7 +30,7 @@
     </div>
 
     @if ($errors->any())
-    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl flex gap-3">
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-md flex gap-3">
         <span class="iconify text-rose-500 text-xl shrink-0" data-icon="lucide:alert-circle"></span>
         <div class="text-sm">
             <h4 class="font-bold text-rose-800">Ada kendala pada input Anda:</h4>
@@ -44,7 +44,7 @@
     @endif
 
     @if (session('error'))
-    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl flex gap-3">
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-md flex gap-3">
         <span class="iconify text-rose-500 text-xl shrink-0" data-icon="lucide:alert-circle"></span>
         <div class="text-sm">
             <h4 class="font-bold text-rose-800">Gagal:</h4>
@@ -54,32 +54,32 @@
     @endif
 
     @if (session('success'))
-    <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex gap-3">
-        <span class="iconify text-emerald-500 text-xl shrink-0" data-icon="lucide:check-circle"></span>
+    <div class="p-4 bg-white border border-gray-200 border border-gray-200 rounded-md flex gap-3">
+        <span class="iconify text-black text-xl shrink-0" data-icon="lucide:check-circle"></span>
         <div class="text-sm">
             <h4 class="font-bold text-emerald-800">Berhasil:</h4>
-            <p class="text-emerald-700/80 mt-1">{{ session('success') }}</p>
+            <p class="text-black/80 mt-1">{{ session('success') }}</p>
         </div>
     </div>
     @endif
 
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="bg-gray-50 rounded-md border border-gray-200 shadow-sm overflow-hidden">
         <form action="{{ route('admin.recipes.store') }}" method="POST" id="recipeForm" novalidate>
             @csrf
             
             <div class="p-6 space-y-6">
                 <!-- Header Form -->
-                <div class="border-b border-slate-200 pb-4">
-                    <h2 class="text-lg font-semibold text-slate-900">Informasi Resep</h2>
-                    <p class="text-sm text-slate-500 mt-0.5">Pilih menu dan tentukan komposisi bahan bakunya</p>
+                <div class="border-b border-gray-200 pb-4">
+                    <h2 class="text-lg font-semibold text-black">Informasi Resep</h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Pilih menu dan tentukan komposisi bahan bakunya</p>
                 </div>
 
                 <!-- Pilih Menu -->
                 <div class="space-y-2">
-                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    <label class="text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         Pilih Menu <span class="text-rose-500">*</span>
                     </label>
-                    <select name="product_id" class="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer" required>
+                    <select name="product_id" class="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-md focus:border-gray-200 focus:ring-4 focus:ring-[#1677ff]/10 transition-all cursor-pointer" required>
                         <option value="">-- Pilih Menu --</option>
                         @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
@@ -92,23 +92,23 @@
                     @enderror
                 </div>
 
-                <div class="border-t border-slate-200 pt-4">
+                <div class="border-t border-gray-200 pt-4">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-semibold text-slate-800 flex items-center gap-2">
-                            <span class="iconify text-indigo-500" data-icon="lucide:package"></span>
+                        <h3 class="text-sm font-semibold text-black flex items-center gap-2">
+                            <span class="iconify text-black" data-icon="lucide:package"></span>
                             Komposisi Bahan Baku
                         </h3>
                         <button type="button" id="add-row"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg hover:bg-emerald-100 transition-all">
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-black text-xs font-bold rounded-md hover:bg-gray-50 border border-gray-200 transition-all">
                             <span class="iconify text-sm" data-icon="lucide:plus"></span>
                             Tambah Bahan
                         </button>
                     </div>
                     
                     <div id="items-container" class="space-y-3">
-                        <div class="item-row grid grid-cols-12 gap-3 items-start bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                        <div class="item-row grid grid-cols-12 gap-3 items-start bg-white p-3 rounded-md border border-gray-200">
                             <div class="col-span-5">
-                                <select name="items[0][ingredient_id]" class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all" required>
+                                <select name="items[0][ingredient_id]" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md focus:border-gray-200 focus:ring-4 focus:ring-[#1677ff]/10 transition-all" required>
                                     <option value="">Pilih Bahan Baku</option>
                                     @foreach($ingredients as $ingredient)
                                     <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
@@ -117,11 +117,11 @@
                             </div>
                             <div class="col-span-3">
                                 <input type="number" step="0.01" name="items[0][quantity]" 
-                                    class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
+                                    class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md focus:border-gray-200 focus:ring-4 focus:ring-[#1677ff]/10 transition-all"
                                     placeholder="Jumlah" required>
                             </div>
                             <div class="col-span-3">
-                                <select name="items[0][unit_id]" class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all">
+                                <select name="items[0][unit_id]" class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md focus:border-gray-200 focus:ring-4 focus:ring-[#1677ff]/10 transition-all">
                                     <option value="">Pilih Satuan</option>
                                     @foreach($units as $unit)
                                     <option value="{{ $unit->id }}">{{ $unit->name }}</option>
@@ -129,25 +129,25 @@
                                 </select>
                             </div>
                             <div class="col-span-1">
-                                <button type="button" class="remove-row w-full py-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all">
+                                <button type="button" class="remove-row w-full py-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md transition-all">
                                     <span class="iconify text-lg" data-icon="lucide:trash-2"></span>
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <p class="text-xs text-slate-400 mt-3">* Minimal 1 bahan baku untuk setiap resep</p>
+                    <p class="text-xs text-gray-500 mt-3">* Minimal 1 bahan baku untuk setiap resep</p>
                 </div>
             </div>
 
             <!-- Form Actions -->
-            <div class="flex items-center justify-end gap-3 px-6 py-4 bg-slate-50/50 border-t border-slate-200">
+            <div class="flex items-center justify-end gap-3 px-4 py-2 bg-white border-t border-gray-200">
                 <a href="{{ route('admin.recipes.index') }}"
-                    class="px-6 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+                    class="px-6 py-2.5 text-sm font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-md hover:bg-white transition-all">
                     Batal
                 </a>
                 <button type="submit" 
-                    class="px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm active:scale-95">
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-black rounded-md hover:bg-gray-800 transition-all shadow-sm active:scale-95">
                     <span class="iconify text-base mr-1" data-icon="lucide:save"></span>
                     Simpan Resep
                 </button>

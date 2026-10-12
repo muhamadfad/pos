@@ -35,11 +35,11 @@ export default function Header({
     const { isSupported, isConnected, isConnecting, printerName, connect, disconnect } = useWebBluetoothPrinter();
 
     return (
-        <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 shrink-0 sticky top-0 z-40 shadow-sm">
+        <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 shrink-0 sticky top-0 z-40 shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)]">
             <div className="flex items-center gap-4 w-full md:w-auto">
                 <a
                     href="/dashboard"
-                    className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-900 border border-gray-200 transition-all hover:shadow-sm"
+                    className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-900 border border-gray-200 transition-all hover:shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)]"
                     title="Kembali ke Admin"
                 >
                     <svg
@@ -63,7 +63,7 @@ export default function Header({
                     {isInstallable && (
                         <button
                             onClick={installPwa}
-                            className="flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs sm:text-sm border border-blue-100 shadow-sm transition-all hover:bg-blue-100 hover:shadow-md hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
+                            className="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-blue-50 text-blue-600 font-bold text-xs sm:text-sm border border-blue-100 shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)] transition-all hover:bg-blue-100 hover:shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] hover:-translate-y-0.5 whitespace-nowrap active:scale-95"
                         >
                             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -77,11 +77,11 @@ export default function Header({
                         <button
                             onClick={connect}
                             disabled={isConnecting}
-                            className={`flex items-center justify-center gap-2 h-10 px-4 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all whitespace-nowrap active:scale-95 ${
+                            className={`flex items-center justify-center gap-2 h-10 px-4 rounded-lg font-bold text-xs sm:text-sm shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)] transition-all whitespace-nowrap active:scale-95 ${
                                 isConnected 
                                     ? "bg-emerald-50 text-emerald-600 border border-emerald-200" 
-                                    : "bg-white text-slate-600 border border-slate-200"
-                            } ${isConnecting ? "opacity-75 cursor-not-allowed" : "hover:shadow-md hover:-translate-y-0.5"}`}
+                                    : "bg-white text-[rgba(0,0,0,0.65)] border border-[#f0f0f0]"
+                            } ${isConnecting ? "opacity-75 cursor-not-allowed" : "hover:shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] hover:-translate-y-0.5"}`}
                             title={printerName || "Koneksi Printer Web Bluetooth"}
                         >
                             {isConnecting ? (
@@ -101,7 +101,7 @@ export default function Header({
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-[0_6px_16px_0_rgba(0,0,0,0.08),0_3px_6px_-4px_rgba(0,0,0,0.12),0_9px_28px_8px_rgba(0,0,0,0.05)] shadow-blue-500/20">
                         <svg
                             className="w-5 h-5 text-white"
                             fill="none"
@@ -129,7 +129,7 @@ export default function Header({
                         <div className="flex items-center gap-2 mt-1">
                             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Point of Sale</p>
                             {pendingCount > 0 && (
-                                <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <span className="text-[10px] font-bold bg-[#e6f4ff] text-[#1677ff] px-1.5 py-0.5 rounded flex items-center gap-1">
                                     {isSyncing ? (
                                         <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -170,7 +170,7 @@ export default function Header({
                         ref={searchRef}
                         type="text"
                         placeholder="Cari produk atau scan barcode..."
-                        className="w-full pl-11 pr-4 py-2.5 text-sm font-medium bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 text-gray-900"
+                        className="w-full pl-11 pr-4 py-2.5 text-sm font-medium bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 text-gray-900"
                         value={search}
                         onChange={(e) => onSearchChange(e.target.value)}
                         onKeyDown={onSearchKeyDown}
@@ -180,7 +180,7 @@ export default function Header({
                 {/* Category filter */}
                 <div className="relative shrink-0 w-full sm:w-auto">
                     <select
-                        className="appearance-none w-full sm:w-auto bg-gray-50 border border-gray-200 text-gray-700 font-semibold text-sm rounded-xl pl-4 pr-10 py-2.5 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 hover:bg-gray-100 transition-all cursor-pointer"
+                        className="appearance-none w-full sm:w-auto bg-gray-50 border border-gray-200 text-gray-700 font-semibold text-sm rounded-lg pl-4 pr-10 py-2.5 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 hover:bg-gray-100 transition-all cursor-pointer"
                         value={categoryFilter ?? ""}
                         onChange={(e) =>
                             onCategoryChange(

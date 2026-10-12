@@ -59,23 +59,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/pin', [ProfileController::class, 'updatePin'])->name('profile.update-pin');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Point of Sale (Kasir & Admin bisa akses)
-    Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos.index');
-    Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('pos.checkout');
-    Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('pos.customer-debt');
-    Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pos.pay-debt');
-    Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('pos.print');
-    Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('pos.expenses.store');
+        // POS PIN System
+    Route::get('/pos/pin', [\App\Http\Controllers\PointOfSaleController::class, 'pinScreen'])->name('pos.pin-screen');
+    Route::post('/pos/verify-pin', [\App\Http\Controllers\PointOfSaleController::class, 'verifyPin'])->name('pos.verify-pin');
 
-    // Cashier Shift Management
-    Route::prefix('pos/shift')->name('pos.shift.')->group(function () {
-        Route::get('/', [CashierShiftController::class, 'index'])->name('index');
-        Route::post('/open', [CashierShiftController::class, 'store'])->name('open');
-        Route::put('/update', [CashierShiftController::class, 'update'])->name('update');
-        Route::post('/close', [CashierShiftController::class, 'close'])->name('close');
-        Route::get('/report', [CashierShiftController::class, 'report'])->name('report');
+    // Wrap POS routes in pos_unlocked middleware
+    Route::middleware(['pos_unlocked'])->group(function () {
+        // Point of Sale (Kasir & Admin bisa akses)
+        Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos.index');
+        Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('pos.checkout');
+        Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('pos.customer-debt');
+        Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pos.pay-debt');
+        Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('pos.print');
+        Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('pos.expenses.store');
+
+        // Cashier Shift Management
+        Route::prefix('pos/shift')->name('pos.shift.')->group(function () {
+            Route::get('/', [CashierShiftController::class, 'index'])->name('index');
+            Route::post('/open', [CashierShiftController::class, 'store'])->name('open');
+            Route::put('/update', [CashierShiftController::class, 'update'])->name('update');
+            Route::post('/close', [CashierShiftController::class, 'close'])->name('close');
+            Route::get('/report', [CashierShiftController::class, 'report'])->name('report');
+        });
     });
 
     // KasPro Routes (Intelligence)
@@ -342,14 +350,16 @@ Route::middleware(['auth', 'kasir'])
             return redirect()->route('kasir.shift.index');
         });
         
-        // POS - hanya bisa akses setelah shift dibuka
-        Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos');
-        Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('checkout');
-        Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('print');
-        Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('customer-debt');
-        Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pay-debt');
-        Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('expenses.store');
-        Route::get('/pos/transactions', [PointOfSaleController::class, 'transactions'])->name('pos.transactions');
+                // POS - hanya bisa akses setelah shift dibuka
+        Route::middleware(['pos_unlocked'])->group(function () {
+            Route::get('/pos', [PointOfSaleController::class, 'index'])->name('pos');
+            Route::post('/pos/checkout', [PointOfSaleController::class, 'checkout'])->name('checkout');
+            Route::get('/pos/print/{order}', [PointOfSaleController::class, 'printReceipt'])->name('print');
+            Route::get('/pos/customer-debt/{customer}', [PointOfSaleController::class, 'customerDebt'])->name('customer-debt');
+            Route::post('/pos/pay-debt', [PointOfSaleController::class, 'payDebt'])->name('pay-debt');
+            Route::post('/pos/expenses', [PointOfSaleController::class, 'storeExpense'])->name('expenses.store');
+            Route::get('/pos/transactions', [PointOfSaleController::class, 'transactions'])->name('pos.transactions');
+        });
         
         // Cashier Shift (halaman utama kasir)
         Route::get('/shift', [CashierShiftController::class, 'index'])->name('shift.index');

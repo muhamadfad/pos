@@ -38,6 +38,24 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user's POS PIN.
+     */
+    public function updatePin(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'pos_pin' => ['nullable', 'string', 'min:4', 'max:6'],
+        ]);
+
+        $request->user()->fill([
+            'pos_pin' => $request->pos_pin,
+        ]);
+
+        $request->user()->save();
+
+        return Redirect::route('profile.edit')->with('status', 'pin-updated');
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

@@ -19,8 +19,9 @@ interface CartPanelProps {
     activeShift: CashierShift | null;
     customers: Customer[];
     selectedCustomerId: number | null;
-    onUpdateQty: (productId: number, qty: number) => void;
-    onRemove: (productId: number) => void;
+    onUpdateQty: (productId: number, qty: number, notes?: string) => void;
+    onRemove: (productId: number, notes?: string) => void;
+    onUpdateNote: (productId: number, oldNote: string | undefined, newNote: string) => void;
     onClear: () => void;
     onPaidChange: (value: string) => void;
     onCustomerChange: (customerId: number | null) => void;
@@ -48,6 +49,7 @@ export default function CartPanel({
     selectedCustomerId,
     onUpdateQty,
     onRemove,
+    onUpdateNote,
     onClear,
     onPaidChange,
     onCustomerChange,
@@ -105,7 +107,7 @@ export default function CartPanel({
             {/* Exit Confirmation Modal */}
             {showExitModal && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-                    <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-md w-full mx-4">
+                    <div className="bg-white rounded-lg p-6 shadow-2xl max-w-md w-full mx-4">
                         <div className="text-center">
                             <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg
@@ -132,7 +134,7 @@ export default function CartPanel({
                             <div className="grid grid-cols-2 gap-3">
                                 <button
                                     onClick={() => setShowExitModal(false)}
-                                    className="py-2.5 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+                                    className="py-2.5 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
                                 >
                                     Batal
                                 </button>
@@ -140,7 +142,7 @@ export default function CartPanel({
                                     onClick={() =>
                                         (window.location.href = "/pos/shift")
                                     }
-                                    className="py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all"
+                                    className="py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all"
                                 >
                                     Ya, Keluar
                                 </button>
@@ -153,7 +155,7 @@ export default function CartPanel({
             <div className="flex-1 min-h-0 flex flex-col bg-white overflow-hidden h-full">
                 {/* Toast sukses ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â inline banner */}
                 {showSuccess && (
-                    <div className="shrink-0 mx-4 mt-3 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl">
+                    <div className="shrink-0 mx-4 mt-3 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                         <svg
                             className="w-5 h-5 text-green-600 shrink-0"
                             fill="none"
@@ -227,7 +229,7 @@ export default function CartPanel({
                 {/* ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ HEADER ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ */}
                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
                             <svg
                                 className="w-5 h-5"
                                 fill="none"
@@ -299,7 +301,7 @@ export default function CartPanel({
                     <div className="px-4 pt-3 space-y-2 shrink-0">
                         {Object.values(errors).map((err, i) => (
                             <div
-                                key={i}
+                                key={`${item.product_id}-${item.notes || ""}`}
                                 className="text-xs text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg flex items-center gap-2"
                             >
                                 <svg
@@ -355,10 +357,11 @@ export default function CartPanel({
                                 <div className="divide-y divide-gray-100">
                                     {cart.map((item, i) => (
                                         <CartItemRow
-                                            key={item.product_id}
+                                            key={item.product_id + '-' + (item.notes || '')}
                                             item={item}
                                             index={i + 1}
                                             onUpdateQty={onUpdateQty}
+                                            onUpdateNote={onUpdateNote}
                                             onRemove={onRemove}
                                         />
                                     ))}
@@ -390,7 +393,7 @@ export default function CartPanel({
                                 <button
                                     onClick={() => setStep("payment")}
                                     disabled={cart.length === 0}
-                                    className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-gray-900/10 active:scale-[0.98] text-base"
+                                    className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-xl shadow-gray-900/10 active:scale-[0.98] text-base"
                                 >
                                     <svg
                                         className="w-5 h-5"
@@ -434,7 +437,7 @@ export default function CartPanel({
                         <div className="flex-1 overflow-y-auto custom-scroll">
                             <div className="p-4 space-y-4">
                                 {/* Order Summary */}
-                                <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                                <div className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
                                     <div className="px-4 py-2.5 bg-gray-100 border-b border-gray-200">
                                         <p className="text-xs font-bold text-gray-600 uppercase tracking-wide">
                                             Ringkasan Pesanan
@@ -443,7 +446,7 @@ export default function CartPanel({
                                     <div className="divide-y divide-gray-100 max-h-36 overflow-y-auto">
                                         {cart.map((item) => (
                                             <div
-                                                key={item.product_id}
+                                                key={`${item.product_id}-${item.notes || ""}`}
                                                 className="flex items-center justify-between px-4 py-2 text-sm"
                                             >
                                                 <span className="text-gray-700 truncate flex-1 mr-2">
@@ -493,7 +496,7 @@ export default function CartPanel({
                                                     totalPrice.toString(),
                                                 );
                                             }}
-                                            className={`py-2 px-2 rounded-xl border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
+                                            className={`py-2 px-2 rounded-lg border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
                                                 paymentType === "lunas"
                                                     ? "border-green-500 bg-green-50 text-green-700"
                                                     : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
@@ -516,7 +519,7 @@ export default function CartPanel({
                                                     ? "Pilih customer terlebih dahulu"
                                                     : ""
                                             }
-                                            className={`py-2 px-2 rounded-xl border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
+                                            className={`py-2 px-2 rounded-lg border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
                                                 paymentType === "partial"
                                                     ? "border-yellow-500 bg-yellow-50 text-yellow-700"
                                                     : canPartial
@@ -541,7 +544,7 @@ export default function CartPanel({
                                                     ? "Pilih customer terlebih dahulu"
                                                     : ""
                                             }
-                                            className={`py-2 px-2 rounded-xl border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
+                                            className={`py-2 px-2 rounded-lg border-2 text-xs font-bold transition-all flex flex-col items-center gap-0.5 ${
                                                 paymentType === "kasbon"
                                                     ? "border-orange-500 bg-orange-50 text-orange-700"
                                                     : canKasbon
@@ -554,7 +557,7 @@ export default function CartPanel({
                                         </button>
                                     </div>
                                     {!hasCustomer && (
-                                        <p className="text-[10px] text-amber-600 mt-1.5 flex items-center gap-1">
+                                        <p className="text-[10px] text-[#1677ff] mt-1.5 flex items-center gap-1">
                                             <svg
                                                 className="w-3 h-3"
                                                 fill="none"
@@ -585,11 +588,11 @@ export default function CartPanel({
                                                 ["cash", "transfer"] as const
                                             ).map((m) => (
                                                 <button
-                                                    key={m}
+                                                    key={`${item.product_id}-${item.notes || ""}`}
                                                     onClick={() =>
                                                         setPaymentMethod(m)
                                                     }
-                                                    className={`py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
+                                                    className={`py-2.5 rounded-lg border-2 text-sm font-bold transition-all ${
                                                         paymentMethod === m
                                                             ? "border-blue-500 bg-blue-50 text-blue-700"
                                                             : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
@@ -634,7 +637,7 @@ export default function CartPanel({
                                                 type="text"
                                                 inputMode="numeric"
                                                 placeholder="0"
-                                                className="w-full pl-10 pr-3 py-3 text-right text-xl font-black border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                                className="w-full pl-10 pr-3 py-3 text-right text-xl font-black border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                                                 value={formatInputRupiah(paid)}
                                                 onChange={(e) =>
                                                     onPaidChange(
@@ -676,7 +679,7 @@ export default function CartPanel({
                                                     .slice(0, 3)
                                                     .map((v) => (
                                                         <button
-                                                            key={v}
+                                                            key={`${item.product_id}-${item.notes || ""}`}
                                                             onClick={() =>
                                                                 onPaidChange(
                                                                     v.toString(),
@@ -702,7 +705,7 @@ export default function CartPanel({
                                                     ),
                                                 ].map((v) => (
                                                     <button
-                                                        key={v}
+                                                        key={`${item.product_id}-${item.notes || ""}`}
                                                         onClick={() =>
                                                             onPaidChange(
                                                                 v.toString(),
@@ -721,7 +724,7 @@ export default function CartPanel({
 
                                 {/* Kasbon info */}
                                 {paymentType === "kasbon" && (
-                                    <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
+                                    <div className="bg-orange-50 border border-orange-200 rounded-lg px-4 py-3">
                                         <p className="text-sm font-bold text-orange-800 mb-1 flex items-center gap-1.5">
                                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg> Seluruh tagihan jadi kasbon
                                         </p>
@@ -740,7 +743,7 @@ export default function CartPanel({
                                 {/* Partial info & sisa */}
                                 {paymentType === "partial" &&
                                     paidAmount > 0 && (
-                                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 space-y-1 text-sm">
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 space-y-1 text-sm">
                                             <div className="flex justify-between">
                                                 <span className="text-gray-500">
                                                     Total
@@ -777,7 +780,7 @@ export default function CartPanel({
                                 {/* Kembalian hanya jika lunas dan ada uang lebih */}
                                 {paymentType === "lunas" && paidAmount > 0 && (
                                     <div
-                                        className={`flex justify-between items-center px-4 py-3 rounded-xl ${change >= 0 ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}
+                                        className={`flex justify-between items-center px-4 py-3 rounded-lg ${change >= 0 ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}
                                     >
                                         <span
                                             className={`text-sm font-medium ${change >= 0 ? "text-green-600" : "text-red-500"}`}
@@ -811,7 +814,7 @@ export default function CartPanel({
                                           : false) /* kasbon: always enabled */ ||
                                     processing
                                 }
-                                className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 text-base shadow-xl shadow-gray-900/10 active:scale-[0.98]"
+                                className="w-full py-4 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-base shadow-xl shadow-gray-900/10 active:scale-[0.98]"
                             >
                                 {processing ? (
                                     <>

@@ -78,7 +78,7 @@ export default function DebtPaymentPanel({
         <div className="flex flex-col h-full">
             {/* Toast sukses — inline banner, bukan modal overlay */}
             {showSuccess && (
-                <div className="shrink-0 mx-4 mt-3 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl animate-pulse">
+                <div className="shrink-0 mx-4 mt-3 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg animate-pulse">
                     <svg
                         className="w-5 h-5 text-green-600 shrink-0"
                         fill="none"
@@ -151,7 +151,7 @@ export default function DebtPaymentPanel({
                                 placeholder="Nama atau no. HP customer..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-colors"
+                                className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-colors"
                                 autoFocus
                             />
                         </div>
@@ -169,7 +169,7 @@ export default function DebtPaymentPanel({
                                     <button
                                         key={c.id}
                                         onClick={() => selectCustomer(c)}
-                                        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 rounded-xl transition-all text-left group"
+                                        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 rounded-lg transition-all text-left group"
                                     >
                                         <div>
                                             <p className="font-semibold text-gray-800 text-sm group-hover:text-orange-700">
@@ -209,7 +209,7 @@ export default function DebtPaymentPanel({
                 {selectedCustomer && (
                     <>
                         {/* Customer info + tombol ganti */}
-                        <div className="flex items-center justify-between bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
+                        <div className="flex items-center justify-between bg-orange-50 border border-orange-200 rounded-lg px-4 py-3">
                             <div>
                                 <p className="font-bold text-orange-800 text-sm">
                                     {selectedCustomer.name}
@@ -238,7 +238,7 @@ export default function DebtPaymentPanel({
                                 Daftar Tagihan (Terlama → Terbaru)
                             </p>
                             {selectedCustomer.orders.length === 0 ? (
-                                <div className="text-center py-6 bg-green-50 border border-green-200 rounded-xl">
+                                <div className="text-center py-6 bg-green-50 border border-green-200 rounded-lg">
                                     <p className="text-green-600 font-semibold text-sm">
                                         ✓ Tidak ada hutang
                                     </p>
@@ -249,7 +249,7 @@ export default function DebtPaymentPanel({
                                         (order, idx) => (
                                             <div
                                                 key={order.id}
-                                                className="bg-white border border-gray-200 rounded-xl overflow-hidden"
+                                                className="bg-white border border-gray-200 rounded-lg overflow-hidden"
                                             >
                                                 <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-b border-gray-100">
                                                     <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export default function DebtPaymentPanel({
                                                     parseInput(e.target.value),
                                                 )
                                             }
-                                            className="w-full pl-10 pr-3 py-3 text-right text-xl font-black border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-colors"
+                                            className="w-full pl-10 pr-3 py-3 text-right text-xl font-black border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-colors"
                                             autoFocus
                                         />
                                     </div>
@@ -375,7 +375,7 @@ export default function DebtPaymentPanel({
 
                                 {/* Sisa setelah bayar */}
                                 {paidAmount > 0 && (
-                                    <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 space-y-1.5 text-sm">
+                                    <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 space-y-1.5 text-sm">
                                         <div className="flex justify-between">
                                             <span className="text-gray-500">
                                                 Total Hutang
@@ -423,7 +423,7 @@ export default function DebtPaymentPanel({
                                                     onClick={() =>
                                                         setPaymentMethod(m)
                                                     }
-                                                    className={`py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
+                                                    className={`py-2.5 rounded-lg border-2 text-sm font-bold transition-all ${
                                                         paymentMethod === m
                                                             ? "border-orange-500 bg-orange-50 text-orange-700"
                                                             : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
@@ -451,7 +451,7 @@ export default function DebtPaymentPanel({
                         disabled={
                             paidAmount <= 0 || paidAmount > totalDebt || loading
                         }
-                        className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base shadow-md hover:shadow-lg active:scale-[0.98]"
+                        className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 text-base shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] hover:shadow-[0_6px_16px_0_rgba(0,0,0,0.08),0_3px_6px_-4px_rgba(0,0,0,0.12),0_9px_28px_8px_rgba(0,0,0,0.05)] active:scale-[0.98]"
                     >
                         {loading ? (
                             <>

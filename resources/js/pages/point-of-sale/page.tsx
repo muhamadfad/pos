@@ -138,10 +138,10 @@ function PointOfSaleContent() {
 
     function addToCart(product: Product) {
     setCart((prev) => {
-        const existing = prev.find((c) => c.product_id === product.id);
+        const existing = prev.find((c) => c.product_id === product.id && !c.notes);
         if (existing) {
             return prev.map((c) =>
-                c.product_id === product.id ? { ...c, qty: c.qty + 1 } : c,
+                (c.product_id === product.id && !c.notes) ? { ...c, qty: c.qty + 1 } : c,
             );
         }
         return [
@@ -152,9 +152,18 @@ function PointOfSaleContent() {
                 name: product.name,
                 price: product.price,
                 qty: 1,
+                notes: "",
             },
         ];
     });
+}
+
+function updateNote(productId: number, oldNote: string | undefined, newNote: string) {
+    setCart((prev) =>
+        prev.map((c) =>
+            (c.product_id === productId && c.notes === oldNote) ? { ...c, notes: newNote } : c,
+        ),
+    );
 }
 
 function addCustomItem() {
@@ -182,20 +191,20 @@ function addCustomItem() {
     setCustomItemPrice("");
 }
 
-function updateQty(productId: number, qty: number) {
+function updateQty(productId: number, qty: number, notes?: string) {
     if (qty < 1) {
-        removeFromCart(productId);
+        removeFromCart(productId, notes);
         return;
     }
     setCart((prev) =>
         prev.map((c) =>
-            c.product_id === productId ? { ...c, qty: qty } : c,
+            (c.product_id === productId && c.notes === notes) ? { ...c, qty: qty } : c,
         ),
     );
 }
 
-    function removeFromCart(productId: number) {
-        setCart((prev) => prev.filter((c) => c.product_id !== productId));
+    function removeFromCart(productId: number, notes?: string) {
+        setCart((prev) => prev.filter((c) => !(c.product_id === productId && c.notes === notes)));
     }
 
     function clearCart() {
@@ -578,6 +587,7 @@ function updateQty(productId: number, qty: number) {
                             selectedCustomerId={selectedCustomerId}
                             onUpdateQty={updateQty}
                             onRemove={removeFromCart}
+                                onUpdateNote={updateNote}
                             onClear={clearCart}
                             onPaidChange={setPaid}
                             onCustomerChange={setSelectedCustomerId}

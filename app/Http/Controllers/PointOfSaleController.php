@@ -18,6 +18,31 @@ use Illuminate\Support\Facades\Log;
 
 class PointOfSaleController extends Controller
 {
+        public function pinScreen()
+    {
+        return view('cashier.pin');
+    }
+
+    public function verifyPin(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'pin' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if ($user->pos_pin && $user->pos_pin === $request->pin) {
+            session(['pos_unlocked' => true]);
+            
+            $intended = session('url.intended_pos', route('pos.index'));
+            session()->forget('url.intended_pos');
+            
+            return redirect($intended);
+        }
+
+        return back()->withErrors(['pin' => 'PIN salah!']);
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -126,6 +151,7 @@ class PointOfSaleController extends Controller
             'items'                  => 'required|array|min:1',
             'items.*.product_id'     => 'required',
             'items.*.qty'            => 'required|integer|min:1',
+            'items.*.notes'          => 'nullable|string|max:500',
             'items.*.price'          => 'required|numeric|min:0',
             'paid'                   => 'required|numeric|min:0',
             'customer_id'            => 'nullable|exists:customers,id',

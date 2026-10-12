@@ -32,46 +32,54 @@ class IngredientAndRecipeSeeder extends Seeder
 
         // 2. Buat Bahan Baku (Ingredients)
         $ingredients = [
-            ['name' => 'Daging Sapi', 'unit_id' => $unitKg, 'current_stock' => 10, 'min_stock' => 2, 'unit_cost' => 120000, 'branch_id' => $branchId, 'is_active' => true],
-            ['name' => 'Jeroan Sapi', 'unit_id' => $unitKg, 'current_stock' => 5, 'min_stock' => 2, 'unit_cost' => 80000, 'branch_id' => $branchId, 'is_active' => true],
-            ['name' => 'Kacang Tanah', 'unit_id' => $unitKg, 'current_stock' => 15, 'min_stock' => 5, 'unit_cost' => 30000, 'branch_id' => $branchId, 'is_active' => true],
-            ['name' => 'Bawang Merah', 'unit_id' => $unitKg, 'current_stock' => 5, 'min_stock' => 1, 'unit_cost' => 45000, 'branch_id' => $branchId, 'is_active' => true],
-            ['name' => 'Bawang Putih', 'unit_id' => $unitKg, 'current_stock' => 4, 'min_stock' => 1, 'unit_cost' => 40000, 'branch_id' => $branchId, 'is_active' => true],
-            ['name' => 'Ketupat Instan', 'unit_id' => \Illuminate\Support\Facades\DB::table('units')->where('name', 'Pieces')->value('id') ?? $unitKg, 'current_stock' => 100, 'min_stock' => 20, 'unit_cost' => 1500, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Biji Kopi Arabica', 'unit_id' => $unitKg, 'current_stock' => 10, 'min_stock' => 2, 'unit_cost' => 150000, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Biji Kopi Robusta', 'unit_id' => $unitKg, 'current_stock' => 5, 'min_stock' => 2, 'unit_cost' => 100000, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Susu Segar (Fresh Milk)', 'unit_id' => $unitLiter, 'current_stock' => 20, 'min_stock' => 5, 'unit_cost' => 20000, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Sirup Karamel', 'unit_id' => $unitLiter, 'current_stock' => 5, 'min_stock' => 1, 'unit_cost' => 80000, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Sirup Gula', 'unit_id' => $unitLiter, 'current_stock' => 4, 'min_stock' => 1, 'unit_cost' => 40000, 'branch_id' => $branchId, 'is_active' => true],
+            ['name' => 'Frozen Croissant', 'unit_id' => \Illuminate\Support\Facades\DB::table('units')->where('name', 'Pieces')->value('id') ?? $unitKg, 'current_stock' => 100, 'min_stock' => 20, 'unit_cost' => 8000, 'branch_id' => $branchId, 'is_active' => true],
         ];
 
         \Illuminate\Support\Facades\DB::table('ingredients')->insert($ingredients);
 
         // Ambil ID Bahan Baku
-        $ingrDaging = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Daging Sapi')->value('id');
-        $ingrJeroan = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Jeroan Sapi')->value('id');
-        $ingrKacang = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Kacang Tanah')->value('id');
-        $ingrKetupat = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Ketupat Instan')->value('id');
+        $ingrArabica = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Biji Kopi Arabica')->value('id');
+        $ingrRobusta = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Biji Kopi Robusta')->value('id');
+        $ingrMilk = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Susu Segar (Fresh Milk)')->value('id');
+        $ingrCaramel = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Sirup Karamel')->value('id');
+        $ingrCroissant = \Illuminate\Support\Facades\DB::table('ingredients')->where('name', 'Frozen Croissant')->value('id');
 
         // 3. Hubungkan ke Produk (Resep/Recipe Items)
         // Pastikan product sudah ada dari PosDummySeeder
-        $prodCotoDaging = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Coto Makassar Daging')->value('id');
-        $prodCotoCampur = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Coto Makassar Campur')->value('id');
-        $prodKetupat = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Ketupat / Burasa')->value('id');
+        $prodEspresso = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Espresso')->value('id');
+        $prodCappuccino = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Cappuccino')->value('id');
+        $prodCroissant = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Croissant')->value('id');
+        $prodCaramelMacchiato = \Illuminate\Support\Facades\DB::table('products')->where('name', 'Caramel Macchiato')->value('id');
 
-        if ($prodCotoDaging) {
+        if ($prodEspresso) {
             \Illuminate\Support\Facades\DB::table('recipe_items')->insert([
-                ['product_id' => $prodCotoDaging, 'ingredient_id' => $ingrDaging, 'quantity' => 0.1, 'unit_id' => $unitKg, 'waste_percentage' => 5, 'created_at' => now(), 'updated_at' => now()], // 100 gram daging
-                ['product_id' => $prodCotoDaging, 'ingredient_id' => $ingrKacang, 'quantity' => 0.05, 'unit_id' => $unitKg, 'waste_percentage' => 0, 'created_at' => now(), 'updated_at' => now()], // 50 gram kacang
+                ['product_id' => $prodEspresso, 'ingredient_id' => $ingrArabica, 'quantity' => 0.015, 'unit_id' => $unitKg, 'waste_percentage' => 5, 'created_at' => now(), 'updated_at' => now()], // 15 gram kopi
             ]);
         }
 
-        if ($prodCotoCampur) {
+        if ($prodCappuccino) {
             \Illuminate\Support\Facades\DB::table('recipe_items')->insert([
-                ['product_id' => $prodCotoCampur, 'ingredient_id' => $ingrDaging, 'quantity' => 0.05, 'unit_id' => $unitKg, 'waste_percentage' => 5, 'created_at' => now(), 'updated_at' => now()], // 50 gram daging
-                ['product_id' => $prodCotoCampur, 'ingredient_id' => $ingrJeroan, 'quantity' => 0.05, 'unit_id' => $unitKg, 'waste_percentage' => 10, 'created_at' => now(), 'updated_at' => now()], // 50 gram jeroan
-                ['product_id' => $prodCotoCampur, 'ingredient_id' => $ingrKacang, 'quantity' => 0.05, 'unit_id' => $unitKg, 'waste_percentage' => 0, 'created_at' => now(), 'updated_at' => now()],
+                ['product_id' => $prodCappuccino, 'ingredient_id' => $ingrArabica, 'quantity' => 0.015, 'unit_id' => $unitKg, 'waste_percentage' => 5, 'created_at' => now(), 'updated_at' => now()], // 15 gram kopi
+                ['product_id' => $prodCappuccino, 'ingredient_id' => $ingrMilk, 'quantity' => 0.15, 'unit_id' => $unitLiter, 'waste_percentage' => 2, 'created_at' => now(), 'updated_at' => now()], // 150 ml susu
             ]);
         }
 
-        if ($prodKetupat) {
+        if ($prodCaramelMacchiato) {
             \Illuminate\Support\Facades\DB::table('recipe_items')->insert([
-                ['product_id' => $prodKetupat, 'ingredient_id' => $ingrKetupat, 'quantity' => 1, 'unit_id' => \Illuminate\Support\Facades\DB::table('units')->where('name', 'Pieces')->value('id'), 'waste_percentage' => 0, 'created_at' => now(), 'updated_at' => now()],
+                ['product_id' => $prodCaramelMacchiato, 'ingredient_id' => $ingrArabica, 'quantity' => 0.015, 'unit_id' => $unitKg, 'waste_percentage' => 5, 'created_at' => now(), 'updated_at' => now()], // 15 gram kopi
+                ['product_id' => $prodCaramelMacchiato, 'ingredient_id' => $ingrMilk, 'quantity' => 0.15, 'unit_id' => $unitLiter, 'waste_percentage' => 2, 'created_at' => now(), 'updated_at' => now()], // 150 ml susu
+                ['product_id' => $prodCaramelMacchiato, 'ingredient_id' => $ingrCaramel, 'quantity' => 0.02, 'unit_id' => $unitLiter, 'waste_percentage' => 2, 'created_at' => now(), 'updated_at' => now()], // 20 ml sirup
+            ]);
+        }
+
+        if ($prodCroissant) {
+            \Illuminate\Support\Facades\DB::table('recipe_items')->insert([
+                ['product_id' => $prodCroissant, 'ingredient_id' => $ingrCroissant, 'quantity' => 1, 'unit_id' => \Illuminate\Support\Facades\DB::table('units')->where('name', 'Pieces')->value('id'), 'waste_percentage' => 0, 'created_at' => now(), 'updated_at' => now()],
             ]);
         }
     }

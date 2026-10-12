@@ -3,7 +3,7 @@
 @section('title', 'Pilih Supplier')
 
 @section('content')
-<div class="bg-white p-6 rounded-xl shadow-sm border">
+<div class="bg-gray-50 p-6 rounded-md shadow-sm border">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
@@ -12,7 +12,7 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border rounded-lg overflow-hidden">
+        <table class="min-w-full text-sm text-left border rounded-md overflow-hidden">
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                     <th class="px-4 py-3">Nama Supplier</th>
@@ -31,10 +31,10 @@
                     </td>
 
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded-full text-xs font-semibold
+                        <span class="px-2 py-1 rounded-md text-xs font-semibold
                             {{ $supplier->type == 'Supplier'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-green-100 text-green-700' }}">
+                                ? 'bg-gray-50 border border-gray-200 text-black'
+                                : 'bg-gray-50 border border-gray-200 text-black' }}">
                             {{ $supplier->type }}
                         </span>
                     </td>
@@ -49,7 +49,7 @@
 
                     <td class="px-4 py-3 text-center">
                         <a href="{{ route('admin.transactions.in.perSupplier', $supplier->id) }}"
-                            class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
+                            class="inline-flex items-center px-3 py-1.5 bg-black text-white text-white rounded-md hover:bg-gray-800 transition text-sm">
                             Pilih
                         </a>
                     </td>

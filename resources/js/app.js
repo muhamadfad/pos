@@ -41,16 +41,16 @@ function initCharts() {
                         {
                             label: 'Pemasukan',
                             data: incomeData,
-                            backgroundColor: 'rgba(16, 185, 129, 0.6)',
-                            borderColor: 'rgb(16, 185, 129)',
+                            backgroundColor: 'rgba(22, 119, 255, 0.6)',
+                            borderColor: 'rgb(22, 119, 255)',
                             borderWidth: 1,
                             borderRadius: 4
                         },
                         {
                             label: 'Pengeluaran',
                             data: expenseData,
-                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
-                            borderColor: 'rgb(239, 68, 68)',
+                            backgroundColor: 'rgba(245, 34, 45, 0.6)',
+                            borderColor: 'rgb(245, 34, 45)',
                             borderWidth: 1,
                             borderRadius: 4
                         }

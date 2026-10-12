@@ -11,39 +11,39 @@
 
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <nav class="flex mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">
+            <nav class="flex mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <span>Inventory</span>
                 <span class="mx-2">/</span>
-                <span class="text-indigo-600">Products</span>
+                <span class="text-black">Products</span>
             </nav>
-            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Daftar Menu</h1>
+            <h1 class="text-3xl font-bold text-black tracking-tight">Daftar Menu</h1>
         </div>
         
         <div class="flex items-center gap-3">
             <button @click="fetchData()" 
-                class="inline-flex items-center justify-center w-10 h-10 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                class="inline-flex items-center justify-center w-10 h-10 bg-gray-50 border border-gray-200 rounded-md text-gray-600 hover:bg-white transition-all active:scale-95 shadow-sm">
                 <span class="iconify text-lg" data-icon="lucide:refresh-cw" :class="loading ? 'animate-spin' : ''"></span>
             </button>
             <a href="{{ route('admin.products.create') }}"
-                class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all shadow-sm active:scale-95">
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#001529] text-white text-sm font-semibold rounded-md hover:bg-[#001529] transition-all shadow-sm active:scale-95">
                 <span class="iconify text-lg" data-icon="lucide:plus"></span>
                 Tambah Menu
             </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center bg-gray-50 p-2 rounded-md border border-gray-200 shadow-sm">
         
         <div class="lg:col-span-6 relative group">
-            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="lucide:search"></span>
+            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-lg" data-icon="lucide:search"></span>
             <input type="text" x-model="search" @input.debounce.500ms="fetchData"
                 placeholder="Cari SKU, Nama, atau Barcode..."
-                class="w-full pl-11 pr-4 py-2.5 text-sm bg-transparent border-none focus:ring-0 text-slate-700 placeholder:text-slate-400">
+                class="w-full pl-11 pr-4 py-2.5 text-sm bg-transparent border-none focus:ring-0 text-slate-700 placeholder:text-gray-500">
         </div>
 
         <div class="lg:col-span-6 flex flex-wrap lg:justify-end items-center gap-3 pr-2">
             <select x-model="category" @change="fetchData"
-                class="text-sm font-medium text-slate-600 bg-slate-50 border-slate-200 rounded-lg focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer py-2 pl-3 pr-10">
+                class="text-sm font-medium text-gray-600 bg-white border-gray-200 rounded-md focus:border-gray-200 focus:ring-4 focus:ring-[#1677ff]/10 transition-all cursor-pointer py-2 pl-3 pr-10">
                 <option value="">Semua Kategori</option>
                 @foreach($categories as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -54,7 +54,7 @@
 
             <div class="flex items-center gap-2">
                 <select x-model="sort" @change="fetchData"
-                    class="text-[11px] font-bold text-slate-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
+                    class="text-[11px] font-bold text-gray-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
                     <option value="">Urutkan</option>
                     <option value="price_asc">Harga Terendah</option>
                     <option value="price_desc">Harga Tertinggi</option>
@@ -63,7 +63,7 @@
                 </select>
                 
                 <select x-model="per_page" @change="fetchData"
-                    class="text-[11px] font-bold text-slate-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
+                    class="text-[11px] font-bold text-gray-500 border-none bg-transparent focus:ring-0 cursor-pointer uppercase tracking-tight">
                     <option value="10">10 Baris</option>
                     <option value="25">25 Baris</option>
                     <option value="50">50 Baris</option>
@@ -72,12 +72,12 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden relative min-h-[400px]">
+    <div class="bg-gray-50 rounded-md border border-gray-200 shadow-sm overflow-hidden relative min-h-[400px]">
         <div x-show="loading" x-transition.opacity
-            class="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-20 flex items-center justify-center">
+            class="absolute inset-0 bg-gray-50/80 backdrop-blur-[1px] z-20 flex items-center justify-center">
             <div class="flex flex-col items-center gap-3">
-                <div class="w-8 h-8 border-[3px] border-slate-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                <span class="text-xs font-medium text-slate-500 tracking-wide">Memuat data...</span>
+                <div class="w-8 h-8 border-[3px] border-gray-200 border-t-indigo-600 rounded-md animate-spin"></div>
+                <span class="text-xs font-medium text-gray-500 tracking-wide">Memuat data...</span>
             </div>
         </div>
 

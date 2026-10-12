@@ -12,38 +12,38 @@
     <div class="flex min-h-screen">
 
         <!-- Sidebar Left -->
-        <aside class="w-64 bg-white border-r shadow-sm hidden md:flex flex-col">
+        <aside class="w-64 bg-gray-50 border-r shadow-sm hidden md:flex flex-col">
             <div class="h-16 flex items-center px-6 font-semibold text-lg border-b">
                 Admin Panel
             </div>
 
             <nav class="flex-1 py-4 space-y-1">
                 <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white border border-gray-200 hover:text-black transition rounded-r-full">
                     <span class="text-lg"><span class="iconify inline-block" data-icon="mdi:chart-bar"></span></span>
                     <span class="ml-3">Dashboard</span>
                 </a>
 
                 <a href="{{ route('admin.products.index') }}"
-                    class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white border border-gray-200 hover:text-black transition rounded-r-full">
                     <span class="text-lg"><span class="iconify inline-block" data-icon="mdi:package-variant"></span></span>
                     <span class="ml-3">Produk</span>
                 </a>
 
                 <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white border border-gray-200 hover:text-black transition rounded-r-full">
                     <span class="text-lg">Ã°Å¸â€”â€šÃ¯Â¸Â</span>
                     <span class="ml-3">Kategori</span>
                 </a>
 
                 <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white border border-gray-200 hover:text-black transition rounded-r-full">
                     <span class="text-lg">Ã°Å¸â€˜Â¤</span>
                     <span class="ml-3">User</span>
                 </a>
 
                 <a href="{{ route('profile.edit') }}"
-                    class="flex items-center px-6 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition rounded-r-full">
+                    class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-white border border-gray-200 hover:text-black transition rounded-r-full">
                     <span class="text-lg">Ã¢Å¡â„¢Ã¯Â¸Â</span>
                     <span class="ml-3">Profil</span>
                 </a>
@@ -53,7 +53,7 @@
                 <form method="POST" action="{{ route('logout') }}" data-turbo="false">
                     @csrf
                     <button type="submit"
-                        class="w-full flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition">
+                        class="w-full flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition">
                         Ã°Å¸Å¡Âª <span class="ml-3">Logout</span>
                     </button>
                 </form>
@@ -64,7 +64,7 @@
         <div class="flex-1 flex flex-col">
 
             <!-- Topbar -->
-            <header class="h-16 bg-white border-b shadow-sm flex items-center justify-between px-6">
+            <header class="h-16 bg-gray-50 border-b shadow-sm flex items-center justify-between px-6">
                 <h1 class="text-lg font-semibold text-gray-800">
                     @yield('title', 'Dashboard')
                 </h1>
@@ -74,7 +74,7 @@
                         {{ Auth::user()->name }}
                     </span>
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0D8ABC&color=fff"
-                        class="w-9 h-9 rounded-full border" alt="User Avatar">
+                        class="w-9 h-9 rounded-md border" alt="User Avatar">
                 </div>
             </header>
 
@@ -85,9 +85,9 @@
         </div>
 
         <!-- Sidebar Right (Vertical User Info) -->
-        <aside class="w-20 bg-white border-l shadow-sm hidden lg:flex flex-col items-center py-6 space-y-6">
+        <aside class="w-20 bg-gray-50 border-l shadow-sm hidden lg:flex flex-col items-center py-6 space-y-6">
             <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=2563EB&color=fff"
-                class="w-10 h-10 rounded-full border" alt="User Avatar">
+                class="w-10 h-10 rounded-md border" alt="User Avatar">
 
             <div class="writing-mode-vertical-rl transform rotate-180 text-xs text-gray-500 font-medium tracking-wide">
                 {{ Auth::user()->email }}
@@ -95,6 +95,7 @@
         </aside>
 
     </div>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </body>
 
 </html>

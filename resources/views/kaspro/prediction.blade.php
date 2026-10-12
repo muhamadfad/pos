@@ -17,20 +17,20 @@
     
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Intelligence Forecast</h1>
-            <p class="text-slate-500 text-sm font-medium">Proyeksi arus kas berbasis performa historis.</p>
+            <h1 class="text-2xl font-semibold text-black tracking-tight">Intelligence Forecast</h1>
+            <p class="text-gray-500 text-sm font-medium">Proyeksi arus kas berbasis performa historis.</p>
         </div>
         
         @if(isset($prediction['growth_rate']))
-        <div class="flex items-center gap-4 px-6 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+        <div class="flex items-center gap-4 px-4 py-2 bg-gray-50 border border-gray-200 rounded-md shadow-sm">
             <div class="flex flex-col">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1 text-right">Growth Rate</p>
-                <p class="text-xl font-black text-slate-900 leading-none">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-none mb-1 text-right">Growth Rate</p>
+                <p class="text-xl font-semibold text-black leading-none">
                     {{ number_format(($prediction['growth_rate'] - 1) * 100, 1) }}%
                 </p>
             </div>
             <div class="h-8 w-[1px] bg-slate-100"></div>
-            <span class="text-xs font-bold {{ $prediction['growth_rate'] >= 1 ? 'text-emerald-600' : 'text-rose-600' }}">
+            <span class="text-xs font-bold {{ $prediction['growth_rate'] >= 1 ? 'text-black' : 'text-rose-600' }}">
                 {{ $prediction['growth_rate'] >= 1 ? 'PROFITABLE ▲' : 'DECLINING ▼' }}
             </span>
         </div>
@@ -38,38 +38,38 @@
     </div>
 
     <div class="glass-card overflow-hidden">
-        <div class="px-8 py-5 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-            <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wider text-numeric">Detail Proyeksi Bulanan</h2>
+        <div class="px-8 py-5 border-b border-slate-50 flex justify-between items-center bg-white">
+            <h2 class="text-xs font-bold text-black uppercase tracking-wider text-numeric">Detail Proyeksi Bulanan</h2>
         </div>
 
         <div class="overflow-x-auto">
             @if(!empty($prediction['predictions']))
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/50">
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Bulan</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Est. Masuk</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Est. Keluar</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Net Flow</th>
+                    <tr class="bg-white">
+                        <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Bulan</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Est. Masuk</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Est. Keluar</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-right">Net Flow</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @foreach($prediction['predictions'] as $pred)
-                    <tr class="hover:bg-slate-50/80 transition">
+                    <tr class="hover:bg-white transition">
                         <td class="px-8 py-4">
-                            <span class="font-bold text-slate-800">{{ $pred['month_name'] }}</span>
+                            <span class="font-bold text-black">{{ $pred['month_name'] }}</span>
                             @if(isset($pred['seasonal_factor']) && $pred['seasonal_factor'] > 1)
-                                <span class="ml-2 text-[9px] font-black bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded uppercase">Peak</span>
+                                <span class="ml-2 text-[9px] font-semibold bg-gray-50 text-black px-1.5 py-0.5 rounded uppercase">Peak</span>
                             @endif
                         </td>
-                        <td class="px-8 py-4 text-emerald-600 font-medium text-numeric text-sm">
+                        <td class="px-8 py-4 text-black font-medium text-numeric text-sm">
                             Rp{{ number_format($pred['predicted_income'], 0, ',', '.') }}
                         </td>
                         <td class="px-8 py-4 text-rose-500 font-medium text-numeric text-sm">
                             Rp{{ number_format($pred['predicted_expense'], 0, ',', '.') }}
                         </td>
                         <td class="px-8 py-4 text-right">
-                            <span class="text-sm font-bold text-numeric {{ $pred['predicted_net'] >= 0 ? 'text-emerald-700' : 'text-rose-700' }}">
+                            <span class="text-sm font-bold text-numeric {{ $pred['predicted_net'] >= 0 ? 'text-black' : 'text-rose-700' }}">
                                 {{ $pred['predicted_net'] >= 0 ? '+' : '' }}Rp{{ number_format($pred['predicted_net'], 0, ',', '.') }}
                             </span>
                         </td>
@@ -78,23 +78,23 @@
                 </tbody>
             </table>
             @else
-            <div class="p-12 text-center text-slate-400 italic text-sm">Data tidak tersedia.</div>
+            <div class="p-12 text-center text-gray-500 italic text-sm">Data tidak tersedia.</div>
             @endif
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 glass-card p-8">
-            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest mb-6">Visualisasi Tren Historis</h3>
+            <h3 class="text-xs font-bold text-black uppercase tracking-widest mb-6">Visualisasi Tren Historis</h3>
             <div class="chart-container">
                 <canvas id="historicalChart"></canvas>
             </div>
         </div>
 
         <div class="lg:col-span-4 space-y-6">
-            <div class="glass-card p-6 border-l-4 border-emerald-500">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Avg. Predicted Income</h4>
-                <p class="text-2xl font-black text-slate-900 text-numeric">
+            <div class="glass-card p-6 border-l-4 border-gray-200">
+                <h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Avg. Predicted Income</h4>
+                <p class="text-2xl font-semibold text-black text-numeric">
                     @php
                         $avgIncome = count($prediction['predictions']) > 0 
                             ? collect($prediction['predictions'])->avg('predicted_income') 
@@ -102,11 +102,11 @@
                     @endphp
                     Rp{{ number_format($avgIncome, 0, ',', '.') }}
                 </p>
-                <p class="text-[10px] text-slate-400 mt-1 italic">*Rata-rata pemasukan per bulan di periode depan</p>
+                <p class="text-[10px] text-gray-500 mt-1 italic">*Rata-rata pemasukan per bulan di periode depan</p>
             </div>
 
             @if(!empty($prediction['recommendations']))
-            <div class="bg-slate-900 rounded-[24px] p-6 text-white shadow-xl">
+            <div class="bg-[#001529] rounded-lg p-6 text-white shadow-sm">
                 <div class="flex items-center gap-2 mb-4">
                     <span class="text-amber-400 font-bold">💡</span>
                     <h4 class="text-[10px] font-bold uppercase tracking-widest opacity-60 text-white">AI Strategy Insight</h4>

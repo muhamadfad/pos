@@ -16,20 +16,20 @@ export default function ProductCard({
     return (
         <button
             onClick={onAdd}
-            className={`relative group rounded-2xl p-5 text-left transition-all duration-300 transform active:scale-95 flex flex-col justify-between h-full min-h-[200px]
+            className={`relative group rounded-lg p-5 text-left transition-all duration-300 transform active:scale-95 flex flex-col justify-between h-full min-h-[200px]
                 ${
                     qtyInCart > 0
-                        ? "bg-white border-2 border-blue-500 shadow-lg shadow-blue-500/20"
-                        : "bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-blue-300 hover:-translate-y-1"
+                        ? "bg-white border-2 border-blue-500 shadow-[0_6px_16px_0_rgba(0,0,0,0.08),0_3px_6px_-4px_rgba(0,0,0,0.12),0_9px_28px_8px_rgba(0,0,0,0.05)] shadow-blue-500/20"
+                        : "bg-white border border-gray-100 shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)] hover:shadow-xl hover:border-blue-300 hover:-translate-y-1"
                 }`}
         >
             {qtyInCart > 0 && (
-                <div className="absolute -top-3 -right-3 z-10 w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-sm font-black rounded-full flex items-center justify-center shadow-md shadow-blue-500/30 transform scale-100 transition-transform">
+                <div className="absolute -top-3 -right-3 z-10 w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-sm font-black rounded-full flex items-center justify-center shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] shadow-blue-500/30 transform scale-100 transition-transform">
                     <span className="animate-pulse">{qtyInCart}</span>
                 </div>
             )}
             
-            <div className="w-full h-36 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:from-blue-50 group-hover:to-indigo-50 transition-colors overflow-hidden relative">
+            <div className="w-full h-36 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center mb-4 group-hover:from-blue-50 group-hover:to-indigo-50 transition-colors overflow-hidden relative">
                 {product.image ? (
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 ) : (
@@ -65,7 +65,7 @@ export default function ProductCard({
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] font-medium text-gray-400 mb-0.5">Stok</span>
                         <span
-                            className={`text-xs font-bold px-2 py-0.5 rounded-md shadow-sm ${
+                            className={`text-xs font-bold px-2 py-0.5 rounded-md shadow-[0_1px_2px_0_rgba(0,0,0,0.03),0_1px_6px_-1px_rgba(0,0,0,0.02),0_2px_4px_0_rgba(0,0,0,0.02)] ${
                                 product.stock <= 5
                                     ? "bg-red-50 text-red-600 border border-red-100"
                                     : "bg-emerald-50 text-emerald-600 border border-emerald-100"

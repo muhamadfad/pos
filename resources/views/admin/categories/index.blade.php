@@ -9,22 +9,22 @@
 
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <div class="flex items-center justify-center w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-lg text-indigo-600 shadow-sm">
+            <div class="flex items-center justify-center w-10 h-10 bg-gray-50 border border-gray-200 rounded-md text-black shadow-sm">
                 <span class="iconify text-xl" data-icon="lucide:layers"></span>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Kategori Produk</h1>
-                <p class="text-sm text-slate-500 font-medium">Kelola pengelompokan inventaris untuk struktur yang rapi.</p>
+                <h1 class="text-2xl font-bold text-black tracking-tight">Kategori Produk</h1>
+                <p class="text-sm text-gray-500 font-medium">Kelola pengelompokan inventaris untuk struktur yang rapi.</p>
             </div>
         </div>
 
         <div class="flex items-center gap-4">
-            <div class="hidden md:block text-right pr-4 border-r border-slate-200">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Record</p>
-                <p class="text-lg font-bold text-slate-800 leading-none">{{ $total }}</p>
+            <div class="hidden md:block text-right pr-4 border-r border-gray-200">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Record</p>
+                <p class="text-base font-semibold text-black leading-none">{{ $total }}</p>
             </div>
             <a href="{{ route('admin.categories.create') }}" 
-               class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-all shadow-sm active:scale-95">
+               class="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white text-sm font-bold rounded-md hover:bg-gray-800 transition-all shadow-sm active:scale-95">
                 <span class="iconify text-lg" data-icon="lucide:plus"></span>
                 Tambah Kategori
             </a>
@@ -33,12 +33,12 @@
 
     <div class="flex flex-col md:flex-row gap-4 items-center">
         <div class="w-full md:flex-1 relative group">
-            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" data-icon="lucide:search"></span>
+            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-black transition-colors" data-icon="lucide:search"></span>
             <input type="text" 
                 x-model="search" 
                 @input.debounce.400ms="fetchData()" 
                 placeholder="Cari nama kategori..."
-                class="w-full pl-10 pr-10 py-2.5 text-sm bg-white border border-slate-200 rounded-lg focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 placeholder:text-slate-400 font-medium">
+                class="w-full pl-10 pr-10 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-md focus:ring-4 focus:ring-[#1677ff]/10 focus:border-gray-200 transition-all text-slate-700 placeholder:text-gray-500 font-medium">
             
             <button x-show="search" @click="search=''; fetchData()" 
                 class="absolute inset-y-0 right-3 flex items-center text-slate-300 hover:text-rose-500 transition-colors">
@@ -47,12 +47,12 @@
         </div>
 
         <div class="flex shrink-0">
-            <div class="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 flex items-center gap-2.5">
+            <div class="bg-white border border-gray-200 border border-gray-200 rounded-md px-3 py-2 flex items-center gap-2.5">
                 <div class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-md bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-md h-2 w-2 bg-white border border-gray-2000"></span>
                 </div>
-                <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Live Database</span>
+                <span class="text-[10px] font-bold text-black uppercase tracking-widest">Live Database</span>
             </div>
         </div>
     </div>
@@ -61,14 +61,14 @@
         <div x-show="loading" 
              x-transition:enter="transition opacity-0" 
              x-transition:enter-end="opacity-100"
-             class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-20 flex items-center justify-center rounded-xl" style="display: none;">
+             class="absolute inset-0 bg-gray-50/60 backdrop-blur-[1px] z-20 flex items-center justify-center rounded-md" style="display: none;">
             <div class="flex flex-col items-center gap-2">
-                <div class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Memuat...</span>
+                <div class="w-6 h-6 border-2 border-gray-200 border-t-transparent rounded-md animate-spin"></div>
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Memuat...</span>
             </div>
         </div>
 
-        <div id="tableContent" class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden transition-all">
+        <div id="tableContent" class="bg-gray-50 border border-gray-200 rounded-md shadow-sm overflow-hidden transition-all">
             @include('admin.categories.partials.table')
         </div>
     </div>

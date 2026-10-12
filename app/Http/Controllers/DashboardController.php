@@ -63,45 +63,49 @@ class DashboardController extends Controller
             $totalUsers = User::where('branch_id', $branchId)->count();
         }
         
+                // =======================
+        // PENDAPATAN (HARI INI, MINGGU INI, BULAN INI)
         // =======================
-        // PENDAPATAN HARI INI
-        // =======================
-        $todayRevenueQuery = Order::whereDate('date', Carbon::today())
-            ->where('payment_status', 'paid');
-        
+        $todayRevenueQuery = Order::whereDate('date', Carbon::today())->where('payment_status', 'paid');
+        $todayTransactionsQuery = Order::whereDate('date', Carbon::today());
+        $yesterdayRevenueQuery = Order::whereDate('date', Carbon::yesterday())->where('payment_status', 'paid');
+            
+        $thisWeekRevenueQuery = Order::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid');
+        $thisWeekTransactionsQuery = Order::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        $lastWeekRevenueQuery = Order::whereBetween('date', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid');
+            
+        $thisMonthRevenueQuery = Order::whereMonth('date', Carbon::now()->month)->whereYear('date', Carbon::now()->year)->where('payment_status', 'paid');
+        $thisMonthTransactionsQuery = Order::whereMonth('date', Carbon::now()->month)->whereYear('date', Carbon::now()->year);
+        $lastMonthRevenueQuery = Order::whereMonth('date', Carbon::now()->subMonth()->month)->whereYear('date', Carbon::now()->subMonth()->year)->where('payment_status', 'paid');
+
         if (!$showAllBranches && $branchId) {
             $todayRevenueQuery->where('branch_id', $branchId);
+            $todayTransactionsQuery->where('branch_id', $branchId);
+            $yesterdayRevenueQuery->where('branch_id', $branchId);
+            $thisWeekRevenueQuery->where('branch_id', $branchId);
+            $thisWeekTransactionsQuery->where('branch_id', $branchId);
+            $lastWeekRevenueQuery->where('branch_id', $branchId);
+            $thisMonthRevenueQuery->where('branch_id', $branchId);
+            $thisMonthTransactionsQuery->where('branch_id', $branchId);
+            $lastMonthRevenueQuery->where('branch_id', $branchId);
         }
         
         $todayRevenue = $todayRevenueQuery->sum('total_amount') ?? 0;
-        
-        // Jumlah transaksi hari ini
-        $todayTransactionsQuery = Order::whereDate('date', Carbon::today());
-        
-        if (!$showAllBranches && $branchId) {
-            $todayTransactionsQuery->where('branch_id', $branchId);
-        }
-        
         $todayTransactions = $todayTransactionsQuery->count();
-        
-        // Pendapatan kemarin untuk perbandingan
-        $yesterdayRevenueQuery = Order::whereDate('date', Carbon::yesterday())
-            ->where('payment_status', 'paid');
-        
-        if (!$showAllBranches && $branchId) {
-            $yesterdayRevenueQuery->where('branch_id', $branchId);
-        }
-        
         $yesterdayRevenue = $yesterdayRevenueQuery->sum('total_amount') ?? 0;
         
-        // Hitung persentase perubahan
-        $revenueChange = 0;
-        if ($yesterdayRevenue > 0) {
-            $revenueChange = (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100;
-        } elseif ($todayRevenue > 0) {
-            $revenueChange = 100;
-        }
+        $thisWeekRevenue = $thisWeekRevenueQuery->sum('total_amount') ?? 0;
+        $thisWeekTransactions = $thisWeekTransactionsQuery->count();
+        $lastWeekRevenue = $lastWeekRevenueQuery->sum('total_amount') ?? 0;
         
+        $thisMonthRevenue = $thisMonthRevenueQuery->sum('total_amount') ?? 0;
+        $thisMonthTransactions = $thisMonthTransactionsQuery->count();
+        $lastMonthRevenue = $lastMonthRevenueQuery->sum('total_amount') ?? 0;
+        
+        $revenueChange = $yesterdayRevenue > 0 ? (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100 : ($todayRevenue > 0 ? 100 : 0);
+        $weeklyRevenueChange = $lastWeekRevenue > 0 ? (($thisWeekRevenue - $lastWeekRevenue) / $lastWeekRevenue) * 100 : ($thisWeekRevenue > 0 ? 100 : 0);
+        $monthlyRevenueChange = $lastMonthRevenue > 0 ? (($thisMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : ($thisMonthRevenue > 0 ? 100 : 0);
+
         // =======================
         // PIUTANG & HUTANG
         // =======================
@@ -214,6 +218,12 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'totalProducts',
             'lowStock',
+            'thisWeekRevenue',
+            'thisWeekTransactions',
+            'weeklyRevenueChange',
+            'thisMonthRevenue',
+            'thisMonthTransactions',
+            'monthlyRevenueChange',
             'outOfStock',
             'totalUsers',
             'todayRevenue',
@@ -444,45 +454,49 @@ class DashboardController extends Controller
             $totalUsers = User::where('branch_id', $branchId)->count();
         }
         
+                // =======================
+        // PENDAPATAN (HARI INI, MINGGU INI, BULAN INI)
         // =======================
-        // PENDAPATAN HARI INI
-        // =======================
-        $todayRevenueQuery = Order::whereDate('date', Carbon::today())
-            ->where('payment_status', 'paid');
-        
+        $todayRevenueQuery = Order::whereDate('date', Carbon::today())->where('payment_status', 'paid');
+        $todayTransactionsQuery = Order::whereDate('date', Carbon::today());
+        $yesterdayRevenueQuery = Order::whereDate('date', Carbon::yesterday())->where('payment_status', 'paid');
+            
+        $thisWeekRevenueQuery = Order::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->where('payment_status', 'paid');
+        $thisWeekTransactionsQuery = Order::whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        $lastWeekRevenueQuery = Order::whereBetween('date', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('payment_status', 'paid');
+            
+        $thisMonthRevenueQuery = Order::whereMonth('date', Carbon::now()->month)->whereYear('date', Carbon::now()->year)->where('payment_status', 'paid');
+        $thisMonthTransactionsQuery = Order::whereMonth('date', Carbon::now()->month)->whereYear('date', Carbon::now()->year);
+        $lastMonthRevenueQuery = Order::whereMonth('date', Carbon::now()->subMonth()->month)->whereYear('date', Carbon::now()->subMonth()->year)->where('payment_status', 'paid');
+
         if (!$showAllBranches && $branchId) {
             $todayRevenueQuery->where('branch_id', $branchId);
+            $todayTransactionsQuery->where('branch_id', $branchId);
+            $yesterdayRevenueQuery->where('branch_id', $branchId);
+            $thisWeekRevenueQuery->where('branch_id', $branchId);
+            $thisWeekTransactionsQuery->where('branch_id', $branchId);
+            $lastWeekRevenueQuery->where('branch_id', $branchId);
+            $thisMonthRevenueQuery->where('branch_id', $branchId);
+            $thisMonthTransactionsQuery->where('branch_id', $branchId);
+            $lastMonthRevenueQuery->where('branch_id', $branchId);
         }
         
         $todayRevenue = $todayRevenueQuery->sum('total_amount') ?? 0;
-        
-        // Jumlah transaksi hari ini
-        $todayTransactionsQuery = Order::whereDate('date', Carbon::today());
-        
-        if (!$showAllBranches && $branchId) {
-            $todayTransactionsQuery->where('branch_id', $branchId);
-        }
-        
         $todayTransactions = $todayTransactionsQuery->count();
-        
-        // Pendapatan kemarin untuk perbandingan
-        $yesterdayRevenueQuery = Order::whereDate('date', Carbon::yesterday())
-            ->where('payment_status', 'paid');
-        
-        if (!$showAllBranches && $branchId) {
-            $yesterdayRevenueQuery->where('branch_id', $branchId);
-        }
-        
         $yesterdayRevenue = $yesterdayRevenueQuery->sum('total_amount') ?? 0;
         
-        // Hitung persentase perubahan
-        $revenueChange = 0;
-        if ($yesterdayRevenue > 0) {
-            $revenueChange = (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100;
-        } elseif ($todayRevenue > 0) {
-            $revenueChange = 100;
-        }
+        $thisWeekRevenue = $thisWeekRevenueQuery->sum('total_amount') ?? 0;
+        $thisWeekTransactions = $thisWeekTransactionsQuery->count();
+        $lastWeekRevenue = $lastWeekRevenueQuery->sum('total_amount') ?? 0;
         
+        $thisMonthRevenue = $thisMonthRevenueQuery->sum('total_amount') ?? 0;
+        $thisMonthTransactions = $thisMonthTransactionsQuery->count();
+        $lastMonthRevenue = $lastMonthRevenueQuery->sum('total_amount') ?? 0;
+        
+        $revenueChange = $yesterdayRevenue > 0 ? (($todayRevenue - $yesterdayRevenue) / $yesterdayRevenue) * 100 : ($todayRevenue > 0 ? 100 : 0);
+        $weeklyRevenueChange = $lastWeekRevenue > 0 ? (($thisWeekRevenue - $lastWeekRevenue) / $lastWeekRevenue) * 100 : ($thisWeekRevenue > 0 ? 100 : 0);
+        $monthlyRevenueChange = $lastMonthRevenue > 0 ? (($thisMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : ($thisMonthRevenue > 0 ? 100 : 0);
+
         // =======================
         // PIUTANG & HUTANG
         // =======================
@@ -596,6 +610,12 @@ class DashboardController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pdf.dashboard', compact(
             'totalProducts',
             'lowStock',
+            'thisWeekRevenue',
+            'thisWeekTransactions',
+            'weeklyRevenueChange',
+            'thisMonthRevenue',
+            'thisMonthTransactions',
+            'monthlyRevenueChange',
             'outOfStock',
             'totalUsers',
             'todayRevenue',
